@@ -1,0 +1,209 @@
+{
+    "settings": {
+        "options": {
+            "show_on_front": "posts",
+            "featured-content": false,
+            "jetpack_global_styles": {
+                "font_base": "Roboto",
+                "font_headings": "Rubik"
+            }
+        },
+        "theme_mods": {
+            "0": false,
+            "nav_menu_locations": [],
+            "custom_css_post_id": -1,
+            "color_palette": "default-palette"
+        },
+        "headstart": {
+            "mapped_id_options": [],
+            "mapped_id_theme_mods": [],
+            "keep_submenu_items": true
+        }
+    },
+    "widgets": [],
+    "content": [
+        {
+            "post_type": "post",
+            "post_title": "Skating and community",
+            "post_content": "<!-- wp:paragraph -->\n<p>The best part of skateboarding is the community. Read stories from skateboarding veterans about the friends they've found along the way.<\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "skating-is-fun",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 72,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Uncategorized"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra",
+            "attachment_url": "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/18382711382_c285acb6bf_k.jpg"
+        },
+        {
+            "post_type": "post",
+            "post_title": "Working on your board",
+            "post_content": "<!-- wp:paragraph -->\n<p>Your board requires just a little bit of upkeep to make sure it's safe and keeping you moving. This maintenance is not difficult to learn.<\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "working-on-your-board",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 78,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Uncategorized"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra",
+            "attachment_url": "https:\/\/skateparkdemo.files.wordpress.com\/2022\/02\/13900064573_0b24c944f5_k.jpg"
+        },
+        {
+            "post_type": "post",
+            "post_title": "Learn some tricks",
+            "post_content": "<!-- wp:paragraph -->\n<p>The best way to learn tricks is to be taught in person. That's where Skatepark comes in! We'll share all our tips to get you kickflipping in no time. <\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "learn-some-tricks",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "",
+            "_starter_page_template": "",
+            "hs_old_id": 76,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Uncategorized"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra",
+            "attachment_url": "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/3625183752_2478de8341_k-e1646336284943.jpg"
+        },
+        {
+            "post_type": "post",
+            "post_title": "Finding a skatepark",
+            "post_content": "<!-- wp:paragraph -->\n<p>Chances are, you have a skatepark nearby. If not, that's ok! Every every railing, curb, and driveway in your town has the potential to be your next favorite spot. <\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "kids-can-skate-too",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 74,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Uncategorized"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "post",
+            "post_title": "Using ramps",
+            "post_content": "<!-- wp:paragraph -->\n<p>Skating on a ramp can feel drastically different than skating on flat pavement. We'll take you through the things you need to know to feel comfortable, no matter the terrain. <\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "using-ramps",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "",
+            "_starter_page_template": "",
+            "hs_old_id": 80,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Uncategorized"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra",
+            "attachment_url": "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/19480529310_060f9ec612_4k-1.jpg"
+        },
+        {
+            "post_type": "page",
+            "post_title": "FAQ",
+            "post_content": "<!-- wp:group {\"align\":\"wide\",\"style\":{\"border\":{\"style\":\"solid\"},\"spacing\":{\"padding\":{\"top\":\"4%\",\"right\":\"4%\",\"bottom\":\"4%\",\"left\":\"4%\"}}},\"className\":\"skatepark-mixed-media-in-container\"} -->\n<div class=\"wp-block-group alignwide skatepark-mixed-media-in-container\" style=\"border-style:solid;padding-top:4%;padding-right:4%;padding-bottom:4%;padding-left:4%;\"><!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>When is camp?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Camp takes place Monday, June 15 \u2013 Sunday, June 28, 2022.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:spacer {\"height\":\"40px\"} -->\n<div style=\"height:40px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>Where is camp?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Skatepark is located at 123 Main Street, Los Angeles, CA.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":\"30px\"} -->\n<div style=\"height:30px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>How much does camp cost?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Thanks to city funding, Skatepark is completely free for residents of LA County. The cost for someone coming from out of town is $250 for the week.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":\"30px\"} -->\n<div style=\"height:30px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>What ages do you accept?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Anyone aged 8\u201316 can apply to come to camp.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:spacer {\"height\":\"40px\"} -->\n<div style=\"height:40px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>Will there be adult supervision?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Our team of adult, camp-certified counselors will be on-hand at all times.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":\"30px\"} -->\n<div style=\"height:30px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>How do I sign up my child?<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>You can apply here. The deadline to apply is April 30th.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns --><\/div>\n<!-- \/wp:group -->",
+            "post_name": "faqs",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 20,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "page",
+            "post_title": "Contact",
+            "post_content": "<!-- wp:columns {\"align\":\"wide\",\"className\":\"has-2-columns\"} -->\n<div class=\"wp-block-columns alignwide has-2-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"textAlign\":\"left\"} -->\n<h2 class=\"has-text-align-left\">Get in Touch<\/h2>\n<!-- \/wp:heading -->\n\n<!-- wp:jetpack\/contact-info -->\n<div class=\"wp-block-jetpack-contact-info\"><!-- wp:jetpack\/address {\"address\":\"10 Street Road\",\"city\":\"City\",\"postal\":\"10100\",\"country\":\"USA\"} -->\n<div class=\"wp-block-jetpack-address\"><div class=\"jetpack-address__address jetpack-address__address1\">10 Street Road<\/div><div><span class=\"jetpack-address__city\">City<\/span>, <span class=\"jetpack-address__region\"><\/span> <span class=\"jetpack-address__postal\">10100<\/span><\/div><div class=\"jetpack-address__country\">USA<\/div><\/div>\n<!-- \/wp:jetpack\/address -->\n\n<!-- wp:jetpack\/email {\"email\":\"mail@example.com\"} -->\n<div class=\"wp-block-jetpack-email\"><a href=\"mailto:mail@example.com\">mail@example.com<\/a><\/div>\n<!-- \/wp:jetpack\/email -->\n\n<!-- wp:jetpack\/phone {\"phone\":\"(555) 555 1234\"} -->\n<div class=\"wp-block-jetpack-phone\"><a href=\"tel:5555551234\">(555) 555 1234<\/a><\/div>\n<!-- \/wp:jetpack\/phone --><\/div>\n<!-- \/wp:jetpack\/contact-info --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"textAlign\":\"left\"} -->\n<h2 class=\"has-text-align-left\">Send a Message<\/h2>\n<!-- \/wp:heading -->\n\n<!-- wp:jetpack\/contact-form {\"subject\":\"[Skatepark] Contact\"} -->\n<div class=\"wp-block-jetpack-contact-form\"><!-- wp:jetpack\/field-name {\"required\":true} \/-->\n\n<!-- wp:jetpack\/field-email {\"label\":\"Email\",\"required\":true} \/-->\n\n<!-- wp:jetpack\/field-url \/-->\n\n<!-- wp:jetpack\/field-textarea {\"required\":true} \/-->\n\n<!-- wp:jetpack\/button {\"element\":\"button\",\"text\":\"Send Message\"} \/--><\/div>\n<!-- \/wp:jetpack\/contact-form --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+            "post_name": "contact",
+            "post_excerpt": "",
+            "menu_order": 1,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 6,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "post",
+            "post_title": "5 simple tricks",
+            "post_content": "<!-- wp:paragraph -->\n<p>The foundation of most tricks is the ollie. Once you've learned to lift the board up off the ground, you open yourself up to a whole new world. <\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "5-simple-skateboarding-tricks",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 7,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Tutorials"
+                ],
+                "post_tag_name": [
+                    "grinding",
+                    "kickflips",
+                    "nose grab",
+                    "tail grab",
+                    "tricks"
+                ]
+            },
+            "hs_custom_meta": "_hs_extra",
+            "attachment_url": "https:\/\/skateparkdemo.files.wordpress.com\/2021\/08\/693372530767c766f2db45bbfb132770-2048x1365-1.jpeg"
+        }
+    ],
+    "menus": [],
+    "images": [
+        "https:\/\/skateparkdemo.files.wordpress.com\/2022\/02\/13900064573_0b24c944f5_k.jpg",
+        "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/19480529310_060f9ec612_4k-1.jpg",
+        "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/3625183752_2478de8341_k-e1646336284943.jpg",
+        "https:\/\/skateparkdemo.files.wordpress.com\/2021\/09\/18382711382_c285acb6bf_k.jpg",
+        "https:\/\/skateparkdemo.files.wordpress.com\/2021\/08\/693372530767c766f2db45bbfb132770-2048x1365-1.jpeg"
+    ],
+    "meta": {
+        "blog_id": 196120810,
+        "url": "https:\/\/skateparkdemo.wordpress.com",
+        "update_date": "March 8, 2022, 9:58 am",
+        "update_timestamp": 1646733539
+    }
+}

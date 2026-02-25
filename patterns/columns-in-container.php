@@ -1,0 +1,44 @@
+<?php declare( strict_types = 1 ); ?>
+<?php
+/**
+ * Title: Columns in container
+ * Slug: house-you/columns-in-container
+ * Categories: featured, columns
+ */
+?>
+
+<!-- wp:spacer {"height":40} -->
+<div style="height:40px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:group {"align":"wide","style":{"border":{"width":"3px","style":"solid"},"spacing":{"padding":{"top":"4%","right":"4%","bottom":"4%","left":"4%"}}},"borderColor":"primary","className":"columns-in-container","layout":{"inherit":true}} -->
+<div class="wp-block-group alignwide columns-in-container has-border-color has-primary-border-color" style="border-style:solid;border-width:3px;padding-top:4%;padding-right:4%;padding-bottom:4%;padding-left:4%"><!-- wp:columns {"align":"wide"} -->
+<div class="wp-block-columns alignwide"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:heading {"level":4} -->
+<h4><?php echo esc_html__( 'Learn to skate', 'house-you' ); ?></h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><?php echo esc_html__( 'Skatepark welcomes youth of all ages and experience levels. Whether you’ve never been on a board before, or you can already do tricks, there’s a place for you and something to learn.', 'house-you' ); ?></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:heading {"level":4} -->
+<h4><?php echo esc_html__( 'Make new friends', 'house-you' ); ?></h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><?php echo esc_html__( 'Skateboarding is a social sport! Come hang out and meet some new friends to cheer you on while you skate. We have a strict no-bullying policy and maintain a supportive environment.', 'house-you' ); ?></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:spacer {"height":40} -->
+<div style="height:40px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:paragraph -->
+<p><?php echo esc_html__( 'Skateboarding can teach people discipline, patience, and resiliency. It’s a great sport for kids with a lot of energy! We’ll help build up some structure and support in your life, all while you meet new people and have a ton of fun learning how to skateboard.', 'house-you' ); ?></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->

@@ -1,0 +1,1988 @@
+/* Text selection text color */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap");
+::selection {
+  color: var(--wp--custom--color--background);
+  background-color: var(--wp--custom--color--foreground);
+}
+
+/* Post title when featured image is present */
+body:not(.has-featured-image) h1.wp-block-post-title {
+  border-bottom: var(--wp--custom--form--border--width) var(--wp--custom--form--border--style) var(--wp--preset--color--primary);
+  padding-bottom: calc(var(--wp--custom--gap--vertical) * 3);
+}
+
+/* Separator width */
+/* This can be removed when this issue gets fixed: https://github.com/WordPress/gutenberg/issues/40624 */
+.wp-block-separator {
+  opacity: 1;
+}
+.wp-block-separator.has-background:not(.is-style-dots) {
+  height: 3px;
+}
+.wp-block-separator.has-background:not(.is-style-wide):not(.is-style-dots) {
+  height: 3px;
+}
+
+/* Links and underlines */
+a {
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.46ex;
+}
+
+.wp-block-post-content p a:not(.wp-block-post-excerpt__more-link) {
+  text-decoration-line: underline;
+}
+.wp-block-post-content p a:not(.wp-block-post-excerpt__more-link):hover {
+  text-decoration: none;
+  background-color: var(--wp--custom--color--primary);
+  color: var(--wp--custom--color--background);
+}
+
+.wp-block-post-comments .comment-meta > a,
+.wp-block-post-comments .comment-body > p > a,
+.wp-block-post-comments .comment-edit-link,
+.post-meta a {
+  text-decoration-line: underline;
+}
+.wp-block-post-comments .comment-meta > a:hover,
+.wp-block-post-comments .comment-body > p > a:hover,
+.wp-block-post-comments .comment-edit-link:hover,
+.post-meta a:hover {
+  text-decoration-line: none;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a,
+.wp-block-site-title a,
+.wp-block-post-title a {
+  text-underline-offset: 0.1ex;
+}
+
+.wp-block-site-title a,
+.wp-block-post-title a,
+.wp-block-query-pagination a,
+.wp-block-navigation a {
+  text-decoration-line: none;
+}
+.wp-block-site-title a:hover,
+.wp-block-post-title a:hover,
+.wp-block-query-pagination a:hover,
+.wp-block-navigation a:hover {
+  text-decoration-line: underline;
+}
+
+.wp-block-search__button:active, .wp-block-search__button:focus,
+a:not(.ab-item):not(.screen-reader-shortcut):active,
+a:not(.ab-item):not(.screen-reader-shortcut):focus {
+  outline: 1px dotted var(--wp--custom--color--primary);
+  outline-offset: 0.1em;
+  text-decoration: none;
+}
+.wp-block-navigation .wp-block-search__button:active, .wp-block-navigation .wp-block-search__button:focus,
+.wp-block-navigation a:not(.ab-item):not(.screen-reader-shortcut):active,
+.wp-block-navigation a:not(.ab-item):not(.screen-reader-shortcut):focus {
+  outline-color: currentcolor;
+}
+
+.archive .wp-block-post-date,
+.blog .wp-block-post-date,
+.home .wp-block-post-date {
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.46ex;
+}
+
+.wp-block-query-pagination .wp-block-query-pagination-numbers .current {
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.46ex;
+}
+
+.wp-block-post-excerpt__more-link {
+  font-weight: 500;
+}
+
+/*
+ * Search and File Block button styles.
+ * Necessary until the following issues are resolved in Gutenberg:
+ * https://github.com/WordPress/gutenberg/issues/36444
+ * https://github.com/WordPress/gutenberg/issues/27760
+ */
+.wp-block-search.wp-block-search__button-inside .wp-block-search__inside-wrapper {
+  border-style: var(--wp--custom--button--border--style);
+  border-width: var(--wp--custom--button--border--width);
+  border-color: var(--wp--custom--color--foreground);
+}
+
+.wp-block-search__input {
+  background-color: transparent;
+  border: var(--wp--custom--form--border--width) var(--wp--custom--form--border--style) var(--wp--custom--form--border--color);
+}
+
+.wp-block-search__button,
+.wp-block-file .wp-block-file__button {
+  border-width: 0;
+  border-radius: 0;
+  background-color: var(--wp--custom--color--foreground);
+  color: var(--wp--custom--color--background);
+  font-size: var(--wp--preset--font-size--normal);
+  font-weight: var(--wp--custom--button--typography--font-weight);
+  padding: calc(0.667em + 2px) calc(1.333em + 2px);
+  line-height: var(--wp--custom--button--typography--line-height);
+}
+
+.wp-block-search.wp-block-search__button-inside .wp-block-search__inside-wrapper .wp-block-search__button {
+  border-width: 0;
+  padding-top: calc(var(--wp--custom--button--spacing--padding--top) + var(--wp--custom--button--border--width));
+  padding-bottom: calc(var(--wp--custom--button--spacing--padding--bottom) + var(--wp--custom--button--border--width));
+  padding-left: calc(var(--wp--custom--button--spacing--padding--left) + var(--wp--custom--button--border--width));
+  padding-right: calc(var(--wp--custom--button--spacing--padding--right) + var(--wp--custom--button--border--width));
+}
+
+/*
+ * Button hover styles.
+ * Necessary until the following issue is resolved in Gutenberg:
+ * https://github.com/WordPress/gutenberg/issues/27075
+ */
+.wp-block-search__button:hover,
+.wp-block-file .wp-block-file__button:hover,
+.wp-block-button__link:hover {
+  opacity: 0.9;
+}
+
+/* Comments */
+.wp-block-post-comments input[type=submit] {
+  font-family: var(--wp--preset--font-family--red-hat-display);
+  color: var(--wp--custom--color--background);
+}
+
+.wp-block-post-comments textarea,
+.wp-block-post-comments input:not([type=submit]) {
+  background-color: var(--wp--custom--color--background);
+  color: var(--wp--custom--color--foreground);
+  border-style: var(--wp--custom--button--border--style);
+  border-width: var(--wp--custom--button--border--width);
+  border-color: var(--wp--custom--color--foreground);
+}
+
+/*
+* Alignment styles, borrowed from Twenty Twenty-Two.
+* These rules are temporary, and should not be relied on or
+* modified too heavily by themes or plugins that build on
+* Twenty Twenty-Two. These are meant to be a precursor to
+* a global solution provided by the Block Editor.
+*
+* Relevant issues:
+* https://github.com/WordPress/gutenberg/issues/35607
+* https://github.com/WordPress/gutenberg/issues/35884
+*/
+.wp-site-blocks,
+body > .is-root-container,
+.edit-post-visual-editor__post-title-wrapper,
+.wp-block-group.alignfull,
+.wp-block-group.has-background,
+.wp-block-cover.alignfull,
+.is-root-container .wp-block[data-align=full] > .wp-block-group,
+.is-root-container .wp-block[data-align=full] > .wp-block-cover {
+  padding-left: var(--wp--custom--spacing--outer);
+  padding-right: var(--wp--custom--spacing--outer);
+}
+
+.wp-site-blocks .alignfull,
+.wp-site-blocks > .wp-block-group.has-background,
+.wp-site-blocks > .wp-block-cover,
+.wp-site-blocks > .wp-block-template-part > .wp-block-group.has-background,
+.wp-site-blocks > .wp-block-template-part > .wp-block-cover,
+body > .is-root-container > .wp-block-cover,
+body > .is-root-container > .wp-block-template-part > .wp-block-group.has-background,
+body > .is-root-container > .wp-block-template-part > .wp-block-cover,
+.is-root-container .wp-block[data-align=full] {
+  margin-left: calc(-1 * var(--wp--custom--spacing--outer)) !important;
+  margin-right: calc(-1 * var(--wp--custom--spacing--outer)) !important;
+  max-width: unset;
+  width: unset;
+}
+
+/* Blocks inside columns don't have negative margins. */
+.wp-site-blocks .wp-block-columns .wp-block-column .alignfull,
+.is-root-container .wp-block-columns .wp-block-column .wp-block[data-align=full],
+.wp-site-blocks .alignfull:not(.wp-block-group) .alignfull,
+.is-root-container .wp-block[data-align=full] > *:not(.wp-block-group) .wp-block[data-align=full] {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: inherit;
+}
+
+/*
+* Responsive menu container padding.
+* This ensures the responsive container inherits the same
+* spacing defined above. This behavior may be built into
+* the Block Editor in the future.
+*/
+.wp-block-navigation__responsive-container.is-menu-open {
+  padding-top: var(--wp--custom--spacing--outer);
+  padding-bottom: var(--wp--custom--spacing--large);
+  padding-right: var(--wp--custom--spacing--outer);
+  padding-left: var(--wp--custom--spacing--outer);
+}
+
+/* =========================================================================
+   BLOCK STYLES - COLOR PRESETS
+   One-click color schemes for Group blocks
+   ========================================================================= */
+.wp-block-group.is-style-dark-section,
+.wp-block-cover.is-style-dark-section {
+  background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+  padding: 60px 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.wp-block-group.is-style-dark-section h1, .wp-block-group.is-style-dark-section h2, .wp-block-group.is-style-dark-section h3, .wp-block-group.is-style-dark-section h4, .wp-block-group.is-style-dark-section h5, .wp-block-group.is-style-dark-section h6, .wp-block-group.is-style-dark-section p, .wp-block-group.is-style-dark-section li, .wp-block-group.is-style-dark-section a,
+.wp-block-cover.is-style-dark-section h1,
+.wp-block-cover.is-style-dark-section h2,
+.wp-block-cover.is-style-dark-section h3,
+.wp-block-cover.is-style-dark-section h4,
+.wp-block-cover.is-style-dark-section h5,
+.wp-block-cover.is-style-dark-section h6,
+.wp-block-cover.is-style-dark-section p,
+.wp-block-cover.is-style-dark-section li,
+.wp-block-cover.is-style-dark-section a {
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+.wp-block-group.is-style-light-section,
+.wp-block-cover.is-style-light-section {
+  background-color: var(--wp--preset--color--white, #FFFFFF) !important;
+  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  padding: 60px 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.wp-block-group.is-style-light-section h1, .wp-block-group.is-style-light-section h2, .wp-block-group.is-style-light-section h3, .wp-block-group.is-style-light-section h4, .wp-block-group.is-style-light-section h5, .wp-block-group.is-style-light-section h6, .wp-block-group.is-style-light-section p, .wp-block-group.is-style-light-section li, .wp-block-group.is-style-light-section a,
+.wp-block-cover.is-style-light-section h1,
+.wp-block-cover.is-style-light-section h2,
+.wp-block-cover.is-style-light-section h3,
+.wp-block-cover.is-style-light-section h4,
+.wp-block-cover.is-style-light-section h5,
+.wp-block-cover.is-style-light-section h6,
+.wp-block-cover.is-style-light-section p,
+.wp-block-cover.is-style-light-section li,
+.wp-block-cover.is-style-light-section a {
+  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+}
+
+.wp-block-group.is-style-pink-section,
+.wp-block-cover.is-style-pink-section {
+  background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+  padding: 60px 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.wp-block-group.is-style-pink-section h1, .wp-block-group.is-style-pink-section h2, .wp-block-group.is-style-pink-section h3, .wp-block-group.is-style-pink-section h4, .wp-block-group.is-style-pink-section h5, .wp-block-group.is-style-pink-section h6, .wp-block-group.is-style-pink-section p, .wp-block-group.is-style-pink-section li, .wp-block-group.is-style-pink-section a,
+.wp-block-cover.is-style-pink-section h1,
+.wp-block-cover.is-style-pink-section h2,
+.wp-block-cover.is-style-pink-section h3,
+.wp-block-cover.is-style-pink-section h4,
+.wp-block-cover.is-style-pink-section h5,
+.wp-block-cover.is-style-pink-section h6,
+.wp-block-cover.is-style-pink-section p,
+.wp-block-cover.is-style-pink-section li,
+.wp-block-cover.is-style-pink-section a {
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+.wp-block-group.is-style-full-width {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+.wp-block-group.is-style-full-width > * {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+@media (min-width: 769px) {
+  .wp-block-group.is-style-full-width > * {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* =========================================================================
+   EDITOR-SPECIFIC STYLES
+   Apply block styles in the editor
+   ========================================================================= */
+.editor-styles-wrapper .wp-block-group.is-style-dark-section,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section {
+  background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-dark-section h1, .editor-styles-wrapper .wp-block-group.is-style-dark-section h2, .editor-styles-wrapper .wp-block-group.is-style-dark-section h3, .editor-styles-wrapper .wp-block-group.is-style-dark-section h4, .editor-styles-wrapper .wp-block-group.is-style-dark-section h5, .editor-styles-wrapper .wp-block-group.is-style-dark-section h6, .editor-styles-wrapper .wp-block-group.is-style-dark-section p, .editor-styles-wrapper .wp-block-group.is-style-dark-section li, .editor-styles-wrapper .wp-block-group.is-style-dark-section a,
+.editor-styles-wrapper .wp-block-group.is-style-dark-section .block-editor-rich-text__editable,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h1,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h2,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h3,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h4,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h5,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section h6,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section p,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section li,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section a,
+.editor-styles-wrapper .wp-block-cover.is-style-dark-section .block-editor-rich-text__editable {
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-light-section,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section {
+  background-color: var(--wp--preset--color--white, #FFFFFF) !important;
+  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-light-section h1, .editor-styles-wrapper .wp-block-group.is-style-light-section h2, .editor-styles-wrapper .wp-block-group.is-style-light-section h3, .editor-styles-wrapper .wp-block-group.is-style-light-section h4, .editor-styles-wrapper .wp-block-group.is-style-light-section h5, .editor-styles-wrapper .wp-block-group.is-style-light-section h6, .editor-styles-wrapper .wp-block-group.is-style-light-section p, .editor-styles-wrapper .wp-block-group.is-style-light-section li, .editor-styles-wrapper .wp-block-group.is-style-light-section a,
+.editor-styles-wrapper .wp-block-group.is-style-light-section .block-editor-rich-text__editable,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h1,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h2,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h3,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h4,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h5,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section h6,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section p,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section li,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section a,
+.editor-styles-wrapper .wp-block-cover.is-style-light-section .block-editor-rich-text__editable {
+  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-pink-section,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section {
+  background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-pink-section h1, .editor-styles-wrapper .wp-block-group.is-style-pink-section h2, .editor-styles-wrapper .wp-block-group.is-style-pink-section h3, .editor-styles-wrapper .wp-block-group.is-style-pink-section h4, .editor-styles-wrapper .wp-block-group.is-style-pink-section h5, .editor-styles-wrapper .wp-block-group.is-style-pink-section h6, .editor-styles-wrapper .wp-block-group.is-style-pink-section p, .editor-styles-wrapper .wp-block-group.is-style-pink-section li, .editor-styles-wrapper .wp-block-group.is-style-pink-section a,
+.editor-styles-wrapper .wp-block-group.is-style-pink-section .block-editor-rich-text__editable,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h1,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h2,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h3,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h4,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h5,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section h6,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section p,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section li,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section a,
+.editor-styles-wrapper .wp-block-cover.is-style-pink-section .block-editor-rich-text__editable {
+  color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+.editor-styles-wrapper .wp-block-group.is-style-full-width {
+  border-left: 4px solid var(--wp--preset--color--house-you-pink, #CB1EAA);
+  padding-left: 20px;
+}
+.editor-styles-wrapper .wp-block-group.is-style-full-width::before {
+  content: "Full Width";
+  display: block;
+  font-size: 12px;
+  color: var(--wp--preset--color--house-you-pink, #CB1EAA);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* =========================================================================
+   HOUSE YOU CUSTOM STYLES
+   All custom CSS below migrated from style.css
+   ========================================================================= */
+/* ========================================
+   HOUSE YOU - CLEAN STYLESHEET (No CF7)
+   Max-width: 1800px
+   Aligned header, body, footer
+   ======================================== */
+/* Import Inter font */
+/* ========================================
+   CUSTOM CONTAINER CLASS
+   ======================================== */
+.content-container {
+  max-width: 1800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 769px) {
+  .content-container {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
+/* ========================================
+   LAYOUT & CONTAINERS
+   ======================================== */
+/* Site blocks - remove all constraints */
+.wp-site-blocks {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Main content area - no constraints */
+.site-main {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Full-width sections - backgrounds span full viewport width */
+.full-width-homepage {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure full-width sections break out of constrained layouts */
+.wp-site-blocks .full-width-homepage,
+.wp-block-group.has-background .full-width-homepage,
+.is-layout-constrained .full-width-homepage {
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Remove spacing around full-width sections when they're first/last in main */
+main .full-width-homepage:first-child {
+  margin-top: 0 !important;
+  padding-top: 60px !important;
+}
+
+main .full-width-homepage:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 60px !important;
+}
+
+/* Constrain content inside full-width sections */
+.full-width-homepage .wp-block-columns,
+.full-width-homepage > .wp-block-heading,
+.full-width-homepage > .wp-block-paragraph,
+.full-width-homepage > .petition-row,
+.full-width-homepage > .content-container {
+  max-width: 1800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* Content sections with vertical spacing */
+.content-section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* Column spacing */
+.wp-block-columns {
+  gap: 20px;
+}
+
+.wp-block-column {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Header gets constrained content - matches body */
+header.wp-block-template-part {
+  width: 100vw;
+  max-width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background-color: var(--wp--preset--color--ash-grey, #2D2A2E);
+  color: var(--wp--preset--color--white, #FFFFFF);
+  box-sizing: border-box;
+}
+
+/* Override WordPress's .is-layout-constrained in header */
+header.wp-block-template-part > .wp-block-group.is-layout-constrained {
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  background-color: var(--wp--preset--color--ash-grey, #2D2A2E);
+  color: var(--wp--preset--color--white, #FFFFFF);
+}
+
+/* Header text colors */
+header.wp-block-template-part h1,
+header.wp-block-template-part h2,
+header.wp-block-template-part h3,
+header.wp-block-template-part h4,
+header.wp-block-template-part h5,
+header.wp-block-template-part h6,
+header.wp-block-template-part p,
+header.wp-block-template-part a {
+  color: var(--wp--preset--color--white, #FFFFFF);
+}
+
+/* Apply container styling to header columns - MOBILE FIRST */
+header.wp-block-template-part .wp-block-columns.header-columns {
+  max-width: 1800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+/* Remove padding from individual columns */
+header.wp-block-template-part .wp-block-column {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* DESKTOP OVERRIDE - must come after mobile rules */
+@media (min-width: 769px) {
+  header.wp-block-template-part .wp-block-columns.header-columns {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
+/* Footer gets constrained content - matches body and header */
+footer.wp-block-template-part {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Footer structure */
+footer.wp-block-template-part > .wp-block-group.is-layout-constrained {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Footer background spans full width */
+footer.wp-block-template-part .wp-block-group.alignfull.pre-footer {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  box-sizing: border-box !important;
+}
+
+/* Constrain footer content inside the full-width background */
+footer.wp-block-template-part .wp-block-columns,
+footer.wp-block-template-part .wp-block-paragraph {
+  max-width: 1800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+}
+
+header.wp-block-template-part .wp-block-column {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Remove any extra spacing from header-columns specifically */
+.header-columns {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Footer gets constrained content - matches body and header */
+footer.site-footer-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+footer.site-footer-container > .wp-block-group {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+/* Desktop spacing adjustments */
+@media (min-width: 769px) {
+  /* Header desktop padding */
+  header.wp-block-template-part > .wp-block-group {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+  /* Keep nested header elements with no padding */
+  header.wp-block-template-part .wp-block-columns,
+  header.wp-block-template-part .header-columns {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  header.wp-block-template-part .wp-block-column {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  /* Body content desktop padding */
+  .full-width-homepage .wp-block-columns,
+  .full-width-homepage > .wp-block-heading,
+  .full-width-homepage > .wp-block-paragraph,
+  .full-width-homepage > .petition-row,
+  .full-width-homepage > .content-container {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+  .content-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  /* Footer desktop padding */
+  footer.wp-block-template-part .wp-block-columns,
+  footer.wp-block-template-part .wp-block-paragraph {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+  /* Column spacing desktop */
+  .wp-block-columns {
+    gap: 40px;
+  }
+  .wp-block-column {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+h1 {
+  font-size: 2.5em !important;
+}
+
+h2 {
+  font-size: 2em !important;
+}
+
+h3 {
+  font-size: 1.6em !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+h4 {
+  font-size: 1.2em !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+h5 {
+  font-size: 1em !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Intro text blocks */
+.intro-block {
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  color: white !important;
+  padding: 0.48rem 0;
+}
+
+/* Default paragraph spacing */
+.site-main p {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  padding: 5px 0;
+}
+
+/* Inter Font Application for Headers/Text */
+.hero-section p,
+.hero-section h3,
+.hero-section h5,
+.hero-section .intro-block,
+.hero-section li {
+  font-family: "Inter", sans-serif;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.hero-section p,
+.hero-section li {
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 1.2;
+  padding: 6px 0;
+}
+
+.hero-section p strong,
+.hero-section li strong {
+  font-weight: 800;
+}
+
+@media (min-width: 769px) {
+  .site-main p {
+    font-size: 1.5rem;
+  }
+  .hero-section p, .hero-section li {
+    font-size: 1.5rem;
+  }
+}
+/* ========================================
+   HERO & PAGE BLOCKS
+   ======================================== */
+.hero-section {
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.hero-columns {
+  align-items: stretch;
+}
+
+.signup-block {
+  background-color: rgba(26, 27, 28, 0.05);
+  border-radius: 0;
+  padding: 0 !important;
+}
+
+.home-block {
+  padding: 0 !important;
+}
+
+/* ========================================
+   PETITION/CRISIS DRIVERS ROW
+   ======================================== */
+.petition-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.petition-row .wp-block-image {
+  flex: 0 1 auto;
+  margin: 0;
+}
+
+@media (min-width: 769px) {
+  .petition-row {
+    gap: 50px;
+  }
+}
+/* ========================================
+   NAVIGATION & MEGA MENU
+   ======================================== */
+#mega-menu-wrap {
+  clear: both !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+/* Desktop - right align menu */
+@media (min-width: 769px) {
+  #mega-menu-wrap {
+    justify-content: flex-end !important;
+  }
+  .mega-menu-item .mega-sub-menu {
+    top: 100% !important;
+  }
+}
+.mega-menu-item > a {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+/* Font styling for all menu items */
+#mega-menu-wrap a,
+.mega-menu-link,
+.mega-menu-item a,
+.mega-menu-item:hover a,
+a.mega-menu-link:hover,
+a.mega-menu-link:focus {
+  font-family: "League Spartan", sans-serif !important;
+}
+
+.mega-menu-item:hover .mega-sub-menu {
+  margin-top: 0 !important;
+}
+
+/* Social Icons in Menu */
+.mega-social-icon,
+li.mega-social-icon {
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: auto !important;
+  line-height: 1 !important;
+}
+
+.mega-social-icon .mega-menu-link,
+li.mega-social-icon a {
+  margin: 0 !important;
+  line-height: 1 !important;
+  height: 40px !important;
+}
+
+@media (min-width: 769px) {
+  .social-icon,
+  li.mega-social-icon {
+    padding: 0 10px !important;
+  }
+}
+/* Mobile menu styles */
+@media (max-width: 768px) {
+  #mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 {
+    top: 150px !important;
+  }
+  .mega-menu-toggle {
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+  }
+  .mega-toggle-blocks-right {
+    margin-left: auto !important;
+  }
+  .mega-menu {
+    padding-top: 20px !important;
+  }
+  .mega-menu-item {
+    text-align: center !important;
+    padding: 20px 0 !important;
+  }
+  .mega-menu-item > a {
+    justify-content: center !important;
+  }
+  .social-icon, li.mega-social-icon {
+    display: flex !important;
+    justify-content: center !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .social-icon > a {
+    margin: 0 auto !important;
+  }
+}
+/* ========================================
+   SOCIAL ICONS
+   ======================================== */
+.social-icon a span,
+.social-icon .mega-menu-link,
+.social-icon a,
+.social-icon a .wp-block-navigation-item__label {
+  font-size: 0 !important;
+  text-indent: -9999px !important;
+  color: transparent !important;
+  overflow: hidden !important;
+}
+
+.social-icon > a,
+.social-icon a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  background-size: 40px 40px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Facebook icon */
+.social-icon a[href*="facebook.com"] {
+  background-image: url("../assets/svg/facebook-2.svg") !important;
+}
+
+/* Instagram icon */
+.social-icon a[href*="instagram.com"] {
+  background-image: url("../assets/svg/instagram.svg") !important;
+}
+
+/* Text shadow for social media icons for readability */
+.social-links-container img {
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9));
+}
+
+/* ========================================
+   VISIBILITY HELPERS
+   ======================================== */
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+@media (min-width: 769px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+/* =========================================================================
+   ACTION NETWORK FORM STYLES - HOUSE YOU
+   LETTER CAMPAIGN FORM ONLY (NOT RSVP)
+   ========================================================================= */
+/* === GLOBAL FORM LAYOUT (Letter Form Only) === */
+#can_embed_form form.new_delivery,
+#can_embed_form form.js-letter-form {
+  font-family: "League Spartan", sans-serif !important;
+  color: #000000 !important;
+  padding-bottom: 20px;
+}
+
+/* === HEADINGS (Letter Form Only) === */
+#can_embed_form form.new_delivery h2,
+#can_embed_form form.new_delivery h3,
+#can_embed_form form.new_delivery h4,
+#can_letter_one_col h2,
+#can_letter_one_col h3,
+#can_letter_one_col h4 {
+  font-family: "Inter", sans-serif !important;
+  font-size: 1.4em !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+  padding-bottom: 15px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* === INPUT FIELDS (House You Shadow Box Style - Letter Form Only) === */
+#can_embed_form form.new_delivery input[type=text],
+#can_embed_form form.new_delivery input[type=email],
+#can_embed_form form.new_delivery input[type=tel],
+#can_embed_form form.new_delivery textarea,
+#can_embed_form form.new_delivery select#Housing-Demographic,
+#can_letter_one_col input[type=text],
+#can_letter_one_col input[type=email],
+#can_letter_one_col textarea {
+  font-family: "Inter", sans-serif !important;
+  font-size: 18px !important;
+  height: 52px !important;
+  padding: 12px 15px !important;
+  border-radius: 10px !important;
+  border: 1px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  margin-bottom: 20px !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  display: block !important;
+  appearance: menulist !important;
+}
+
+/* Textarea specific (Letter Form Only) */
+#can_embed_form form.new_delivery textarea,
+#can_letter_one_col textarea {
+  height: auto !important;
+  min-height: 150px;
+  padding-top: 15px !important;
+}
+
+/* Placeholder styling (Letter Form Only) */
+#can_embed_form form.new_delivery ::placeholder,
+#can_letter_one_col ::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* === BUTTONS (Submit & Navigation - Letter Form Only) === */
+#can_embed_form form.new_delivery input[type=submit],
+#can_embed_form form.new_delivery .button,
+#can_embed_form form.new_delivery .can_button,
+#can_letter_one_col input[type=submit],
+#can_letter_one_col .button {
+  background-color: #CB1EAA !important;
+  color: #FFFFFF !important;
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: bold !important;
+  font-size: 20px !important;
+  text-transform: uppercase !important;
+  border: none !important;
+  border-radius: 11px !important;
+  padding: 12px 32px !important;
+  cursor: pointer;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  display: block;
+  margin: 20px auto 0 auto !important;
+  width: auto !important;
+  transition: all 0.3s ease;
+}
+
+/* Button hover states (Letter Form Only) */
+#can_embed_form form.new_delivery input[type=submit]:hover,
+#can_embed_form form.new_delivery .button:hover,
+#can_embed_form form.new_delivery .can_button:hover,
+#can_letter_one_col input[type=submit]:hover,
+#can_letter_one_col .button:hover {
+  background-color: #A01888 !important;
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 4px 0 #2D2A2E !important;
+}
+
+/* === TWO-COLUMN LAYOUT (Letter Form ONLY - NOT RSVP) === */
+#can_embed_form form.new_delivery #form_col1 {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 0 4%;
+}
+
+#can_embed_form form.new_delivery #form_col1 li.core_field,
+#can_embed_form form.new_delivery #form_col1 li.control-group {
+  width: 48% !important;
+  margin: 0 0 20px 0 !important;
+  list-style: none !important;
+  display: block !important;
+  padding: 0 !important;
+}
+
+/* Submit button column takes full width (Letter Form Only) */
+#can_embed_form form.new_delivery #form_col2 {
+  width: 100% !important;
+  clear: both !important;
+}
+
+/* === OPT-IN CHECKBOX STYLING (Letter Form Only) === */
+#can_embed_form form.new_delivery #d_sharing ul,
+#can_embed_form form.new_delivery #d_sharing li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#can_embed_form form.new_delivery #d_sharing label {
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  display: block;
+  padding-top: 5px !important;
+}
+
+/* === WELCOME MESSAGE (Both Letter Pages) === */
+#can_embed_form form.new_delivery #action_welcome_message,
+#can_letter_one_col #action_welcome_message {
+  margin-bottom: 15px !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+#can_embed_form form.new_delivery #action_welcome_message_inner,
+#can_letter_one_col #action_welcome_message_inner {
+  display: block !important;
+}
+
+#can_embed_form form.new_delivery #action_welcome_message_inner .left,
+#can_letter_one_col #action_welcome_message_inner .left {
+  display: block !important;
+  float: none !important;
+}
+
+#can_embed_form form.new_delivery #action_welcome_message_inner .left > div,
+#can_letter_one_col #action_welcome_message_inner .left > div {
+  display: inline !important;
+  margin-right: 5px !important;
+  font-size: 25px !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+#can_embed_form form.new_delivery #action_welcome_message_inner small,
+#can_letter_one_col #action_welcome_message_inner small {
+  font-size: 25px !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+#can_embed_form form.new_delivery #action_welcome_message_inner small a,
+#can_letter_one_col #action_welcome_message_inner small a {
+  color: #CB1EAA !important;
+  text-decoration: underline !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================================================
+   CLEANUP: HIDE BROKEN/UNWANTED ELEMENTS (Letter Form Only)
+   ========================================================================= */
+/* Hide empty form builder output (Letter Form Only) */
+#can_embed_form form.new_delivery li.form_builder_output.js-form_builder_output {
+  display: none !important;
+}
+
+/* Hide broken Select2 visual container (Letter Form Only) */
+#can_embed_form form.new_delivery div#s2id_Housing-Demographic {
+  display: none !important;
+}
+
+/* Hide Select2 labels for Housing Demographic (Letter Form Only) */
+#can_embed_form form.new_delivery label.js-fb-selectbasic[for=s2id_autogen1],
+#can_embed_form form.new_delivery label.js-fb-selectbasic[for=s2id_autogen2] {
+  display: none !important;
+}
+
+/* Remove Select2 styling from broken elements (Letter Form Only) */
+#can_embed_form form.new_delivery .select2-container .select2-choice,
+#can_embed_form form.new_delivery .select2-container {
+  box-shadow: none !important;
+  border: none !important;
+  margin-bottom: 0 !important;
+}
+
+/* Prevent Select2 black screen overlay */
+.select2-drop-mask {
+  background: transparent !important;
+  display: none !important;
+}
+
+/* Hide floating label duplicates (Letter Form Only) */
+#can_embed_form form.new_delivery .floatlabel-wrapper .floatlabel-label {
+  display: none !important;
+}
+
+/* Hide Year of Birth label (Letter Form Only) */
+#can_embed_form form.new_delivery label[for=Year-of-Birth-YYYY] {
+  display: none !important;
+}
+
+/* Hide Housing Demographic label (Letter Form Only) */
+#can_embed_form form.new_delivery label.control-label[for=s2id_autogen1] {
+  display: none !important;
+}
+
+/* Hide the "enter your response" input box for Housing Demographic dropdown (Letter Form Only) */
+#can_embed_form form.new_delivery li.control-group[data-identifier="019248db-c95d-46eb-8c31-45feb5c752c1"] .form_builder_other_input {
+  display: none !important;
+}
+
+/* Hide Street Address field (Letter Form Only) */
+#can_embed_form form.new_delivery li:has(input#form-street),
+#can_embed_form form.new_delivery li.core_field:has(input#form-street) {
+  display: none !important;
+}
+
+/* Hide City field (Letter Form Only) */
+#can_embed_form form.new_delivery li:has(input#form-city),
+#can_embed_form form.new_delivery li.core_field:has(input#form-city) {
+  display: none !important;
+}
+
+/* Hide unwanted Action Network branding and elements (Letter Form Only) */
+#can_embed_form form.new_delivery .lined_after_title,
+#can_embed_form form.new_delivery .international_link-wrap,
+#can_embed_form form.new_delivery .country_drop_wrap,
+#can_embed_form form.new_delivery #logo_wrap,
+#can_embed_form form.new_delivery .can_help_text,
+#can_embed_form form.new_delivery .international_link,
+#can_embed_form form.new_delivery #action_info,
+#can_embed_form form.new_delivery .action_info_user,
+#can_embed_form form.new_delivery .ajax-loading,
+#can_letter_one_col #logo_wrap,
+#can_letter_one_col #action_info,
+#can_letter_one_col .action_info_user {
+  display: none !important;
+}
+
+/* Hide "Take Action" heading */
+#can_embed_form .new_delivery h4.lined_after_title,
+#can_embed_form h4.lined_after_title {
+  display: none !important;
+}
+
+/* Hide unwanted Action Network branding (Letter Form Only) */
+#can_embed_form .new_delivery ~ #action_info,
+#can_embed_form .new_delivery ~ #logo_wrap,
+#can_embed_form > #can_embed_form_inner > #action_info,
+#can_embed_form > #can_embed_form_inner > #logo_wrap {
+  display: none !important;
+}
+
+/* Also hide these at the root level */
+#can_embed_form #logo_wrap,
+#can_embed_form #action_info {
+  display: none !important;
+}
+
+/* =========================================================================
+   LETTER WRITING PAGE (Step 2) SPECIFIC STYLES
+   ========================================================================= */
+/* Hide the main heading on letter page */
+#can_letter_one_col h2.line {
+  display: none !important;
+}
+
+/* Hide the "Write To" recipient headings on page 2 */
+#can_letter_one_col h4.mt15.mb5.nobold {
+  display: none !important;
+}
+
+/* Hide recipient hidden inputs */
+#can_letter_one_col input[type=hidden][id^=email_],
+#can_letter_one_col input#letter_template_id,
+#can_letter_one_col input#delivery_id {
+  display: none !important;
+}
+
+/* === "YOUR LETTER" SECTION === */
+#can_letter_one_col #form_col2 h4.mt15.mb5.nobold {
+  display: block !important;
+  font-size: 25px !important;
+  color: #FFFFFF !important;
+  font-weight: normal !important;
+  text-transform: none !important;
+  padding-bottom: 5px !important;
+  margin-top: 15px !important;
+  margin-bottom: 5px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================================================
+   THANK YOU PAGE (Step 3) STYLING - LETTER CAMPAIGN ONLY
+   ========================================================================= */
+/* === THANK YOU PAGE - ONLY FOR LETTER CAMPAIGN === */
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .post-submission-message {
+  color: #FFFFFF !important;
+}
+
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section h4 {
+  color: #FFFFFF !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 2em !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section p,
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section li {
+  color: #FFFFFF !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 20px !important;
+  padding: 3px 0 !important;
+  text-shadow: 0 0 16px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .emphasis-text {
+  font-weight: bold !important;
+}
+
+/* Make social icons horizontal */
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .social-links-container {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 20px !important;
+  margin-top: 20px !important;
+}
+
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .social-links-container p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .social-icon {
+  display: block !important;
+  width: 80px !important;
+  height: auto !important;
+}
+
+/* === HIDE DEFAULT H2 HEADING (Letter Form Only) === */
+#can_embed_form .new_delivery h2.line,
+#can_embed_form h2.line {
+  display: none !important;
+}
+
+/* Fix Housing Demographic dropdown (Letter Form Only) */
+#can_embed_form form.new_delivery select#Housing-Demographic {
+  color: #999;
+}
+
+#can_embed_form form.new_delivery select#Housing-Demographic option:not([value=""]) {
+  color: #000;
+}
+
+/* Year of Birth placeholder styling (Letter Form Only) */
+#can_embed_form form.new_delivery input#Year-of-Birth-YYYY {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  height: 52px;
+  padding: 0 20px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background: #fff;
+  color: #000;
+  box-shadow: 10px 10px 2px 0 #2D2A2E;
+}
+
+#can_embed_form form.new_delivery input#Year-of-Birth-YYYY::placeholder {
+  color: #999;
+}
+
+#can_embed_form form.new_delivery input#Year-of-Birth-YYYY::-webkit-input-placeholder {
+  color: #999;
+}
+
+#can_embed_form form.new_delivery input#Year-of-Birth-YYYY::-moz-placeholder {
+  color: #999;
+}
+
+/* Hide "Your Letter" heading in form_col2 */
+#can_embed_form #form_col2 h4.mt15.mb5.nobold {
+  display: none !important;
+}
+
+/* Style "Your Letter Subject" and "Your Message" labels - ultra specific */
+#can_embed_form #can_embed_form_inner #can_letter_one_col #form_col2 .floatlabel-wrapper label.floatlabel-label.floatlabel-label-active[for=subject],
+#can_embed_form #can_embed_form_inner #can_letter_one_col #form_col2 .floatlabel-wrapper label.floatlabel-label.floatlabel-label-active[for=message] {
+  color: #FFFFFF !important;
+  font-weight: bold !important;
+  font-size: 24px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* =========================================================================
+   RSVP FORM SPECIFIC STYLES
+   ========================================================================= */
+/* Hide event details (title, dates, times, type, accessibility) */
+#can_embed_form form.new_rsvp .last_line {
+  display: none !important;
+}
+
+/* Hide "Attend this event" heading */
+#can_embed_form form.new_rsvp ~ h4,
+#can_embed_form .can_embed_form_inner > h4 {
+  display: none !important;
+}
+
+/* Apply House You styling to RSVP inputs */
+#can_embed_form form.new_rsvp input[type=text],
+#can_embed_form form.new_rsvp input[type=email] {
+  font-family: "Inter", sans-serif !important;
+  font-size: 18px !important;
+  height: 52px !important;
+  padding: 12px 15px !important;
+  border-radius: 10px !important;
+  border: 1px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+}
+
+/* Apply House You styling to RSVP submit button */
+#can_embed_form form.new_rsvp input[type=submit] {
+  background-color: #CB1EAA !important;
+  color: #FFFFFF !important;
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: bold !important;
+  font-size: 20px !important;
+  text-transform: uppercase !important;
+  border-radius: 11px !important;
+  padding: 12px 32px !important;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+}
+
+/* Show opt-in checkbox on RSVP */
+#can_embed_form form.new_rsvp #d_sharing {
+  display: block !important;
+}
+
+/* Single column layout for RSVP */
+#can_embed_form form.new_rsvp #form_col1 {
+  display: block !important;
+}
+
+#can_embed_form form.new_rsvp #form_col1 li.core_field {
+  width: 100% !important;
+}
+
+/* Hide phone field on RSVP */
+#can_embed_form form.new_rsvp input#form-phone {
+  display: none !important;
+}
+
+/* Hide street field on RSVP */
+#can_embed_form form.new_rsvp input#form-street {
+  display: none !important;
+}
+
+/* Hide city field on RSVP */
+#can_embed_form form.new_rsvp input#form-city {
+  display: none !important;
+}
+
+/* Hide control groups on RSVP */
+#can_embed_form form.new_rsvp li.control-group {
+  display: none !important;
+}
+
+/* Hide Action Network branding on RSVP */
+#can_embed_form form.new_rsvp ~ #logo_wrap,
+#can_embed_form form.new_rsvp ~ #action_info {
+  display: none !important;
+}
+
+/* =========================================================================
+   RSVP FORM SPECIFIC STYLES
+   These styles apply ONLY to RSVP event forms (form.new_rsvp)
+   ========================================================================= */
+/* === HIDE UNWANTED FIELDS ON RSVP === */
+/* Hide phone field wrapper on RSVP */
+#can_embed_form form.new_rsvp li.core_field input#form-phone {
+  display: none !important;
+}
+
+#can_embed_form form.new_rsvp li.core_field:has(input#form-phone) {
+  display: none !important;
+}
+
+/* Hide street field wrapper on RSVP */
+#can_embed_form form.new_rsvp li.core_field input#form-street {
+  display: none !important;
+}
+
+#can_embed_form form.new_rsvp li.core_field:nth-child(6) {
+  display: none !important;
+}
+
+/* Hide city field wrapper on RSVP */
+#can_embed_form form.new_rsvp li.core_field input#form-city {
+  display: none !important;
+}
+
+#can_embed_form form.new_rsvp li.core_field:nth-child(7) {
+  display: none !important;
+}
+
+/* Hide all custom field control groups on RSVP */
+#can_embed_form form.new_rsvp li.control-group {
+  display: none !important;
+}
+
+/* === HIDE ACTION NETWORK BRANDING ON RSVP === */
+#can_embed_form form.new_rsvp ~ #logo_wrap,
+#can_embed_form form.new_rsvp ~ #action_info {
+  display: none !important;
+}
+
+#can_embed_form form.new_rsvp .ajax-loading,
+#can_embed_form form.new_rsvp .international_link-wrap,
+#can_embed_form form.new_rsvp .country_drop_wrap {
+  display: none !important;
+}
+
+/* === HIDE EVENT DETAILS SECTION === */
+#can_embed_form form.new_rsvp .last_line {
+  display: none !important;
+}
+
+/* === HIDE "ATTEND THIS EVENT" HEADING === */
+#can_embed_form .can_embed_form_inner > h4 {
+  display: none !important;
+}
+
+/* === SINGLE COLUMN LAYOUT FOR RSVP === */
+#can_embed_form form.new_rsvp #form_col1 {
+  display: block !important;
+}
+
+#can_embed_form form.new_rsvp #form_col1 li.core_field {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 20px !important;
+}
+
+/* === APPLY HOUSE YOU STYLING TO RSVP INPUTS === */
+#can_embed_form form.new_rsvp input[type=text],
+#can_embed_form form.new_rsvp input[type=email] {
+  font-family: "Inter", sans-serif !important;
+  font-size: 18px !important;
+  height: 52px !important;
+  padding: 12px 15px !important;
+  border-radius: 10px !important;
+  border: 1px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  margin-bottom: 20px !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  display: block !important;
+}
+
+/* Placeholder styling for RSVP */
+#can_embed_form form.new_rsvp ::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* === APPLY HOUSE YOU STYLING TO RSVP SUBMIT BUTTON === */
+#can_embed_form form.new_rsvp input[type=submit] {
+  background-color: #CB1EAA !important;
+  color: #FFFFFF !important;
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: bold !important;
+  font-size: 20px !important;
+  text-transform: uppercase !important;
+  border: none !important;
+  border-radius: 11px !important;
+  padding: 12px 32px !important;
+  cursor: pointer;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  display: block;
+  margin: 0 auto !important;
+  width: auto !important;
+  transition: all 0.3s ease;
+}
+
+#can_embed_form form.new_rsvp input[type=submit]:hover {
+  background-color: #A01888 !important;
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 4px 0 #2D2A2E !important;
+}
+
+/* === SHOW AND STYLE OPT-IN CHECKBOX ON RSVP === */
+#can_embed_form form.new_rsvp #d_sharing {
+  display: block !important;
+}
+
+#can_embed_form form.new_rsvp #d_sharing ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#can_embed_form form.new_rsvp #d_sharing li {
+  list-style: none !important;
+  margin: 0 !important;
+  /* padding removed - defined specifically below */
+}
+
+/* === HIDE FLOATING LABELS ON RSVP === */
+#can_embed_form form.new_rsvp .floatlabel-wrapper .floatlabel-label {
+  display: none !important;
+}
+
+/* === HIDE EMPTY FORM BUILDER OUTPUT ON RSVP === */
+#can_embed_form form.new_rsvp li.form_builder_output.js-form_builder_output {
+  display: none !important;
+}
+
+/* === HIDE EVENT DETAILS SECTION ON RSVP === */
+#can_embed_form form.new_rsvp ~ .last_line,
+#can_embed_form .can_embed_form_inner .last_line {
+  display: none !important;
+}
+
+/* === HIDE EVENT DETAILS SECTION ON RSVP === */
+#can_embed_form .last_line {
+  display: none !important;
+}
+
+/* === HIDE "ATTEND THIS EVENT" HEADING ON RSVP === */
+#can_embed_form > div > h4 {
+  display: none !important;
+}
+
+/* === STYLE RSVP FORM LABELS AS WHITE TEXT === */
+#can_embed_form form.new_rsvp label.control-label {
+  color: #FFFFFF !important;
+  font-size: 18px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* === STYLE WELCOME MESSAGE ON RSVP AS WHITE TEXT === */
+#can_embed_form form.new_rsvp #action_welcome_message_inner .left > div,
+#can_embed_form form.new_rsvp #action_welcome_message_inner small,
+#can_embed_form form.new_rsvp #action_welcome_message_inner small a {
+  color: #FFFFFF !important;
+  font-size: 18px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Style opt-in checkbox li element on RSVP */
+#can_embed_form form.new_rsvp #d_sharing li {
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+}
+
+/* Style opt-in checkbox label on RSVP */
+#can_embed_form form.new_rsvp #d_sharing li label {
+  color: #000000 !important;
+  font-size: 16px !important;
+  text-shadow: none !important;
+  padding-top: 25px !important;
+  display: block !important;
+}
+
+/* Remove all spacing from opt-in container */
+#can_embed_form form.new_rsvp #d_sharing {
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Remove spacing from submit button list item */
+#can_embed_form form.new_rsvp li.submit_button_li,
+#can_embed_form form.new_rsvp #form_col2 li:has(input[type=submit]) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Add top padding to entire RSVP column on desktop only */
+@media (min-width: 769px) {
+  .wp-block-column.home-block:has(#can_embed_form) {
+    padding-top: 60px !important;
+  }
+}
+/* =========================================================================
+   EVENT PAGE MOBILE LAYOUT - RSVP FORM & FEATURED IMAGE ON TOP
+   ========================================================================= */
+/* Mobile only - reorder columns so RSVP form and featured image appear first */
+@media (max-width: 768px) {
+  /* Target the columns container on AN Events pages */
+  body.page-template-an-events .wp-block-columns.home-block {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+  /* Ensure both columns are full width on mobile */
+  body.page-template-an-events .wp-block-columns.home-block > .wp-block-column {
+    width: 100% !important;
+    flex-basis: 100% !important;
+    margin-bottom: 30px !important;
+  }
+  /* Remove extra top padding from RSVP column on mobile */
+  body.page-template-an-events .wp-block-column.home-block.is-vertically-aligned-top {
+    padding-top: 0 !important;
+  }
+}
+/* =========================================================================
+   ACTION NETWORK THANK YOU PAGE STYLES
+   ========================================================================= */
+/* === HIDE UNWANTED SECTIONS ON THANK YOU PAGE === */
+#can_embed_form.can_thank_you_wrap #ty_instructions,
+#can_embed_form.can_thank_you_wrap .can_thank_you-block:has(input#event-share_link),
+#can_embed_form.can_thank_you_wrap .can_thank_you-block:has(textarea#event-email_friend_message),
+#can_embed_form.can_thank_you_wrap .can_thank_you-block:has(textarea#event-embed),
+#can_embed_form.can_thank_you_wrap .thank-you-message {
+  display: none !important;
+}
+
+/* === STYLE THANK YOU PAGE WITH HOUSE YOU THEME === */
+#can_embed_form.can_thank_you_wrap {
+  font-family: "Inter", sans-serif !important;
+}
+
+/* Main thank you heading */
+#can_embed_form.can_thank_you_wrap #can_thank_you h1 {
+  font-family: "Inter", sans-serif !important;
+  font-size: 2.5em !important;
+  color: #FFFFFF !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Subtitle */
+#can_embed_form.can_thank_you_wrap #can_thank_you h4 {
+  font-family: "Inter", sans-serif !important;
+  font-size: 1.2em !important;
+  color: #FFFFFF !important;
+  text-align: center !important;
+  margin-bottom: 30px !important;
+  font-weight: normal !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Add to Calendar section */
+#can_embed_form.can_thank_you_wrap #add-to-calendar {
+  background: #FFFFFF !important;
+  border-radius: 10px !important;
+  padding: 25px !important;
+  margin: 30px 0 !important;
+  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+}
+
+#can_embed_form.can_thank_you_wrap #add-to-calendar p {
+  font-family: "Inter", sans-serif !important;
+  color: #000000 !important;
+  font-size: 16px !important;
+  margin-bottom: 15px !important;
+}
+
+#can_embed_form.can_thank_you_wrap #add-to-calendar a {
+  display: inline-block !important;
+  background-color: #CB1EAA !important;
+  color: #FFFFFF !important;
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  margin: 5px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 5px 5px 1px 0 #2D2A2E !important;
+}
+
+#can_embed_form.can_thank_you_wrap #add-to-calendar a:hover {
+  background-color: #A01888 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 7px 7px 2px 0 #2D2A2E !important;
+}
+
+/* Share buttons section */
+#can_embed_form.can_thank_you_wrap .can_thank_you-block h4.widget_title {
+  font-family: "Inter", sans-serif !important;
+  font-size: 1.4em !important;
+  color: #FFFFFF !important;
+  font-weight: bold !important;
+  margin-bottom: 20px !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Social share buttons */
+#can_embed_form.can_thank_you_wrap .share_button {
+  display: inline-block !important;
+  background-color: #CB1EAA !important;
+  color: #FFFFFF !important;
+  font-family: "League Spartan", sans-serif !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  border-radius: 8px !important;
+  padding: 12px 24px !important;
+  margin: 10px 10px 10px 0 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 5px 5px 1px 0 #2D2A2E !important;
+}
+
+#can_embed_form.can_thank_you_wrap .share_button:hover {
+  background-color: #A01888 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 7px 7px 2px 0 #2D2A2E !important;
+}
+
+#can_embed_form.can_thank_you_wrap .share_button span {
+  color: #FFFFFF !important;
+}
+
+/* Hide Action Network branding on thank you page */
+#can_embed_form.can_thank_you_wrap #action_info,
+#can_embed_form.can_thank_you_wrap #logo_wrap {
+  display: none !important;
+}
+
+/* === FIX RSVP FORM LAYOUT - STACK VERTICALLY === */
+/* Override Action Network's two-column layout completely */
+#can_embed_form form.new_rsvp #form_col1,
+#can_embed_form form.new_rsvp #form_col2 {
+  display: block !important;
+  width: 100% !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* Force all list items to stack */
+#can_embed_form form.new_rsvp #form_col1 li,
+#can_embed_form form.new_rsvp #form_col2 li {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+  margin-bottom: 20px !important;
+}
+
+/* Ensure opt-in checkbox section is full width */
+#can_embed_form form.new_rsvp #d_sharing {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* Make submit button wrapper full width */
+#can_embed_form form.new_rsvp li.submit_button_li,
+#can_embed_form form.new_rsvp li:has(input[type=submit]) {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* === FIX FORM INTERACTION ISSUES === */
+/* Ensure floatlabel wrappers don't block interaction */
+#can_embed_form form.new_rsvp .floatlabel-wrapper {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Make sure inputs are clickable and above any overlays */
+#can_embed_form form.new_rsvp input[type=text],
+#can_embed_form form.new_rsvp input[type=email],
+#can_embed_form form.new_rsvp input[type=tel] {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure checkbox is clickable */
+#can_embed_form form.new_rsvp #d_sharing input[type=checkbox] {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Make sure submit button is clickable */
+#can_embed_form form.new_rsvp input[type=submit] {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* =========================================================================
+   EVENTS LISTING SHORTCODE
+   ========================================================================= */
+.events-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+
+.event-card-link {
+  text-decoration: none;
+  display: block;
+  width: 500px;
+  flex-shrink: 0;
+}
+
+.event-card {
+  background-color: white;
+  padding: 0;
+  border-radius: 10px;
+  min-height: 250px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-card > *:not(.event-image) {
+  padding: 0 25px;
+}
+
+.event-card > h3.event-title {
+  padding-top: 20px;
+}
+
+.event-card > .event-excerpt,
+.event-card > .event-meta:last-of-type {
+  padding-bottom: 25px;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.event-card.no-date {
+  border: 2px solid #FF9800;
+}
+
+.event-warning {
+  background-color: #FF9800;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  color: var(--wp--preset--color--ash-grey);
+  margin: 0 0 15px 0;
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
+.event-meta {
+  background-color: #f5f5f5;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: var(--wp--preset--color--ash-grey);
+}
+
+.event-meta > div {
+  margin: 5px 0;
+}
+
+.event-date,
+.event-time,
+.event-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-image {
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-excerpt {
+  color: var(--wp--preset--color--ash-grey);
+  margin: 10px 0 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Responsive: smaller cards on mobile */
+@media (max-width: 768px) {
+  .event-card-link {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+/*# sourceMappingURL=theme.css.map */
