@@ -1160,7 +1160,7 @@ li.mega-social-icon a {
 
 #can_embed_form form.new_delivery #d_sharing label {
   color: #FFFFFF !important;
-  font-size: 14px !important;
+  font-size: 20px !important;
   padding-left: 0 !important;
   margin-left: 0 !important;
   display: block;
@@ -1482,27 +1482,51 @@ li.mega-social-icon a {
 }
 
 /* Ensure opt-in checkbox section is visible on action template letter forms */
+/* border-top is AN's injected dotted separator line — remove it */
 .page-template-action #can_embed_form form.new_delivery #d_sharing {
   display: block !important;
+  padding-top: 16px !important;
+  border-top: none !important;
 }
 
 /* Fix opt-in checkbox alignment — keep checkbox inline with label text */
 .page-template-action #can_embed_form form.new_delivery #d_sharing label {
   display: flex !important;
+  flex-direction: row !important;
   align-items: flex-start !important;
   gap: 8px !important;
   cursor: pointer !important;
+  color: #000 !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
 }
 
 .page-template-action #can_embed_form form.new_delivery #d_sharing label input[type="checkbox"] {
   flex-shrink: 0 !important;
-  margin-top: 3px !important;
+  position: relative !important;
+  margin-top: 2px !important;
   width: auto !important;
 }
 
 /* hidden sub_group_id input must not create layout space */
 .page-template-action #can_embed_form form.new_delivery #d_sharing label input[type="hidden"] {
   display: none !important;
+}
+
+/* .can_float is a class ON #can_embed_form itself — fix display and remove brackets */
+.page-template-action #can_embed_form.can_float {
+  display: block !important;
+  background: transparent !important;
+}
+.page-template-action #can_embed_form.can_float::before,
+.page-template-action #can_embed_form.can_float::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Smaller font for "*your name, email" footnote text on action pages */
+.page-template-action #can_embed_form form.new_delivery #action_welcome_message_inner small {
+  font-size: 10px !important;
 }
 
 /* =========================================================================

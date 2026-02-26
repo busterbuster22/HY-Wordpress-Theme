@@ -1015,46 +1015,41 @@ The embed will display where the [action_network_embed] shortcode appears in the
 }
 add_action( 'acf/init', 'houseyou_register_acf_fields' );
 
-/**
- * Staging: Enable testing of AN forms on wpcomstaging.com URLs.
- * Polls for the AN embed to load, fills required fields with dummy data,
- * and blocks form submission to prevent accidental live submissions.
- */
 add_action('wp_footer', function() {
-	if (defined('IS_WPCOM') && IS_WPCOM) {
-		// Only runs on WordPress.com (including staging)
-		?>
-		<script>
-		if (window.location.hostname.includes('wpcomstaging.com')) {
-			document.addEventListener('DOMContentLoaded', function() {
-				// Wait for AN embed to load
-				var interval = setInterval(function() {
-					var firstName = document.querySelector('#form-first_name');
-					if (!firstName) return;
-					clearInterval(interval);
-
-					// Fill required fields with dummy data
-					firstName.value = 'Test';
-					var lastName = document.querySelector('#form-last_name');
-					if (lastName) lastName.value = 'User';
-					var email = document.querySelector('#form-email');
-					if (email) email.value = 'test@houseyou.org.au';
-					var zip = document.querySelector('#form-zip_code');
-					if (zip) zip.value = '2480';
-
-					// Intercept submission
-					var form = document.querySelector('#new_delivery');
-					if (form) {
-						form.addEventListener('submit', function(e) {
-							e.preventDefault();
-							e.stopPropagation();
-							console.log('Staging: submission blocked');
-						}, true);
-					}
-				}, 200);
-			});
-		}
-		</script>
-		<?php
-	}
-});
+    ?>
+    <script>
+    (function() {
+        if (!window.location.hostname.includes('wpcomstaging.com')) return;
+        window.__stagingTestMode = true;
+        var interval = setInterval(function() {
+            var firstName = document.querySelector('#form-first_name');
+            if (!firstName) return;
+            clearInterval(interval);
+            var fields = {
+                '#form-first_name': 'Test',
+                '#form-last_name': 'User',
+                '#form-email': 'test@houseyou.org.au',
+                '#form-zip_code': '2480'
+            };
+            Object.keys(fields).forEach(function(sel) {
+                var el = document.querySelector(sel);
+                if (!el) return;
+                el.value = fields[sel];
+                el.dispatchEvent(new Event('focus', {bubbles: true}));
+                el.dispatchEvent(new Event('input', {bubbles: true}));
+                el.dispatchEvent(new Event('change', {bubbles: true}));
+                el.dispatchEvent(new Event('blur', {bubbles: true}));
+            });
+            var form = document.querySelector('#new_delivery');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Staging: submission blocked');
+                }); // removed 'true' - bubbling listener fires after AN's own capturing handlers
+            }
+        }, 200);
+    })();
+    </script>
+    <?php
+}, 99);
