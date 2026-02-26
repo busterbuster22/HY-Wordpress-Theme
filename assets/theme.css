@@ -188,13 +188,19 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 .wp-site-blocks,
 body > .is-root-container,
 .edit-post-visual-editor__post-title-wrapper,
-.wp-block-group.alignfull,
-.wp-block-group.has-background,
 .wp-block-cover.alignfull,
 .is-root-container .wp-block[data-align=full] > .wp-block-group,
-.is-root-container .wp-block[data-align=full] > .wp-block-cover {
+.is-root-container .wp-block[data-align=full] > .wp-block-cover,
+body:not(:has(header.wp-block-template-part)) .wp-block-group.alignfull,
+body:not(:has(header.wp-block-template-part)) .wp-block-group.has-background {
   padding-left: var(--wp--custom--spacing--outer);
   padding-right: var(--wp--custom--spacing--outer);
+}
+
+header.wp-block-template-part .wp-block-group.alignfull,
+header.wp-block-template-part .wp-block-group.has-background {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .wp-site-blocks .alignfull,
