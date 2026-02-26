@@ -537,6 +537,7 @@ main .full-width-homepage:last-child {
 
 /* Constrain content inside full-width sections */
 .full-width-homepage .wp-block-columns,
+.full-width-homepage > .wp-block-post-title,
 .full-width-homepage > .wp-block-heading,
 .full-width-homepage > .wp-block-paragraph,
 .full-width-homepage > .petition-row,
@@ -702,6 +703,7 @@ footer.site-footer-container > .wp-block-group {
   }
   /* Body content desktop padding */
   .full-width-homepage .wp-block-columns,
+  .full-width-homepage > .wp-block-post-title,
   .full-width-homepage > .wp-block-heading,
   .full-width-homepage > .wp-block-paragraph,
   .full-width-homepage > .petition-row,
@@ -1846,6 +1848,28 @@ li.mega-social-icon a {
     padding-top: 0 !important;
   }
 }
+/* =========================================================================
+   ACTION PAGE MOBILE LAYOUT - TAKE ACTION FORM ON TOP
+   ========================================================================= */
+/* Mobile only - reorder columns so Take Action form appears first */
+@media (max-width: 768px) {
+  /* Target the columns container on Action pages */
+  body.page-template-action .wp-block-columns.home-block {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+  /* Ensure both columns are full width on mobile */
+  body.page-template-action .wp-block-columns.home-block > .wp-block-column {
+    width: 100% !important;
+    flex-basis: 100% !important;
+    margin-bottom: 30px !important;
+  }
+  /* Remove extra top padding from Take Action column on mobile */
+  body.page-template-action .wp-block-column.home-block.is-vertically-aligned-top {
+    padding-top: 0 !important;
+  }
+}
+
 /* =========================================================================
    ACTION NETWORK THANK YOU PAGE STYLES
    ========================================================================= */
