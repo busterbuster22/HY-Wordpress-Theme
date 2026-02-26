@@ -140,6 +140,30 @@ function houseyou_enqueue_action_event_embed() {
 
 add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_action_event_embed' );
 
+/**
+ * Enqueue Action template letter-action script.
+ *
+ * Only loads on pages using the "action" block template, where an Action
+ * Network letter campaign is embedded via the [action_network_embed] shortcode.
+ * Injects a privacy disclaimer below the opt-in checkbox; layout fixes are
+ * handled in theme.css via the .page-template-action body class.
+ */
+function houseyou_enqueue_action_template_embed() {
+	if ( ! is_page_template( 'action' ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'houseyou-action-template-embed',
+		get_template_directory_uri() . '/assets/js/action-template-embed.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true // Load in footer
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_action_template_embed' );
+
 if ( ! function_exists( 'houseyou_editor_styles' ) ) :
 
 	/**

@@ -1417,6 +1417,67 @@ li.mega-social-icon a {
 }
 
 /* =========================================================================
+   ACTION TEMPLATE — LETTER FORM LAYOUT OVERRIDES
+   Overrides the home-page two-column letter form layout for pages using
+   the "action" block template. Fields expand to full width (single column)
+   except Zip/Post and Year of Birth, which share one row.
+   ========================================================================= */
+
+/* form_col1 takes full width — matches AN's own selector pattern to beat it in cascade */
+#can_embed_form.can_float #form_col1 {
+  width: 100% !important;
+  float: none !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 0 4% !important;
+}
+
+/* form_col2 (submit + opt-in) also full width */
+#can_embed_form.can_float #form_col2 {
+  width: 100% !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* All fields full width by default */
+.page-template-action #can_embed_form form.new_delivery #form_col1 li.core_field,
+.page-template-action #can_embed_form form.new_delivery #form_col1 li.control-group {
+  width: 100% !important;
+}
+
+/* Zip/Post and Year of Birth share a row — each ~48% */
+/* Note: AN uses id="form-zip_code" (not form-zip) */
+.page-template-action #can_embed_form form.new_delivery #form_col1 li.core_field:has(input#form-zip_code),
+.page-template-action #can_embed_form form.new_delivery #form_col1 li.control-group:has(input#Year-of-Birth-YYYY) {
+  width: calc(50% - 2%) !important;
+}
+
+/* Ensure opt-in checkbox section is visible on action template letter forms */
+.page-template-action #can_embed_form form.new_delivery #d_sharing {
+  display: block !important;
+}
+
+/* Fix opt-in checkbox alignment — keep checkbox inline with label text */
+.page-template-action #can_embed_form form.new_delivery #d_sharing label {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+}
+
+.page-template-action #can_embed_form form.new_delivery #d_sharing label input[type="checkbox"] {
+  flex-shrink: 0 !important;
+  margin-top: 3px !important;
+  width: auto !important;
+}
+
+/* hidden sub_group_id input must not create layout space */
+.page-template-action #can_embed_form form.new_delivery #d_sharing label input[type="hidden"] {
+  display: none !important;
+}
+
+/* =========================================================================
    RSVP FORM SPECIFIC STYLES
    ========================================================================= */
 /* Hide event details (title, dates, times, type, accessibility) */
