@@ -241,8 +241,8 @@
 				}
 			},
 			"layout": {
-				"contentSize": "684px",
-				"wideSize": "1160px"
+				"contentSize": "1800px",
+				"wideSize": "100%"
 			},
 			"line-height": {
 				"body": 1.6
@@ -255,8 +255,8 @@
 			}
 		},
 		"layout": {
-			"contentSize": "684px",
-			"wideSize": "1160px"
+			"contentSize": "1800px",
+			"wideSize": "100%"
 		},
 		"spacing": {
 			"units": [

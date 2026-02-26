@@ -1,5 +1,45 @@
 /* Text selection text color */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap");
+
+/* Prevent horizontal overflow caused by 100vw elements */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure body has white background */
+body {
+  background-color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+/* Ensure site blocks container fills the viewport */
+.wp-site-blocks {
+  background-color: var(--wp--preset--color--white, #FFFFFF);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Override WordPress layout constraints */
+.is-layout-constrained {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.is-layout-constrained > .alignwide {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.is-layout-constrained > .alignfull {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
 ::selection {
   color: var(--wp--custom--color--background);
   background-color: var(--wp--custom--color--foreground);
@@ -297,13 +337,10 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
 }
 
 .wp-block-group.is-style-full-width {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  position: relative !important;
-  left: 50% !important;
-  right: 50% !important;
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
   box-sizing: border-box !important;
@@ -326,6 +363,49 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
    EDITOR-SPECIFIC STYLES
    Apply block styles in the editor
    ========================================================================= */
+
+/* Fix editor canvas background and text contrast - prevents black on black */
+.editor-styles-wrapper {
+  background-color: var(--wp--preset--color--white, #FFFFFF) !important;
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
+}
+
+/* Ensure the editor iframe canvas has proper background */
+.edit-post-visual-editor__content-area,
+.edit-post-visual-editor,
+.is-root-container,
+.editor-styles-wrapper .wp-site-blocks {
+  background-color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+/* Ensure all text elements are readable in editor with proper contrast */
+.editor-styles-wrapper .wp-block,
+.editor-styles-wrapper p,
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3,
+.editor-styles-wrapper h4,
+.editor-styles-wrapper h5,
+.editor-styles-wrapper h6,
+.editor-styles-wrapper li,
+.editor-styles-wrapper td,
+.editor-styles-wrapper th,
+.editor-styles-wrapper span:not(.block-editor-rich-text__editable),
+.editor-styles-wrapper .block-editor-rich-text__editable {
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
+}
+
+/* Ensure links are visible but styled appropriately */
+.editor-styles-wrapper a {
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
+}
+
+/* Editor placeholder text should also be visible */
+.editor-styles-wrapper [data-placeholder]:empty::before,
+.editor-styles-wrapper .block-editor-rich-text__editable[data-placeholder]:empty::before {
+  color: rgba(20, 20, 20, 0.5) !important;
+}
+
 .editor-styles-wrapper .wp-block-group.is-style-dark-section,
 .editor-styles-wrapper .wp-block-cover.is-style-dark-section {
   background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
@@ -445,13 +525,10 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
 
 /* Full-width sections - backgrounds span full viewport width */
 .full-width-homepage {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  position: relative !important;
-  left: 50% !important;
-  right: 50% !important;
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   padding-left: 0 !important;
@@ -463,8 +540,8 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
 .wp-site-blocks .full-width-homepage,
 .wp-block-group.has-background .full-width-homepage,
 .is-layout-constrained .full-width-homepage {
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
@@ -512,13 +589,8 @@ main .full-width-homepage:last-child {
 
 /* Header gets constrained content - matches body */
 header.wp-block-template-part {
-  width: 100vw;
-  max-width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  width: 100%;
+  max-width: 100%;
   background-color: var(--wp--preset--color--ash-grey, #2D2A2E);
   color: var(--wp--preset--color--white, #FFFFFF);
   box-sizing: border-box;
@@ -583,13 +655,10 @@ footer.wp-block-template-part > .wp-block-group.is-layout-constrained {
 
 /* Footer background spans full width */
 footer.wp-block-template-part .wp-block-group.alignfull.pre-footer {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  position: relative !important;
-  left: 50% !important;
-  right: 50% !important;
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   box-sizing: border-box !important;
 }
 

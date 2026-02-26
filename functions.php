@@ -493,76 +493,70 @@ function houseyou_events_listing_shortcode( $atts ) {
 	ob_start();
 	?>
 
-	<div class="full-width-homepage" style="background-color: var(--wp--preset--color--ash-grey); padding: 60px 0;">
-		<div class="content-container">
-			<h2 style="color: white; text-align: center; margin-bottom: 40px;">Upcoming Events</h2>
+	<?php if ( $events->have_posts() ) : ?>
+		<div class="events-grid">
+			<?php while ( $events->have_posts() ) : $events->the_post();
+				$event_date = get_post_meta( get_the_ID(), '_event_date', true );
+				$event_time = get_post_meta( get_the_ID(), '_event_time', true );
+				$event_end_time = get_post_meta( get_the_ID(), '_event_end_time', true );
+				$event_location = get_post_meta( get_the_ID(), '_event_location', true );
+			?>
+				<a href="<?php the_permalink(); ?>" class="event-card-link">
+					<div class="event-card<?php echo empty( $event_date ) ? ' no-date' : ''; ?>">
+						<?php if ( has_post_thumbnail() ) : ?>
+							<div class="event-image">
+								<?php the_post_thumbnail( 'medium' ); ?>
+							</div>
+						<?php endif; ?>
 
-			<?php if ( $events->have_posts() ) : ?>
-				<div class="events-grid">
-					<?php while ( $events->have_posts() ) : $events->the_post();
-						$event_date = get_post_meta( get_the_ID(), '_event_date', true );
-						$event_time = get_post_meta( get_the_ID(), '_event_time', true );
-						$event_end_time = get_post_meta( get_the_ID(), '_event_end_time', true );
-						$event_location = get_post_meta( get_the_ID(), '_event_location', true );
-					?>
-						<a href="<?php the_permalink(); ?>" class="event-card-link">
-							<div class="event-card <?php echo empty( $event_date ) ? 'no-date' : ''; ?>">
-								<?php if ( has_post_thumbnail() ) : ?>
-									<div class="event-image">
-										<?php the_post_thumbnail( 'medium' ); ?>
+						<?php if ( empty( $event_date ) ) : ?>
+							<div class="event-warning">⚠ Date not set</div>
+						<?php endif; ?>
+
+						<h3 class="event-title">
+							<?php the_title(); ?>
+						</h3>
+
+						<?php if ( ! empty( $event_date ) || ! empty( $event_time ) || ! empty( $event_location ) ) : ?>
+							<div class="event-meta">
+								<?php if ( ! empty( $event_date ) ) : ?>
+									<div class="event-date">
+										📅 <?php echo esc_html( date_i18n( 'F j, Y', strtotime( $event_date ) ) ); ?>
 									</div>
 								<?php endif; ?>
 
-								<?php if ( empty( $event_date ) ) : ?>
-									<div class="event-warning">⚠ Date not set</div>
-								<?php endif; ?>
-
-								<h3 class="event-title">
-									<?php the_title(); ?>
-								</h3>
-
-								<?php if ( ! empty( $event_date ) || ! empty( $event_time ) || ! empty( $event_location ) ) : ?>
-									<div class="event-meta">
-										<?php if ( ! empty( $event_date ) ) : ?>
-													<div class="event-date">
-														📅 <?php echo esc_html( date_i18n( 'F j, Y', strtotime( $event_date ) ) ); ?>
-													</div>
-												<?php endif; ?>
-		
-												<?php if ( ! empty( $event_time ) ) : ?>
-													<div class="event-time">
-														🕐 <?php
-															echo esc_html( date_i18n( 'g:i A', strtotime( $event_time ) ) );
-															if ( ! empty( $event_end_time ) ) {
-																echo ' - ' . esc_html( date_i18n( 'g:i A', strtotime( $event_end_time ) ) );
-															}
-														?>
-													</div>
-												<?php endif; ?>
-
-										<?php if ( ! empty( $event_location ) ) : ?>
-											<div class="event-location">
-												📍 <?php echo esc_html( $event_location ); ?>
-											</div>
-										<?php endif; ?>
+								<?php if ( ! empty( $event_time ) ) : ?>
+									<div class="event-time">
+										🕐 <?php
+											echo esc_html( date_i18n( 'g:i A', strtotime( $event_time ) ) );
+											if ( ! empty( $event_end_time ) ) {
+												echo ' - ' . esc_html( date_i18n( 'g:i A', strtotime( $event_end_time ) ) );
+											}
+										?>
 									</div>
 								<?php endif; ?>
 
-								<?php if ( has_excerpt() ) : ?>
-									<p class="event-excerpt">
-										<?php echo wp_trim_words( get_the_excerpt(), 15 ); ?>
-									</p>
+								<?php if ( ! empty( $event_location ) ) : ?>
+									<div class="event-location">
+										📍 <?php echo esc_html( $event_location ); ?>
+									</div>
 								<?php endif; ?>
 							</div>
-						</a>
-					<?php endwhile; ?>
-				</div>
-			<?php else : ?>
-				<p style="color: white; text-align: center;">No upcoming events.</p>
-			<?php endif;
-			wp_reset_postdata(); ?>
+						<?php endif; ?>
+
+						<?php if ( has_excerpt() ) : ?>
+							<p class="event-excerpt">
+								<?php echo wp_trim_words( get_the_excerpt(), 15 ); ?>
+							</p>
+						<?php endif; ?>
+					</div>
+				</a>
+			<?php endwhile; ?>
 		</div>
-	</div>
+	<?php else : ?>
+		<p class="events-no-events">No upcoming events.</p>
+	<?php endif;
+	wp_reset_postdata(); ?>
 
 	<?php
 	return ob_get_clean();
@@ -876,3 +870,77 @@ add_shortcode( 'action_network_embed', 'houseyou_action_network_embed_shortcode'
 
 // Allow ACF shortcodes in block themes (required for FSE)
 add_filter( 'acf/shortcode/allow_in_block_themes_outside_content', '__return_true' );
+
+/**
+ * Register ACF Fields for Action Network Integration
+ *
+ * Creates the 'action_embed_code' field programmatically so it's
+ * version controlled and works immediately on theme activation.
+ */
+function houseyou_register_acf_fields() {
+	// Check if ACF is active
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key' => 'group_action_network_embed',
+		'title' => 'Action Network Settings',
+		'fields' => array(
+			array(
+				'key' => 'field_action_embed_code',
+				'label' => 'Action Network Embed Code',
+				'name' => 'action_embed_code',
+				'type' => 'textarea',
+				'instructions' => 'Paste the Action Network embed code here. This can be:
+• A widget script: <code><script src="https://actionnetwork.org/widgets/v3/event/..."></script></code>
+• An event URL: <code>https://actionnetwork.org/events/event-slug</code>
+• An event ID: <code>abc123-def456-ghi789</code>
+
+The embed will display where the [action_network_embed] shortcode appears in the template.',
+				'required' => 0,
+				'placeholder' => '<script src="https://actionnetwork.org/widgets/v3/event/YOUR-EVENT-ID?format=js"></script>',
+				'rows' => 4,
+				'new_lines' => '',
+			),
+		),
+		'location' => array(
+			// Show on pages using Action template
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'page',
+				),
+				array(
+					'param' => 'page_template',
+					'operator' => '==',
+					'value' => 'action',
+				),
+			),
+			// Show on pages using AN Events template
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'page',
+				),
+				array(
+					'param' => 'page_template',
+					'operator' => '==',
+					'value' => 'an-events',
+				),
+			),
+		),
+		'menu_order' => 10,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'below_label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => 'Configure Action Network embed for this page.',
+		'show_in_rest' => 0,
+	) );
+}
+add_action( 'acf/init', 'houseyou_register_acf_fields' );

@@ -1,23 +1,12 @@
-<!-- wp:group {"layout":{"inherit":"true"}} -->
-<div class="wp-block-group"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"},"style":{"spacing":{"padding":{"bottom":"0","top":"var(--wp--custom--gap--vertical)"}}}} -->
-	<div class="wp-block-group alignwide" style="padding-bottom:0;padding-top:var(--wp--custom--gap--vertical)">
-		<!-- wp:site-logo {"width":200,"shouldSyncIcon":true} /-->
-
-		<!-- wp:navigation {"layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"left"},"overlayBackgroundColor":"primary","overlayTextColor":"background","style":{"typography":{"fontStyle":"normal"},"spacing":{"blockGap":"2em"}},"fontSize":"small"} /-->
-
-	</div><!-- /wp:group -->
-
-	<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"},"style":{"spacing":{"padding":{"bottom":"var(--wp--custom--gap--vertical)","top":"0"}}}} -->
-	<div class="wp-block-group alignwide" style="padding-bottom:var(--wp--custom--gap--vertical);padding-top:0">
-		<!-- wp:site-tagline /-->
-
-		<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"left"},"style":{"typography":{"fontStyle":"normal"},"spacing":{"blockGap":"2em"}},"fontSize":"small"} -->
-			<!-- wp:social-links {"iconColor":"primary","iconColorValue":"#000000","className":"is-style-logos-only","style":{"spacing":{"blockGap":"1.2em"}}} -->
-				<ul class="wp-block-social-links has-icon-color is-style-logos-only">
-					<!-- wp:social-link {"url":"https://twitter.com/","service":"twitter"} /-->
-					<!-- wp:social-link {"url":"https://facebook.com/","service":"facebook"} /-->
-				</ul>
-			<!-- /wp:social-links -->
-		<!-- /wp:navigation --></div>
-	<!-- /wp:group --></div>
+<!-- wp:group {"align":"full","backgroundColor":"ash-grey","layout":{"type":"default"}} -->
+<div class="wp-block-group alignfull has-ash-grey-background-color has-background"><!-- wp:columns {"isStackedOnMobile":false,"className":"header-columns"} -->
+<div class="wp-block-columns is-not-stacked-on-mobile header-columns"><!-- wp:column {"verticalAlignment":"center"} -->
+<div class="wp-block-column is-vertically-aligned-center"><!-- wp:site-logo {"width":153} /--></div>
+<!-- /wp:column -->
+<!-- wp:column {"verticalAlignment":"center"} -->
+<div class="wp-block-column is-vertically-aligned-center"><!-- wp:shortcode -->
+[maxmegamenu location="max_mega_menu_2"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
 <!-- /wp:group -->

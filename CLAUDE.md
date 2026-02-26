@@ -320,6 +320,37 @@ All functions use the `houseyou_` prefix.
 - ✓ Error handling with clear messages
 - ✓ Fallback to manual event ID entry if ACF field is empty
 
+### Events Listing Shortcode
+
+**Location:** `functions.php` → `houseyou_events_listing_shortcode()` (line ~458)
+
+**Usage:** `[events_listing]`
+
+**Purpose:** Displays a grid of upcoming event pages (pages using the "AN Events" template).
+
+**Output:**
+- Queries all published pages using the `an-events` template
+- Filters to only show events with `_event_date` >= today (or no date set)
+- Outputs a clean grid with no inline styles or wrapper containers
+
+**CSS Classes (for styling):**
+| Class | Element |
+|---|---|
+| `.events-grid` | Grid container wrapping all event cards |
+| `.event-card-link` | Link wrapper around each card |
+| `.event-card` | Individual event card container |
+| `.event-image` | Featured image container |
+| `.event-warning` | "Date not set" warning |
+| `.event-title` | Event title (h3) |
+| `.event-meta` | Meta info container (date/time/location) |
+| `.event-date` | Event date display |
+| `.event-time` | Event time display |
+| `.event-location` | Event location display |
+| `.event-excerpt` | Event excerpt text |
+| `.events-no-events` | "No upcoming events" message |
+
+**Note:** No inline styles or background colors are applied. Style via `sass/theme.scss` or the block editor.
+
 **Future Enhancements (Phase 3-4):**
 - Scheduled auto-sync (WP-Cron every 6 hours)
 - Bulk "Sync All Events" action
