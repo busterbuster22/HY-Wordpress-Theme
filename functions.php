@@ -1014,3 +1014,47 @@ The embed will display where the [action_network_embed] shortcode appears in the
 	) );
 }
 add_action( 'acf/init', 'houseyou_register_acf_fields' );
+
+/**
+ * Staging: Enable testing of AN forms on wpcomstaging.com URLs.
+ * Polls for the AN embed to load, fills required fields with dummy data,
+ * and blocks form submission to prevent accidental live submissions.
+ */
+add_action('wp_footer', function() {
+	if (defined('IS_WPCOM') && IS_WPCOM) {
+		// Only runs on WordPress.com (including staging)
+		?>
+		<script>
+		if (window.location.hostname.includes('wpcomstaging.com')) {
+			document.addEventListener('DOMContentLoaded', function() {
+				// Wait for AN embed to load
+				var interval = setInterval(function() {
+					var firstName = document.querySelector('#form-first_name');
+					if (!firstName) return;
+					clearInterval(interval);
+
+					// Fill required fields with dummy data
+					firstName.value = 'Test';
+					var lastName = document.querySelector('#form-last_name');
+					if (lastName) lastName.value = 'User';
+					var email = document.querySelector('#form-email');
+					if (email) email.value = 'test@houseyou.org.au';
+					var zip = document.querySelector('#form-zip_code');
+					if (zip) zip.value = '2480';
+
+					// Intercept submission
+					var form = document.querySelector('#new_delivery');
+					if (form) {
+						form.addEventListener('submit', function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+							console.log('Staging: submission blocked');
+						}, true);
+					}
+				}, 200);
+			});
+		}
+		</script>
+		<?php
+	}
+});

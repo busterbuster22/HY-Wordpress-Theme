@@ -1000,6 +1000,34 @@ li.mega-social-icon a {
    ACTION NETWORK FORM STYLES - HOUSE YOU
    LETTER CAMPAIGN FORM ONLY (NOT RSVP)
    ========================================================================= */
+
+/* === HARD RESET — nullifies all of style-embed-v3.css === */
+#can_embed_form,
+#can_embed_form * {
+  all: unset;
+}
+
+/* Restore essential display values lost by the reset */
+#can_embed_form form,
+#can_embed_form div,
+#can_embed_form li {
+  display: block;
+}
+
+#can_embed_form input,
+#can_embed_form select {
+  display: inline-block;
+}
+
+/* Restore native checkbox appearance lost by all: unset */
+#can_embed_form input[type="checkbox"] {
+  appearance: checkbox !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  width: auto !important;
+  height: auto !important;
+}
+
 /* === GLOBAL FORM LAYOUT (Letter Form Only) === */
 #can_embed_form form.new_delivery,
 #can_embed_form form.js-letter-form {
@@ -1423,8 +1451,8 @@ li.mega-social-icon a {
    except Zip/Post and Year of Birth, which share one row.
    ========================================================================= */
 
-/* form_col1 takes full width — matches AN's own selector pattern to beat it in cascade */
-#can_embed_form.can_float #form_col1 {
+/* form_col1 full width — 3-ID selector (specificity 300) beats AN's 2-ID+class (210) */
+#can_embed_form #can_embed_form_inner #form_col1 {
   width: 100% !important;
   float: none !important;
   display: flex !important;
@@ -1434,7 +1462,7 @@ li.mega-social-icon a {
 }
 
 /* form_col2 (submit + opt-in) also full width */
-#can_embed_form.can_float #form_col2 {
+#can_embed_form #can_embed_form_inner #form_col2 {
   width: 100% !important;
   float: none !important;
   clear: both !important;

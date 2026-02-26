@@ -479,6 +479,7 @@ footer template part
 
 **Shortcode used:** `[action_network_embed]` — reads the `action_embed_code` ACF field on the current page and outputs the embed HTML. See [Section 8](#8-action-network-integration).
 
+
 ---
 
 ### `an-events.html` — Individual event page
@@ -818,3 +819,92 @@ The footer navigation blocks reference menus by database ID (`ref: 2063`, `ref: 
 4. Added `.is-layout-constrained { max-width: 100% !important }` to override WordPress's automatic layout constraint on the site wrapper
 
 **Note:** The `100vw` values themselves were NOT changed — the technique is intentional. The overflow is clipped instead.
+## Action Network Embed Styling
+
+### Overview
+
+The Action Network embed (`#can_embed_form`) is injected via AN's own JavaScript
+from `actionnetwork.org`. It loads two external resources that cannot be controlled
+via WordPress:
+
+- `style-embed-v3.css` — AN's full stylesheet, loaded as an external file
+- Dynamic `<style>` blocks — injected into the DOM by AN's embed JS after page
+  load, containing `!important` rules for layout-critical properties like column
+  widths and floats
+
+### The Cascade Problem
+
+AN's stylesheet loads at position ~49 in the stylesheet order, after `theme.css`
+at position 34. More critically, AN injects `<style>` blocks dynamically via
+JavaScript after all external stylesheets have loaded. This means:
+
+- CSS specificity alone cannot win — even 3-ID selectors with `!important` lose
+  to AN's dynamically injected `<style>` blocks because source order decides ties
+  and AN's blocks always arrive later
+- The only mechanism that reliably beats dynamically injected styles is JavaScript
+  inline styles set via `element.style.setProperty('property', 'value', 'important')`
+
+### Our Approach
+
+**1. CSS reset on the embed container**
+
+At the top of the Action Network section in `assets/theme.css`:
+```css
+#can_embed_form,
+#can_embed_form * {
+  all: unset;
+}
+```
+
+This nullifies `style-embed-v3.css` entirely. All visual styling of the form
+comes from our custom rules below the reset. Note that `all: unset` removes
+default browser display values so `display` must be explicitly declared on
+block elements.
+
+**2. JavaScript inline style overrides for layout-critical properties**
+
+`assets/js/action-template-embed.js` contains a polling block (100ms interval,
+5s max) that waits for `#form_col1` and `#form_col2` to appear in the DOM, then
+applies inline `!important` styles:
+```javascript
+col1.style.setProperty('width',   '100%', 'important');
+col1.style.setProperty('float',   'none', 'important');
+col1.style.setProperty('display', 'flex', 'important');
+col2.style.setProperty('width',   '100%', 'important');
+col2.style.setProperty('float',   'none', 'important');
+col2.style.setProperty('clear',   'both', 'important');
+```
+
+Elements are marked with `data-col-fixed` after processing to prevent re-running.
+This pattern should be used for any other AN properties that CSS cannot reliably
+override.
+
+**3. Checkbox appearance**
+
+After `all: unset`, checkboxes lose their native rendering. Restored with:
+```css
+#can_embed_form input[type="checkbox"] {
+  appearance: checkbox !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  width: auto !important;
+  height: auto !important;
+}
+```
+
+### Key Rules for Future AN Styling Work
+
+1. Write all AN styles scoped under `#can_embed_form` — the reset means nothing
+   leaks in or out
+2. If a CSS rule isn't sticking, AN is probably injecting it dynamically — use
+   `setProperty` in `action-template-embed.js` instead
+3. Always check which stylesheet is winning using the cascade checker console
+   script before spending time on specificity battles
+4. The polling pattern in `action-template-embed.js` is the established pattern
+   for JS overrides — follow it for consistency
+
+### Staging Test Mode
+
+`functions.php` contains a conditional that runs only on `wpcomstaging.com` URLs.
+It strips required field validation and intercepts form submission so the form
+can be tested visually without sending data to Action Network.

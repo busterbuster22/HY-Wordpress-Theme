@@ -11,7 +11,48 @@
 (function () {
 
 	// -------------------------------------------------------------------------
-	// Inject privacy disclaimer below the opt-in checkbox (#d_sharing)
+	// Block 1 — Force form_col1 and form_col2 to full width via inline styles
+	//
+	// AN injects a <style> element after WordPress's stylesheets, meaning any
+	// stylesheet rule (even !important) with equal specificity loses to AN's
+	// later-loaded rule. Inline styles set via setProperty('…','important') are
+	// the highest-priority mechanism in CSS and cannot be overridden by any
+	// external or dynamically-injected stylesheet.
+	// -------------------------------------------------------------------------
+
+	var fixFormColumns = function () {
+		var col1 = document.querySelector( '#can_embed_form #form_col1' );
+		var col2 = document.querySelector( '#can_embed_form #form_col2' );
+
+		if ( col1 && ! col1.dataset.colFixed ) {
+			col1.style.setProperty( 'width',   '100%', 'important' );
+			col1.style.setProperty( 'float',   'none', 'important' );
+			col1.style.setProperty( 'display', 'flex', 'important' );
+			col1.dataset.colFixed = 'true';
+		}
+
+		if ( col2 && ! col2.dataset.colFixed ) {
+			col2.style.setProperty( 'width',   '100%',  'important' );
+			col2.style.setProperty( 'float',   'none',  'important' );
+			col2.style.setProperty( 'clear',   'both',  'important' );
+			col2.dataset.colFixed = 'true';
+		}
+	};
+
+	var checkForColumns = setInterval( function () {
+		var col1 = document.querySelector( '#can_embed_form #form_col1' );
+		if ( col1 ) {
+			fixFormColumns();
+			clearInterval( checkForColumns );
+		}
+	}, 100 );
+
+	setTimeout( function () {
+		clearInterval( checkForColumns );
+	}, 5000 );
+
+	// -------------------------------------------------------------------------
+	// Block 2 — Inject privacy disclaimer below the opt-in checkbox (#d_sharing)
 	// Mirrors Block 6 of home-letter-action.js but without home-specific styles.
 	// -------------------------------------------------------------------------
 
