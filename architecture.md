@@ -627,6 +627,54 @@ Meta is saved in [`houseyou_save_event_details()`](functions.php:400) on the `sa
 
 ---
 
+### Home page letter action JS — `home-letter-action.js`
+
+**File:** [`assets/js/home-letter-action.js`](assets/js/home-letter-action.js)
+
+**Enqueued by:** [`houseyou_enqueue_home_letter_action()`](functions.php:97) on `wp_enqueue_scripts`, only when `is_front_page()` is true — i.e. only on the site front page.
+
+**Target form:** The Action Network letter campaign `end-the-tax-breaks-and-fund-housing-first`, embedded directly in [`block-templates/home-2026.html`](block-templates/home-2026.html:52) via a raw `<script>` + `<div id="can-letter-area-end-the-tax-breaks-and-fund-housing-first">` block.
+
+**Page guard:** The script opens with an IIFE early-exit check — if `#can-letter-area-end-the-tax-breaks-and-fund-housing-first` is not in the DOM it exits immediately. This prevents any effect on Action Network forms embedded on action template pages or anywhere else.
+
+**What it does (in execution order):**
+
+| Block | Target selector | Behaviour |
+|---|---|---|
+| 1 — Housing Demographic dropdown | `select#Housing-Demographic` | Converts first option to a disabled placeholder ("Your housing situation"), greys it out |
+| 2 — Year of Birth placeholder | `input#Year-of-Birth-YYYY` | Adds `placeholder="Year of Birth (YYYY)"` |
+| 3 — Step 2 header injection | `#can_letter_one_col` | Inserts an `h3` ("Step 2: Send a message to our politicians") and description `p` at the top of the letter-writing step; uses a `MutationObserver` because this element is dynamically revealed |
+| 4 — Custom thank you page | `#can_embed_form.can_thank_you_wrap` | Replaces Action Network's thank you content with a custom Step 3 social sharing block (Instagram + Facebook); uses a `MutationObserver` |
+| 5 — Submit button text | `#can_embed_form input[type="submit"]` | Overrides button label to "Have Your Say"; intercepts both attribute mutations and JS property setter so Action Network cannot revert it |
+| 6 — Step 1 header + privacy disclaimer | `#form_col1`, `#d_sharing` | Inserts "Step 1: Join the movement" before form fields and a privacy disclaimer `p` after the opt-in checkbox |
+
+**Timing pattern:** Blocks 1, 2, 5, and 6 use `setInterval` at 100 ms polling (max 5 seconds) because Action Network injects its DOM asynchronously. Blocks 3 and 4 use `MutationObserver` on `document.body` (childList, subtree, attributes) to react to the form's multi-step transitions.
+
+**Social icon URLs (Block 4):**
+- `https://houseyou.org/wp-content/uploads/2025/11/hy-insta-scaled.png`
+- `https://houseyou.org/wp-content/uploads/2025/11/hy-fb2-scaled.png`
+
+---
+
+### AN Events embed JS — `action-event-embed.js`
+
+**File:** [`assets/js/action-event-embed.js`](assets/js/action-event-embed.js)
+
+**Enqueued by:** [`houseyou_enqueue_action_event_embed()`](functions.php:120) on `wp_enqueue_scripts`, only when `is_page_template( 'an-events' )` is true — i.e. only on individual event pages using the AN Events template.
+
+**Target form:** Action Network RSVP/event widgets embedded via `[action_network_embed]` shortcode on `an-events` template pages.
+
+**What it does:** After the Action Network widget loads, hides two elements that are not appropriate for the site's UX:
+
+| Target | Selector | Action |
+|---|---|---|
+| Event date/location row | `#can_embed_form .last_line` | `display:none`, `visibility:hidden`, `height:0`, `overflow:hidden` |
+| "Attend this event" heading | `#can_embed_form_inner > h4` (text match) | `display:none` |
+
+**Timing:** 100 ms `setInterval` polling, max 10 seconds (longer than the letter script because event forms can be slower to initialise). Clears as soon as both elements are found.
+
+---
+
 ## 9. Deployment Workflow
 
 ### Local development

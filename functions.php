@@ -94,6 +94,52 @@ endif;
 
 add_action( 'wp_enqueue_scripts', 'houseyou_styles' );
 
+/**
+ * Enqueue home page letter-action script.
+ *
+ * Only loads on the front page (home-2026 template) where the Action Network
+ * letter campaign embed lives. This prevents the customisations from affecting
+ * Action Network forms on any other page (action template pages, etc.).
+ */
+function houseyou_enqueue_home_letter_action() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'houseyou-home-letter-action',
+		get_template_directory_uri() . '/assets/js/home-letter-action.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true // Load in footer
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_home_letter_action' );
+
+/**
+ * Enqueue Action Network event embed script.
+ *
+ * Only loads on pages using the "AN Events" page template, where the
+ * Action Network RSVP/event widget is embedded. Hides unwanted event
+ * detail elements injected by the Action Network widget.
+ */
+function houseyou_enqueue_action_event_embed() {
+	if ( ! is_page_template( 'an-events' ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'houseyou-action-event-embed',
+		get_template_directory_uri() . '/assets/js/action-event-embed.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true // Load in footer
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_action_event_embed' );
+
 if ( ! function_exists( 'houseyou_editor_styles' ) ) :
 
 	/**
