@@ -24,6 +24,13 @@
 			"postTypes": [
 				"page"
 			]
+		},
+		{
+			"name": "home-2026-test",
+			"title": "Home 2026 Test",
+			"postTypes": [
+				"page"
+			]
 		}
 	],
 	"templateParts": [

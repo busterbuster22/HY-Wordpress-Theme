@@ -218,6 +218,16 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
   width: unset;
 }
 
+/* Header template part: override negative margins from .alignfull rule above */
+header.wp-block-template-part .wp-block-group.alignfull,
+header.wp-block-template-part .wp-block-group.has-background,
+.wp-site-blocks > header.wp-block-template-part > .wp-block-group.alignfull,
+.wp-site-blocks > header.wp-block-template-part > .wp-block-group.has-background {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
 /* Blocks inside columns don't have negative margins. */
 .wp-site-blocks .wp-block-columns .wp-block-column .alignfull,
 .is-root-container .wp-block-columns .wp-block-column .wp-block[data-align=full],
@@ -324,14 +334,8 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
   max-width: 1800px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-@media (min-width: 769px) {
-  .wp-block-group.is-style-full-width > * {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
+  padding-left: var(--wp--custom--spacing--outer);
+  padding-right: var(--wp--custom--spacing--outer);
 }
 
 /* =========================================================================
@@ -468,16 +472,9 @@ body > .is-root-container > .wp-block-template-part > .wp-block-cover,
   max-width: 1800px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
+  padding-left: var(--wp--custom--spacing--outer) !important;
+  padding-right: var(--wp--custom--spacing--outer) !important;
   box-sizing: border-box !important;
-}
-
-@media (min-width: 769px) {
-  .content-container {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
-  }
 }
 /* ========================================
    LAYOUT & CONTAINERS
@@ -545,8 +542,8 @@ main .full-width-homepage:last-child {
   max-width: 1800px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
+  padding-left: var(--wp--custom--spacing--outer) !important;
+  padding-right: var(--wp--custom--spacing--outer) !important;
   box-sizing: border-box !important;
 }
 
@@ -601,13 +598,13 @@ header.wp-block-template-part a {
   color: var(--wp--preset--color--white, #FFFFFF);
 }
 
-/* Apply container styling to header columns - MOBILE FIRST */
+/* Apply container styling to header columns */
 header.wp-block-template-part .wp-block-columns.header-columns {
   max-width: 1800px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
+  padding-left: var(--wp--custom--spacing--outer) !important;
+  padding-right: var(--wp--custom--spacing--outer) !important;
   box-sizing: border-box !important;
   width: 100% !important;
 }
@@ -616,14 +613,6 @@ header.wp-block-template-part .wp-block-columns.header-columns {
 header.wp-block-template-part .wp-block-column {
   padding-left: 0 !important;
   padding-right: 0 !important;
-}
-
-/* DESKTOP OVERRIDE - must come after mobile rules */
-@media (min-width: 769px) {
-  header.wp-block-template-part .wp-block-columns.header-columns {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
-  }
 }
 /* Footer gets constrained content - matches body and header */
 footer.wp-block-template-part {
@@ -652,22 +641,14 @@ footer.wp-block-template-part .wp-block-paragraph {
   max-width: 1800px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
+  padding-left: var(--wp--custom--spacing--outer) !important;
+  padding-right: var(--wp--custom--spacing--outer) !important;
   box-sizing: border-box !important;
 }
 
 header.wp-block-template-part .wp-block-column {
   padding-left: 0 !important;
   padding-right: 0 !important;
-}
-
-/* Remove any extra spacing from header-columns specifically */
-.header-columns {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
 }
 
 /* Footer gets constrained content - matches body and header */
@@ -679,8 +660,8 @@ footer.site-footer-container {
 footer.site-footer-container > .wp-block-group {
   max-width: 1800px;
   margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: var(--wp--custom--spacing--outer);
+  padding-right: var(--wp--custom--spacing--outer);
   box-sizing: border-box;
 }
 
@@ -688,8 +669,8 @@ footer.site-footer-container > .wp-block-group {
 @media (min-width: 769px) {
   /* Header desktop padding */
   header.wp-block-template-part > .wp-block-group {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
+    padding-left: var(--wp--custom--spacing--outer) !important;
+    padding-right: var(--wp--custom--spacing--outer) !important;
   }
   /* Keep nested header elements with no padding */
   header.wp-block-template-part .wp-block-columns,
@@ -701,25 +682,25 @@ footer.site-footer-container > .wp-block-group {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  /* Body content desktop padding */
+  /* Body content desktop padding - using responsive spacing */
   .full-width-homepage .wp-block-columns,
   .full-width-homepage > .wp-block-post-title,
   .full-width-homepage > .wp-block-heading,
   .full-width-homepage > .wp-block-paragraph,
   .full-width-homepage > .petition-row,
   .full-width-homepage > .content-container {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
+    padding-left: var(--wp--custom--spacing--outer) !important;
+    padding-right: var(--wp--custom--spacing--outer) !important;
   }
   .content-section {
     padding-top: 60px;
     padding-bottom: 60px;
   }
-  /* Footer desktop padding */
+  /* Footer desktop padding - using responsive spacing */
   footer.wp-block-template-part .wp-block-columns,
   footer.wp-block-template-part .wp-block-paragraph {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
+    padding-left: var(--wp--custom--spacing--outer) !important;
+    padding-right: var(--wp--custom--spacing--outer) !important;
   }
   /* Column spacing desktop */
   .wp-block-columns {
