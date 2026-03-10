@@ -44,6 +44,7 @@
 		}
 	],
 	"settings": {
+		"useRootPaddingAwareAlignments": true,
 		"appearanceTools": true,
 		"color": {
 			"duotone": [
@@ -248,8 +249,8 @@
 				}
 			},
 			"layout": {
-				"contentSize": "684px",
-				"wideSize": "1160px"
+				"contentSize": "1160px",
+				"wideSize": "1400px"
 			},
 			"line-height": {
 				"body": 1.6
@@ -262,8 +263,8 @@
 			}
 		},
 		"layout": {
-			"contentSize": "684px",
-			"wideSize": "1160px"
+			"contentSize": "1160px",
+			"wideSize": "1400px"
 		},
 		"spacing": {
 			"units": [
@@ -310,6 +311,13 @@
 		}
 	},
 	"styles": {
+		"spacing": {
+			"blockGap": "0.5em",
+			"padding": {
+				"right": "var(--wp--custom--spacing--outer)",
+				"left": "var(--wp--custom--spacing--outer)"
+			}
+		},
 		"blocks": {
 			"core/button": {
 				"border": {
@@ -569,9 +577,6 @@
 					"text": "var(--wp--custom--color--primary)"
 				}
 			}
-		},
-		"spacing": {
-			"blockGap": "0.5em"
 		},
 		"typography": {
 			"lineHeight": "var(--wp--custom--body--typography--line-height)",

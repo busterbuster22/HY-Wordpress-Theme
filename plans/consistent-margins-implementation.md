@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan addresses the inconsistent margin/padding across different page templates in the House You theme. The goal is to ensure all pages have consistent margins that match the header and footer (57px padding on each side).
+This plan addresses the inconsistent margin/padding across different page templates in the House You theme. The goal is to ensure all pages have consistent margins that match the header and footer (57px padding on each side) using **native WordPress Block Theme features**.
 
 ## Current State Analysis
 
@@ -20,6 +20,7 @@ This plan addresses the inconsistent margin/padding across different page templa
 1. **`theme.json` has `contentSize: 684px`** - too narrow
 2. **`page.html` has hardcoded margins** - `margin-right/left: var(--wp--preset--spacing--80)`
 3. **Inconsistent layout types** across templates
+4. **Not using Root Padding Aware Alignments** - missing native WordPress feature
 
 ---
 
@@ -48,7 +49,7 @@ This plan addresses the inconsistent margin/padding across different page templa
 **Rationale:** 
 - `contentSize` should match the desired content width
 - `wideSize` provides a wider option for `alignwide` blocks
-- 1160px matches the current `wideSize` which works well with header/footer
+- 1160px provides comfortable reading width that matches header/footer
 
 ---
 
@@ -148,65 +149,77 @@ Apply the same changes as `an-events.html`:
 
 ---
 
-### Phase 5: Add Content Container Utility Class
+### Phase 5: Enable Root Padding Aware Alignments
 
-**File:** [`sass/theme.scss`](sass/theme.scss)
+**File:** [`theme.json`](theme.json)
 
-Add a utility class for content that needs consistent padding:
+This is the **native WordPress solution** for consistent edge padding. It applies padding to the root layout and automatically handles the math so that normal blocks stay constrained, but `.alignfull` blocks break out edge-to-edge natively—without any custom CSS hacks.
 
-```scss
-/* Content Container - matches header/footer padding */
-.content-container {
-    max-width: 1160px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 57px;
-    padding-right: 57px;
-    box-sizing: border-box;
-
-    @media (max-width: 768px) {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-}
-
-/* Full-width sections - edge to edge */
-.full-width-content {
-    margin-left: calc(-1 * var(--wp--custom--spacing--outer, 57px));
-    margin-right: calc(-1 * var(--wp--custom--spacing--outer, 57px));
-    padding-left: var(--wp--custom--spacing--outer, 57px);
-    padding-right: var(--wp--custom--spacing--outer, 57px);
+**Add to `settings` section:**
+```json
+"settings": {
+    "useRootPaddingAwareAlignments": true,
+    ...existing settings...
 }
 ```
+
+**Add to `styles` section:**
+```json
+"styles": {
+    "spacing": {
+        "padding": {
+            "right": "var(--wp--custom--spacing--outer)",
+            "left": "var(--wp--custom--spacing--outer)"
+        }
+    },
+    ...existing styles...
+}
+```
+
+**Complete theme.json changes for this phase:**
+
+The `--wp--custom--spacing--outer` variable is already defined in theme.json at line 261:
+```json
+"spacing": {
+    "small": "clamp(20px, 4vw, 40px)",
+    "medium": "clamp(30px, 8vw, 100px)",
+    "large": "clamp(100px, 12vw, 460px)",
+    "outer": "min(4vw, 90px)"
+}
+```
+
+This means the root padding will be responsive:
+- Minimum: ~57px on large screens
+- Scales down to 4vw on smaller screens
+- Maximum: 90px
 
 ---
 
-### Phase 6: Update Existing CSS Rules
+## How Root Padding Aware Alignments Works
 
-**File:** [`sass/theme.scss`](sass/theme.scss)
-
-Review and update these existing rules to work with the new layout:
-
-1. **Lines 446-452** - Site main rules:
-```scss
-/* Main content area - respects constrained layout */
-.site-main {
-    width: 100%;
-    max-width: 100%;
-}
+```mermaid
+graph TD
+    A[useRootPaddingAwareAlignments: true] --> B[Root padding applied to body]
+    B --> C[Normal blocks stay constrained]
+    B --> D[alignfull blocks break out edge-to-edge]
+    B --> E[alignwide blocks extend to wideSize]
+    
+    C --> F[No negative margin hacks needed]
+    D --> F
+    E --> F
+    
+    F --> G[Clean, native WordPress solution]
 ```
 
-2. **Lines 473-478** - Full-width homepage rules:
-```scss
-/* Full-width sections break out of constrained layout */
-.is-layout-constrained .full-width-homepage,
-.is-layout-constrained .alignfull {
-    margin-left: calc(-1 * var(--wp--custom--spacing--outer, 57px)) !important;
-    margin-right: calc(-1 * var(--wp--custom--spacing--outer, 57px)) !important;
-    max-width: none !important;
-    width: calc(100% + 2 * var(--wp--custom--spacing--outer, 57px)) !important;
-}
-```
+### Benefits of This Approach
+
+| Aspect | Old CSS Hack Approach | Root Padding Aware Alignments |
+|--------|----------------------|------------------------------|
+| **Horizontal scroll on mobile** | Common issue | Prevented natively |
+| **Site Editor UI** | Often breaks | Works perfectly |
+| **Maintenance** | Requires custom CSS updates | Handled by WordPress core |
+| **Performance** | Extra CSS to parse | Native, no extra CSS |
+| **Future compatibility** | May break with updates | WordPress core feature |
 
 ---
 
@@ -218,7 +231,9 @@ After implementation, test the following:
 - [ ] Header padding matches content padding on all pages
 - [ ] Footer padding matches content padding on all pages
 - [ ] Content width is consistent across all page types
-- [ ] Full-width sections still break out correctly
+- [ ] Full-width sections (`.alignfull`) break out correctly edge-to-edge
+- [ ] Wide sections (`.alignwide`) extend to `wideSize` correctly
+- [ ] No horizontal scrolling on mobile devices
 
 ### Pages to Test
 - [ ] Home page (`/`)
@@ -233,6 +248,12 @@ After implementation, test the following:
 - [ ] Tablet (768px - 1200px)
 - [ ] Mobile (< 768px)
 
+### Site Editor Testing
+- [ ] Open Site Editor
+- [ ] Verify templates load correctly
+- [ ] Verify no layout breaks in editor
+- [ ] Test block alignment options
+
 ### Browser Testing
 - [ ] Chrome
 - [ ] Firefox
@@ -245,10 +266,11 @@ After implementation, test the following:
 
 If issues arise, revert changes in this order:
 
-1. Revert `theme.json` layout settings to original values
-2. Revert `page.html` template to original markup
-3. Revert `an-events.html` and `action.html` templates
-4. Remove new CSS utility classes
+1. Set `useRootPaddingAwareAlignments: false` in theme.json
+2. Remove root padding from styles section
+3. Revert `theme.json` layout settings to original values
+4. Revert `page.html` template to original markup
+5. Revert `an-events.html` and `action.html` templates
 
 ---
 
@@ -263,4 +285,10 @@ After implementation:
 | Event Page | 813px | ~1160px |
 | Action Page | 813px | ~1160px |
 
-All pages will have consistent content width that matches the header and footer padding (57px each side).
+All pages will have consistent content width with native WordPress handling of:
+- Root padding (57px responsive)
+- Full-width block breakouts
+- Wide-width block extensions
+- Mobile responsiveness
+
+No custom CSS hacks required.

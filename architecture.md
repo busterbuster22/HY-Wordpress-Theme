@@ -104,93 +104,49 @@ Font-face styles are also injected into the editor via [`houseyou_editor_styles(
 
 ## 3. Layout System
 
-The theme uses a **three-tier layout system** to achieve full-viewport-width coloured backgrounds while keeping content readable at a constrained width.
+The theme uses WordPress's native **`useRootPaddingAwareAlignments`** system for layout. This was migrated from a legacy CSS-hack approach in March 2026 (see [plans/layout-migration-completed.md](plans/layout-migration-completed.md)).
 
-### Tier 1 — Full-width background sections
+### How it works
 
-Two techniques are used depending on context:
+1. **Root padding** is defined in `theme.json` → `styles.spacing.padding` as `var(--wp--custom--spacing--outer)` (which resolves to `min(4vw, 90px)`)
+2. WordPress applies this padding to `.wp-site-blocks`, creating consistent side margins on all pages
+3. Blocks with `align: full` (`alignfull` class) automatically **negate** the root padding, breaking out to full viewport width
+4. Content inside constrained blocks is limited to `contentSize: 1160px` or `wideSize: 1400px`
 
-#### `.full-width-homepage` (used in `action.html`, `an-events.html`, `home.html` variants)
+### Content widths (from `theme.json` → `settings.layout`)
 
-```css
-.full-width-homepage {
-  width: 100vw !important;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw !important;
-  right: 50%;
-  margin-right: -50vw !important;
-}
-```
+| Setting | Value | Purpose |
+|---|---|---|
+| `contentSize` | `1160px` | Default max-width for constrained blocks |
+| `wideSize` | `1400px` | Max-width for `alignwide` blocks |
 
-Additional rules prevent margin collapse at first/last child positions:
+These values also exist under `settings.custom.layout` (which generates `--wp--custom--layout--content-size` and `--wp--custom--layout--wide-size` CSS properties).
 
-```css
-main .full-width-homepage:first-child { margin-top: 0 !important; }
-main .full-width-homepage:last-child  { margin-bottom: 0 !important; }
-```
+### Full-width sections
 
-#### `.wp-block-group.is-style-full-width` (block style variation — usable on any Group block)
+To make a section span the full viewport width:
 
-```css
-.wp-block-group.is-style-full-width {
-  width: 100vw !important;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw !important;
-  right: 50%;
-  margin-right: -50vw !important;
-}
-```
+1. In the block editor, select the Group block
+2. Set alignment to **"Full Width"** in the toolbar
+3. WordPress adds `"align":"full"` to the block comment and `alignfull` to the HTML class
+4. The native layout system removes root padding on that element automatically
 
-> **Critical**: `100vw` here is intentional. It includes scrollbar width, which is why `overflow-x: hidden` is set on `html, body`. Do NOT replace with `100%` — that resolves to the parent container width, not the viewport width, and breaks the layout. See [Section 10](#10-known-constraints-and-gotchas).
+No CSS hacks are needed. The `home-2026.html` template uses this on all 4 sections (hero, light, pink, dark).
 
-### Tier 2 — Constrained content
+### Responsive padding
 
-Content inside full-width sections is constrained and centred:
+Padding uses the `--wp--custom--spacing--outer` CSS variable (`min(4vw, 90px)`), which is responsive by nature. Additional padding rules in `sass/theme.scss` use this same variable for header, footer, and content containers:
 
 ```css
-/* Direct children of full-width sections */
-.full-width-homepage .wp-block-columns,
-.full-width-homepage > .wp-block-heading,
-.full-width-homepage > .wp-block-paragraph,
-.full-width-homepage > .petition-row,
-.full-width-homepage > .content-container {
-  max-width: 1800px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
+/* Mobile: inherits from --wp--custom--spacing--outer (min(4vw, 90px)) */
+.content-container { padding-left: 20px; padding-right: 20px; }
 
-/* .content-container class (used in footer, other sections) */
-.content-container {
-  max-width: 1800px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* is-style-full-width children */
-.wp-block-group.is-style-full-width > * {
-  max-width: 1800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-```
-
-### Tier 3 — Responsive padding
-
-All constrained content gets horizontal padding, switching at the 769px breakpoint:
-
-```css
-/* Mobile: 20px */
-.content-container { padding-left: 20px !important; padding-right: 20px !important; }
-.full-width-homepage .wp-block-columns,
-.full-width-homepage > .wp-block-heading, /* etc */ { padding-left: 20px; padding-right: 20px; }
-.wp-block-group.is-style-full-width > * { padding-left: 20px; padding-right: 20px; }
-
-/* Desktop (≥769px): 40px */
+/* Desktop (≥769px): uses the CSS variable */
 @media (min-width: 769px) {
-  .content-container { padding-left: 40px !important; padding-right: 40px !important; }
-  /* same for other constrained selectors */
+  .content-container {
+    padding-left: var(--wp--custom--spacing--outer);
+    padding-right: var(--wp--custom--spacing--outer);
+  }
 }
 ```
 
@@ -198,14 +154,13 @@ All constrained content gets horizontal padding, switching at the 769px breakpoi
 
 | Class | Where applied | Effect |
 |---|---|---|
-| `.full-width-homepage` | `wp:group` in action/event/home templates | Full-viewport-width section using 100vw + negative margins |
+| `.full-width-homepage` | `wp:group` in home-2026 template | Legacy class kept on sections that also use `alignfull`; child-padding rules still reference it |
 | `.content-container` | `wp:columns` or `wp:group` inside full-width sections; footer columns | Constrains to 1800px, centred, responsive padding |
 | `.content-section` | `wp:group` wrapping standard content | Adds vertical padding (40px mobile, 60px desktop) |
 | `.header-columns` | `wp:columns` inside header group | Two-column layout for logo + nav |
 | `.home-block` | `wp:columns` and `wp:column` in action/event templates | Removes default padding; enables custom column layout |
-| `.is-style-full-width` | Any `wp:group` block (block style variation) | Same full-width 100vw breakout as `.full-width-homepage` |
 | `.pre-footer` | Outer `wp:group` in footer | Identifies footer region for CSS scoping |
-| `.site-main` | Outer `wp:group` in action/event templates | Constrained layout wrapper around full-width content |
+| `.site-main` | Outer `wp:group` in action/event templates | Constrained layout wrapper with white background |
 
 ---
 
@@ -302,22 +257,21 @@ The theme has a single mobile/desktop breakpoint:
 
 | Breakpoint | Value | Usage |
 |---|---|---|
-| Desktop | `min-width: 769px` | Padding switches 20px → 40px; columns stack/unstack; social icons display |
+| Desktop | `min-width: 769px` | Padding switches to `var(--wp--custom--spacing--outer)`; columns stack/unstack; social icons display |
 
 ### Block style variations
 
-Registered via [`houseyou_register_block_styles()`](functions.php:779) on the `init` hook. Applied to both `core/group` and `core/cover` blocks (except `is-style-full-width` which is group-only).
+Registered via [`houseyou_register_block_styles()`](functions.php:779) on the `init` hook. Applied to both `core/group` and `core/cover` blocks.
 
 | Style slug | Class | Background | Text | Use when |
 |---|---|---|---|---|
 | `dark-section` | `is-style-dark-section` | `#141414` (ash-grey) | `#FFFFFF` (white) | Dark band/section across the page |
 | `light-section` | `is-style-light-section` | `#FFFFFF` (white) | `#141414` (ash-grey) | Explicit white section against a dark page |
 | `pink-section` | `is-style-pink-section` | `#CB1EAA` (house-you-pink) | `#FFFFFF` (white) | Brand-coloured highlight section |
-| `full-width` | `is-style-full-width` | _(inherits)_ | _(inherits)_ | Break a Group block out to full viewport width |
 
 **How to use a block style**: In the block editor, select a Group or Cover block → Styles panel → choose the variation. The CSS rules apply `!important` to override any inline colours set on the block.
 
-**Editor preview**: `is-style-full-width` renders with a pink left border and a "Full Width" label in the editor (via `::before`) so the breakout is visible at editing time.
+**Full-width sections**: Use the block editor's alignment toolbar (set to "Full Width") instead of a block style. This uses native `alignfull` and works with `useRootPaddingAwareAlignments`. The legacy `is-style-full-width` block style was removed in the March 2026 layout migration.
 
 ---
 
@@ -339,7 +293,7 @@ wp:group  [alignfull, backgroundColor: ash-grey, layout: default]
 
 **How full-width dark background is achieved:**
 
-The outer `wp:group` has `align: full` (`alignfull` class) and `backgroundColor: ash-grey`. In a block theme, `alignfull` on a group inside the site header area stretches it to 100% width. No `100vw` technique is needed for the header because the template part sits outside the constrained content area — WordPress renders template parts at full width by default.
+The outer `wp:group` has `align: full` (`alignfull` class) and `backgroundColor: ash-grey`. With `useRootPaddingAwareAlignments` enabled, `alignfull` elements automatically negate the root padding and span the full viewport. The header template part's background colour and text colour are also reinforced in `sass/theme.scss` on the `header.wp-block-template-part` selector.
 
 **Navigation:** Max Mega Menu plugin renders the nav via the shortcode `[maxmegamenu location="max_mega_menu_2"]` placed inside a `wp:shortcode` block. The menu location `max_mega_menu_2` is configured in WP Admin → Max Mega Menu → Menu Locations.
 
@@ -389,7 +343,7 @@ wp:group  [alignfull, class: pre-footer, backgroundColor: ash-grey, textColor: w
 
 **How full-width dark background is achieved:**
 
-Same `alignfull` technique as the header. The `.content-container` class on the inner columns/group constrains the content to `max-width: 1800px` with `margin: 0 auto` and responsive padding.
+Same `alignfull` + `useRootPaddingAwareAlignments` technique as the header. The `.content-container` class on the inner columns/group constrains the content to `max-width: 1800px` with `margin: 0 auto` and responsive padding via `var(--wp--custom--spacing--outer)`.
 
 **Navigations:** Two separate navigation blocks by database ref ID. `ref: 2063` = footer links (left column); `ref: 2064` = secondary/social links (right column). These refs point to Navigation post objects in the database — they exist on the live site only.
 
@@ -405,7 +359,7 @@ WordPress uses this if no more specific template matches. Contains header, a bas
 
 ### `page.html` — Standard pages
 
-Used for all pages not assigned a custom template. Contains header, `wp:post-title`, `wp:post-featured-image` (full-width), `wp:post-content`, and footer. The post content area is where the page editor content appears.
+Used for all pages not assigned a custom template. Contains header, a constrained `<main>` group with white background and top/bottom padding, `wp:post-content`, and footer. Content is constrained to `contentSize` (1160px) by the native layout system. Side margins come from root padding via `useRootPaddingAwareAlignments`.
 
 ---
 
@@ -454,7 +408,7 @@ Patterns are registered in [`patterns/`](patterns/) and appear as hidden (not sh
 
 ### `home-2026.html` — 2026 homepage variant
 
-A separate homepage layout for 2026 campaign content. Selectable as a custom template via the page editor. Structure mirrors `home.html` but with different pattern references or inline content.
+A separate homepage layout for 2026 campaign content. Selectable as a custom template via the page editor. Contains four full-width sections (hero, light, pink, dark), each using `align: full` (`alignfull`) with block style colour presets (`is-style-dark-section`, `is-style-light-section`, `is-style-pink-section`). The hero section includes an inline Action Network letter campaign embed. Footer template part is at root level after closing `</main>`.
 
 ---
 
@@ -731,75 +685,38 @@ WordPress.com production (live site)
 
 ## 10. Known Constraints and Gotchas
 
-### 1. `overflow-x: hidden` on `html, body`
-
-```css
-html, body {
-  overflow-x: hidden;
-}
-```
-
-**Why it's there:** The `100vw` unit used in full-width sections includes scrollbar width (typically 15–17px). When a vertical scrollbar is present, elements with `width: 100vw` extend ~15px beyond the right edge of the visible area, creating horizontal overflow and a visible dark strip from the body background. `overflow-x: hidden` clips this overflow.
-
-**Do not remove** this rule unless the 100vw full-width technique is also removed.
-
----
-
-### 2. `theme.json` layout values are intentionally narrow
+### 1. `theme.json` layout values exist in two places
 
 ```json
-"layout": {
-  "contentSize": "684px",
-  "wideSize": "1160px"
-}
+"settings.layout":        { "contentSize": "1160px", "wideSize": "1400px" }
+"settings.custom.layout": { "contentSize": "1160px", "wideSize": "1400px" }
 ```
 
-These values exist in **two places** in [`theme.json`](theme.json:257): `settings.layout` and `settings.custom.layout`. They are deliberately left narrow.
-
-**Why:** WordPress uses these values to constrain block editor content in the editor preview (the editing canvas). The theme's actual content width of 1800px is applied by custom CSS, not by these values. Changing them would alter the editor canvas width and could break the editing experience.
-
-**The custom CSS override:**
-
-```css
-.is-layout-constrained {
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-```
-
-This overrides WordPress's runtime application of `contentSize` to the site wrapper, allowing the theme's own max-width constraints to take effect.
-
-**Do not change** `contentSize` or `wideSize` in `theme.json` without understanding and testing the full visual impact in both the editor and the frontend.
+Both must be kept in sync. `settings.layout` controls the actual block layout constraints. `settings.custom.layout` generates CSS custom properties (`--wp--custom--layout--content-size`, `--wp--custom--layout--wide-size`) that may be referenced elsewhere.
 
 ---
 
-### 3. Do NOT replace `100vw` with `100%`
+### 2. `useRootPaddingAwareAlignments` and `.wp-site-blocks`
 
-The full-width technique uses `width: 100vw` with `margin-left: -50vw`. This is intentional.
+With `useRootPaddingAwareAlignments: true`, WordPress applies root padding to `.wp-site-blocks`. Do not add `padding: 0` or `margin: 0` to `.wp-site-blocks` in the CSS — this would nullify the root padding system and break consistent side margins.
 
-- `100vw` = full viewport width (including scrollbar area)
-- `100%` = 100% of the **parent element's** width
-
-Replacing `100vw` with `100%` makes full-width sections as wide as their container — which is already constrained — and breaks the breakout effect entirely.
-
-The scrollbar overflow side-effect of `100vw` is managed by `overflow-x: hidden` (see constraint 1 above).
+The current `.wp-site-blocks` rule in `sass/theme.scss` only sets `width: 100%` and `max-width: 100%`.
 
 ---
 
-### 4. `[action_network_embed]` shortcode uses `get_post_meta()`, not ACF
+### 3. `[action_network_embed]` shortcode uses `get_post_meta()`, not ACF
 
 The `[action_network_embed]` shortcode reads embed code directly from post meta via `get_post_meta()`, not ACF's `get_field()`. This means it does not depend on ACF being active and does not require the `acf/shortcode/allow_in_block_themes_outside_content` filter.
 
 ---
 
-### 5. Navigation refs are database-specific
+### 4. Navigation refs are database-specific
 
 The footer navigation blocks reference menus by database ID (`ref: 2063`, `ref: 2064`). These IDs exist on the live/staging database only. On any fresh WordPress install or local environment with a different database, these refs point to nothing and the footer nav renders empty. Menus must be recreated and re-referenced in the Site Editor on each environment.
 
 ---
 
-### 6. Event sync: widget slug ≠ API event ID
+### 5. Event sync: widget slug ≠ API event ID
 
 The "Sync from Action Network" button in the Event Details meta box does not currently work. The embed script URL contains a human-readable **slug** (e.g. `housing-rally-lismore`), but the API endpoint (`/api/v2/events/{id}`) requires a **UUID** (e.g. `abc12345-def6-7890-ghij-klmnopqrstuv`). The parse function extracts the slug, sends it to the API, and gets a 500 error.
 
@@ -814,18 +731,29 @@ The embed display itself works fine without sync — date/time/location can be e
 
 ## Changelog
 
-### 2026-02-26 — Black bar fix
+### 2026-03-10 — Layout migration to `useRootPaddingAwareAlignments`
+
+**What:** Complete layout architecture overhaul. Replaced all legacy CSS hacks (100vw breakouts, negative margins, TwentyTwentyTwo alignment workarounds, `overflow-x: hidden`) with WordPress's native `useRootPaddingAwareAlignments` system.
+
+**Key changes:**
+- ~130 lines of CSS hacks deleted from `sass/theme.scss`
+- All hardcoded `40px` padding values converted to `var(--wp--custom--spacing--outer)`
+- `theme.json` layout updated: `contentSize: 1160px`, `wideSize: 1400px`
+- `home-2026.html` sections converted from `.full-width-homepage` CSS hack to native `alignfull`
+- Template margins removed from `page.html`, `contact-us.html`; `contentSize: 100%` removed from `an-events.html`, `action.html`
+- White backgrounds restored/added to `page.html`, `contact-us.html`, `an-events.html`, `action.html` outer wrappers
+
+**Full details:** [plans/layout-migration-completed.md](plans/layout-migration-completed.md)
+
+---
+
+### 2026-02-26 — Black bar fix (superseded by 2026-03-10 migration)
 
 **Problem:** A black/dark strip appeared on the right side of every page, caused by `100vw` (which includes scrollbar width) creating horizontal overflow.
 
-**Solution applied:**
+**Solution applied at the time:** Added `overflow-x: hidden` to clip the overflow. This was a workaround for the 100vw hack.
 
-1. Added `overflow-x: hidden` to `html, body` in [`assets/theme.css`](assets/theme.css)
-2. Added `body { background-color: var(--wp--preset--color--white) !important }` to prevent body background showing in overflow area
-3. Added `.wp-site-blocks { width: 100%; max-width: 100% }` to ensure site container fills viewport
-4. Added `.is-layout-constrained { max-width: 100% !important }` to override WordPress's automatic layout constraint on the site wrapper
-
-**Note:** The `100vw` values themselves were NOT changed — the technique is intentional. The overflow is clipped instead.
+**Status:** This fix is no longer present. The root cause (100vw hacks) was eliminated in the 2026-03-10 layout migration, making `overflow-x: hidden` unnecessary.
 ## Action Network Embed Styling
 
 ### Overview
