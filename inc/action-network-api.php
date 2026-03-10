@@ -121,25 +121,18 @@ function houseyou_an_parse_event_id( $input ) {
 }
 
 /**
- * Get event ID from ACF embed code field
+ * Get event ID from embed code stored in post meta
  *
  * @param int $post_id Post ID
  * @return string|false Event ID or false if not found
  */
-function houseyou_an_get_event_id_from_acf( $post_id ) {
-	// Check if ACF is active
-	if ( ! function_exists( 'get_field' ) ) {
-		return false;
-	}
-
-	// Get the embed code from ACF field
-	$embed_code = get_field( 'action_embed_code', $post_id );
+function houseyou_an_get_event_id_from_embed( $post_id ) {
+	$embed_code = get_post_meta( $post_id, 'action_embed_code', true );
 
 	if ( empty( $embed_code ) ) {
 		return false;
 	}
 
-	// Parse the event ID from the embed code
 	return houseyou_an_parse_event_id( $embed_code );
 }
 

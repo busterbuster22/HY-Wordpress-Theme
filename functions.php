@@ -358,21 +358,20 @@ add_action( 'add_meta_boxes', 'houseyou_event_meta_boxes' );
  * Event Details Meta Box Callback
  */
 function houseyou_event_details_callback( $post ) {
-	// Only show for AN Events template
+	// Only show for AN Events or Action templates
 	$template = get_post_meta( $post->ID, '_wp_page_template', true );
-	if ( $template !== 'an-events' && $template !== '' ) {
-		echo '<p>Event details only available for pages using the "AN Events" template.</p>';
+	if ( ! in_array( $template, array( 'an-events', 'action' ), true ) && $template !== '' ) {
+		echo '<p>Event details only available for pages using the "AN Events" or "Action" template.</p>';
 		return;
 	}
 
 	wp_nonce_field( 'houseyou_event_details', 'houseyou_event_details_nonce' );
 
-	// Try to get event ID from ACF embed code first
-	$acf_event_id = function_exists( 'get_field' ) ? houseyou_an_get_event_id_from_acf( $post->ID ) : false;
-	$manual_event_id = get_post_meta( $post->ID, '_action_network_event_id', true );
+	// Get stored embed code — uses same meta key as ACF for backwards compat
+	$embed_code = get_post_meta( $post->ID, 'action_embed_code', true );
 
-	// Use ACF event ID if available, otherwise use manual
-	$event_id = ! empty( $acf_event_id ) ? $acf_event_id : $manual_event_id;
+	// Parse event ID from embed code
+	$event_id = ! empty( $embed_code ) ? houseyou_an_parse_event_id( $embed_code ) : false;
 
 	$last_synced = get_post_meta( $post->ID, '_last_synced_at', true );
 	$event_date = get_post_meta( $post->ID, '_event_date', true );
@@ -382,27 +381,19 @@ function houseyou_event_details_callback( $post ) {
 
 	?>
 	<div style="background: #f0f0f1; padding: 12px; margin-bottom: 15px; border-radius: 4px;">
-		<?php if ( ! empty( $acf_event_id ) ) : ?>
-			<!-- Auto-detected from ACF embed code -->
-			<p style="margin: 0 0 10px 0;">
-				<strong>✓ Action Network Event Detected</strong><br>
-				<code style="background: #fff; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; margin-top: 5px;"><?php echo esc_html( $acf_event_id ); ?></code>
-				<small style="display: block; margin-top: 5px; color: #666;">
-					Auto-detected from your Action Network embed code (ACF field)
-				</small>
-			</p>
-		<?php else : ?>
-			<!-- Manual entry fallback -->
-			<p style="margin: 0 0 10px 0;">
-				<label for="action_network_event_id"><strong>Action Network Event ID:</strong></label><br>
-				<input type="text" id="action_network_event_id" name="action_network_event_id" value="<?php echo esc_attr( $manual_event_id ); ?>" placeholder="Event ID or URL" style="width: 100%; margin-top: 5px;">
-				<small style="display: block; margin-top: 5px; color: #666;">
-					💡 Or add Action Network embed code to auto-detect event ID
-				</small>
-			</p>
-		<?php endif; ?>
+		<p style="margin: 0 0 10px 0;">
+			<label for="houseyou_embed_code"><strong>Action Network Embed Code:</strong></label><br>
+			<textarea id="houseyou_embed_code" name="houseyou_embed_code" rows="4" style="width: 100%; margin-top: 5px; font-family: monospace; font-size: 12px;"><?php echo esc_textarea( $embed_code ); ?></textarea>
+			<small style="display: block; margin-top: 5px; color: #666;">
+				Paste the Action Network embed code here. This displays the form on the page and auto-detects the event ID for syncing.
+			</small>
+		</p>
 
 		<?php if ( ! empty( $event_id ) ) : ?>
+			<p style="margin: 10px 0 0 0;">
+				<strong>✓ Event ID Detected:</strong><br>
+				<code style="background: #fff; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; margin-top: 5px;"><?php echo esc_html( $event_id ); ?></code>
+			</p>
 			<p style="margin: 10px 0 0 0;">
 				<button type="button" id="houseyou_sync_event" class="button button-secondary" data-event-id="<?php echo esc_attr( $event_id ); ?>" style="width: 100%;">
 					🔄 Sync from Action Network
@@ -416,7 +407,7 @@ function houseyou_event_details_callback( $post ) {
 			<?php endif; ?>
 		<?php else : ?>
 			<p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">
-				💡 Add Action Network embed code or enter Event ID above to enable sync
+				💡 Paste an Action Network embed code above to enable sync
 			</p>
 		<?php endif; ?>
 	</div>
@@ -470,21 +461,25 @@ function houseyou_save_event_details( $post_id ) {
 		return;
 	}
 
-	// Save Action Network Event ID (manual entry - only if ACF field is empty)
-	$acf_event_id = function_exists( 'get_field' ) ? houseyou_an_get_event_id_from_acf( $post_id ) : false;
+	// Save Action Network Embed Code
+	// IMPORTANT: wp_kses_post() CANNOT be used — it strips <script> tags which
+	// Action Network embeds require. This field is only editable by users with
+	// edit_page capability (who already have unfiltered_html in WordPress).
+	if ( isset( $_POST['houseyou_embed_code'] ) ) {
+		$embed_code = wp_unslash( $_POST['houseyou_embed_code'] );
+		$embed_code = trim( $embed_code );
 
-	if ( empty( $acf_event_id ) ) {
-		// Only save manual entry if ACF doesn't have embed code
-		if ( isset( $_POST['action_network_event_id'] ) ) {
-			$an_event_id = sanitize_text_field( $_POST['action_network_event_id'] );
-			if ( ! empty( $an_event_id ) ) {
-				// Parse and clean the event ID
-				$parsed_id = houseyou_an_parse_event_id( $an_event_id );
-				if ( $parsed_id ) {
-					update_post_meta( $post_id, '_action_network_event_id', $parsed_id );
-				}
+		if ( ! empty( $embed_code ) ) {
+			update_post_meta( $post_id, 'action_embed_code', $embed_code );
+
+			// Also store the parsed event ID for quick lookups
+			$parsed_id = houseyou_an_parse_event_id( $embed_code );
+			if ( $parsed_id ) {
+				update_post_meta( $post_id, '_action_network_event_id', $parsed_id );
 			}
 		} else {
+			delete_post_meta( $post_id, 'action_embed_code' );
+			delete_post_meta( $post_id, '_action_embed_code' );
 			delete_post_meta( $post_id, '_action_network_event_id' );
 		}
 	}
@@ -529,6 +524,7 @@ function houseyou_events_listing_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'limit' => -1,
 		'order' => 'DESC',
+		'tag'   => '',
 	), $atts );
 
 	// Get today's date
@@ -557,6 +553,19 @@ function houseyou_events_listing_shortcode( $atts ) {
 			),
 		),
 	);
+
+	// Filter by tags if specified
+	if ( ! empty( $atts['tag'] ) ) {
+		$tags = array_map( 'trim', explode( ',', $atts['tag'] ) );
+		$query_args['tax_query'] = array(
+			array(
+				'taxonomy' => 'post_tag',
+				'field'    => 'slug',
+				'terms'    => $tags,
+				'operator' => 'IN',
+			),
+		);
+	}
 
 	$events = new WP_Query( $query_args );
 
@@ -591,7 +600,7 @@ function houseyou_events_listing_shortcode( $atts ) {
 							<div class="event-meta">
 								<?php if ( ! empty( $event_date ) ) : ?>
 									<div class="event-date">
-										📅 <?php echo esc_html( date_i18n( 'F j, Y', strtotime( $event_date ) ) ); ?>
+										📅 <?php echo esc_html( date_i18n( 'D, jS F Y', strtotime( $event_date ) ) ); ?>
 									</div>
 								<?php endif; ?>
 
@@ -632,6 +641,44 @@ function houseyou_events_listing_shortcode( $atts ) {
 	return ob_get_clean();
 }
 add_shortcode( 'events_listing', 'houseyou_events_listing_shortcode' );
+
+/**
+ * Shortcode: [event_meta_display]
+ * Outputs date, time (start–end), and location for the current event page.
+ */
+function houseyou_event_meta_display_shortcode() {
+	$post_id       = get_the_ID();
+	$event_date    = get_post_meta( $post_id, '_event_date', true );
+	$event_time    = get_post_meta( $post_id, '_event_time', true );
+	$event_end_time = get_post_meta( $post_id, '_event_end_time', true );
+	$event_location = get_post_meta( $post_id, '_event_location', true );
+
+	if ( empty( $event_date ) && empty( $event_time ) && empty( $event_location ) ) {
+		return '';
+	}
+
+	$html = '<div class="event-meta-sidebar">';
+
+	if ( ! empty( $event_date ) ) {
+		$html .= '<div class="event-date">📅 ' . esc_html( date_i18n( 'D, jS F Y', strtotime( $event_date ) ) ) . '</div>';
+	}
+
+	if ( ! empty( $event_time ) ) {
+		$time_str = esc_html( date_i18n( 'g:i A', strtotime( $event_time ) ) );
+		if ( ! empty( $event_end_time ) ) {
+			$time_str .= ' – ' . esc_html( date_i18n( 'g:i A', strtotime( $event_end_time ) ) );
+		}
+		$html .= '<div class="event-time">🕐 ' . $time_str . '</div>';
+	}
+
+	if ( ! empty( $event_location ) ) {
+		$html .= '<div class="event-location">📍 ' . esc_html( $event_location ) . '</div>';
+	}
+
+	$html .= '</div>';
+	return $html;
+}
+add_shortcode( 'event_meta_display', 'houseyou_event_meta_display_shortcode' );
 
 /**
  * Enqueue admin scripts for event sync
@@ -689,9 +736,9 @@ function houseyou_ajax_sync_event() {
 		wp_send_json_error( array( 'message' => 'Invalid post ID.' ) );
 	}
 
-	// Try to get event ID from ACF field first, fallback to provided event_id
+	// Try to get event ID from embed code first, fallback to provided event_id
 	if ( empty( $event_id ) ) {
-		$event_id = houseyou_an_get_event_id_from_acf( $post_id );
+		$event_id = houseyou_an_get_event_id_from_embed( $post_id );
 	}
 
 	if ( empty( $event_id ) ) {
@@ -910,25 +957,30 @@ function houseyou_register_block_styles() {
 add_action( 'init', 'houseyou_register_block_styles' );
 
 /**
+ * Enable Tags taxonomy for Pages
+ */
+function houseyou_enable_tags_for_pages() {
+	register_taxonomy_for_object_type( 'post_tag', 'page' );
+}
+add_action( 'init', 'houseyou_enable_tags_for_pages' );
+
+/**
  * Action Network Embed Shortcode
  *
- * Displays Action Network embed code from ACF field
+ * Displays Action Network embed code from post meta
  * Usage: [action_network_embed]
  *
- * IMPORTANT: This replaces the Code Snippets JavaScript version.
- * The ACF field 'action_embed_code' now serves dual purpose:
- * 1. Displays the Action Network form via this shortcode
- * 2. Auto-detected by Event Details meta box for syncing event data
+ * Reads from 'action_embed_code' post meta (set via Event Details meta box).
  */
 function houseyou_action_network_embed_shortcode() {
-	$embed_code = get_field( 'action_embed_code' );
+	$embed_code = get_post_meta( get_the_ID(), 'action_embed_code', true );
 
 	if ( empty( $embed_code ) ) {
 		// Only show message in preview/editor context
 		if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
 			return '<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
 				<strong>⚠ Action Network Embed Missing</strong><br>
-				<small>Add Action Network embed code to the ACF field to display the form here.</small>
+				<small>Add Action Network embed code in the Event Details sidebar to display the form here.</small>
 			</div>';
 		}
 		return '';
@@ -938,82 +990,54 @@ function houseyou_action_network_embed_shortcode() {
 }
 add_shortcode( 'action_network_embed', 'houseyou_action_network_embed_shortcode' );
 
-// Allow ACF shortcodes in block themes (required for FSE)
-add_filter( 'acf/shortcode/allow_in_block_themes_outside_content', '__return_true' );
-
 /**
- * Register ACF Fields for Action Network Integration
+ * One-time cleanup: remove legacy ACF field groups for Action Network embed.
  *
- * Creates the 'action_embed_code' field programmatically so it's
- * version controlled and works immediately on theme activation.
+ * Two ACF field groups existed:
+ * - group_action_network_embed (registered in code, now removed)
+ * - group_69266f2c9ac00 (created in ACF admin UI, stored in DB)
+ * Both are replaced by the Event Details meta box.
  */
-function houseyou_register_acf_fields() {
-	// Check if ACF is active
-	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+function houseyou_cleanup_acf_embed_groups() {
+	// Search by post_excerpt, post_name, AND post_title to catch all variants.
+	// ACF stores the group key in post_excerpt for code-registered groups,
+	// but may use post_name for groups created through the admin UI.
+	global $wpdb;
+
+	$group_ids = $wpdb->get_col(
+		"SELECT ID FROM {$wpdb->posts}
+		 WHERE post_type IN ('acf-field-group', 'acf-field-group-revision')
+		 AND (
+			 post_excerpt = 'group_action_network_embed'
+			 OR post_excerpt = 'group_69266f2c9ac00'
+			 OR post_name = 'group_action_network_embed'
+			 OR post_name = 'group_69266f2c9ac00'
+			 OR post_title = 'Action Embed Sidebar'
+			 OR post_title = 'Action Network Settings'
+		 )"
+	);
+
+	if ( empty( $group_ids ) ) {
+		// Nothing left to clean — mark done
+		update_option( 'houseyou_acf_embed_cleaned', 2 );
 		return;
 	}
 
-	acf_add_local_field_group( array(
-		'key' => 'group_action_network_embed',
-		'title' => 'Action Network Settings',
-		'fields' => array(
-			array(
-				'key' => 'field_action_embed_code',
-				'label' => 'Action Network Embed Code',
-				'name' => 'action_embed_code',
-				'type' => 'textarea',
-				'instructions' => 'Paste the Action Network embed code here. This can be:
-• A widget script: <code><script src="https://actionnetwork.org/widgets/v3/event/..."></script></code>
-• An event URL: <code>https://actionnetwork.org/events/event-slug</code>
-• An event ID: <code>abc123-def456-ghi789</code>
+	foreach ( $group_ids as $group_id ) {
+		// Delete child fields
+		$field_ids = $wpdb->get_col( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->posts} WHERE post_type = 'acf-field' AND post_parent = %d",
+			$group_id
+		) );
+		foreach ( $field_ids as $field_id ) {
+			wp_delete_post( $field_id, true );
+		}
+		wp_delete_post( $group_id, true );
+	}
 
-The embed will display where the [action_network_embed] shortcode appears in the template.',
-				'required' => 0,
-				'placeholder' => '<script src="https://actionnetwork.org/widgets/v3/event/YOUR-EVENT-ID?format=js"></script>',
-				'rows' => 4,
-				'new_lines' => '',
-			),
-		),
-		'location' => array(
-			// Show on pages using Action template
-			array(
-				array(
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'page',
-				),
-				array(
-					'param' => 'page_template',
-					'operator' => '==',
-					'value' => 'action',
-				),
-			),
-			// Show on pages using AN Events template
-			array(
-				array(
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'page',
-				),
-				array(
-					'param' => 'page_template',
-					'operator' => '==',
-					'value' => 'an-events',
-				),
-			),
-		),
-		'menu_order' => 10,
-		'position' => 'normal',
-		'style' => 'default',
-		'label_placement' => 'top',
-		'instruction_placement' => 'below_label',
-		'hide_on_screen' => '',
-		'active' => true,
-		'description' => 'Configure Action Network embed for this page.',
-		'show_in_rest' => 0,
-	) );
+	update_option( 'houseyou_acf_embed_cleaned', 2 );
 }
-add_action( 'acf/init', 'houseyou_register_acf_fields' );
+add_action( 'admin_init', 'houseyou_cleanup_acf_embed_groups' );
 
 add_action('wp_footer', function() {
     ?>

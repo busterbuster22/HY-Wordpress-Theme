@@ -787,21 +787,28 @@ The scrollbar overflow side-effect of `100vw` is managed by `overflow-x: hidden`
 
 ---
 
-### 4. ACF shortcodes in block themes require an explicit filter
+### 4. `[action_network_embed]` shortcode uses `get_post_meta()`, not ACF
 
-ACF shortcodes (`[acf field="..."]` or custom shortcodes that use `get_field()`) do not render inside FSE block templates by default. The theme enables this with:
-
-```php
-add_filter( 'acf/shortcode/allow_in_block_themes_outside_content', '__return_true' );
-```
-
-This filter is set in [`functions.php:872`](functions.php:872). Without it, `[action_network_embed]` would return empty on all action and event pages.
+The `[action_network_embed]` shortcode reads embed code directly from post meta via `get_post_meta()`, not ACF's `get_field()`. This means it does not depend on ACF being active and does not require the `acf/shortcode/allow_in_block_themes_outside_content` filter.
 
 ---
 
 ### 5. Navigation refs are database-specific
 
 The footer navigation blocks reference menus by database ID (`ref: 2063`, `ref: 2064`). These IDs exist on the live/staging database only. On any fresh WordPress install or local environment with a different database, these refs point to nothing and the footer nav renders empty. Menus must be recreated and re-referenced in the Site Editor on each environment.
+
+---
+
+### 6. Event sync: widget slug ≠ API event ID
+
+The "Sync from Action Network" button in the Event Details meta box does not currently work. The embed script URL contains a human-readable **slug** (e.g. `housing-rally-lismore`), but the API endpoint (`/api/v2/events/{id}`) requires a **UUID** (e.g. `abc12345-def6-7890-ghij-klmnopqrstuv`). The parse function extracts the slug, sends it to the API, and gets a 500 error.
+
+**Future fix options:**
+- Add a separate text input for the API event UUID (used only for sync, not display)
+- Add an API lookup step that lists events and matches by title/date to resolve the UUID
+- Fetch the event list once and cache a slug→UUID mapping
+
+The embed display itself works fine without sync — date/time/location can be entered manually.
 
 ---
 
