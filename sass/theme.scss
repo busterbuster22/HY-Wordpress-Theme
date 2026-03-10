@@ -225,7 +225,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-dark-section {
 	background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
-	padding: 60px 0 !important;
+	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 
@@ -239,7 +239,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-light-section {
 	background-color: var(--wp--preset--color--white, #FFFFFF) !important;
 	color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
-	padding: 60px 0 !important;
+	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 
@@ -253,7 +253,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-pink-section {
 	background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
-	padding: 60px 0 !important;
+	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 
@@ -333,9 +333,6 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
    Aligned header, body, footer
    ======================================== */
 
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap');
-
 /* ========================================
    CUSTOM CONTAINER CLASS
    ======================================== */
@@ -376,12 +373,12 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 /* Remove spacing around full-width sections when they're first/last in main */
 main .full-width-homepage:first-child {
     margin-top: 0 !important;
-    padding-top: 60px !important;
+    padding-top: var(--wp--custom--spacing--medium) !important;
 }
 
 main .full-width-homepage:last-child {
     margin-bottom: 0 !important;
-    padding-bottom: 60px !important;
+    padding-bottom: var(--wp--custom--spacing--medium) !important;
 }
 
 /* Constrain content inside full-width sections */
@@ -400,18 +397,16 @@ main .full-width-homepage:last-child {
 
 /* Content sections with vertical spacing */
 .content-section {
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-block: var(--wp--custom--spacing--small);
 }
 
 /* Column spacing */
 .wp-block-columns {
-    gap: 20px;
+    gap: var(--wp--style--block-gap, 0.5em);
 }
 
 .wp-block-column {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-inline: var(--wp--custom--gap--baseline);
 }
 
 /* Header background */
@@ -535,8 +530,7 @@ footer.site-footer-container > .wp-block-group {
     }
 
     .content-section {
-        padding-top: 60px;
-        padding-bottom: 60px;
+        padding-block: var(--wp--custom--spacing--medium);
     }
 
     /* Footer desktop padding */
@@ -548,12 +542,11 @@ footer.site-footer-container > .wp-block-group {
 
     /* Column spacing desktop */
     .wp-block-columns {
-        gap: 40px;
+        gap: var(--wp--custom--gap--horizontal, 30px);
     }
 
     .wp-block-column {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-inline: var(--wp--custom--gap--horizontal);
     }
 }
 
@@ -561,35 +554,20 @@ footer.site-footer-container > .wp-block-group {
    TYPOGRAPHY
    ======================================== */
 
-h1 { font-size: 2.5em !important; }
-h2 { font-size: 2em !important; }
-h3 { font-size: 1.6em !important; margin-top: 0 !important; margin-bottom: 0 !important; }
-h4 { font-size: 1.2em !important; margin-top: 0 !important; margin-bottom: 0 !important; }
-h5 { font-size: 1em !important; margin-top: 0 !important; margin-bottom: 0 !important; }
-
 /* Intro text blocks */
 .intro-block {
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: 500 !important;
     line-height: 1.2 !important;
     color: white !important;
-    padding: 0.48rem 0;
+    padding: var(--wp--custom--gap--baseline) 0;
 }
 
-/* Default paragraph spacing */
-.site-main p {
-    font-size: 1.3rem;
-    line-height: 1.6;
-    padding: 5px 0;
-}
-
-/* Inter Font Application for Headers/Text */
 .hero-section p,
 .hero-section h3,
 .hero-section h5,
 .hero-section .intro-block,
 .hero-section li {
-    font-family: 'Inter', sans-serif;
     text-shadow:
         0 0 20px rgba(0, 0, 0, 0.8),
         0 0 40px rgba(0, 0, 0, 0.6),
@@ -599,19 +577,12 @@ h5 { font-size: 1em !important; margin-top: 0 !important; margin-bottom: 0 !impo
 .hero-section p,
 .hero-section li {
     font-weight: 500;
-    font-size: 25px;
     line-height: 1.2;
-    padding: 6px 0;
 }
 
 .hero-section p strong,
 .hero-section li strong {
-    font-weight: 800;
-}
-
-@media (min-width: 769px) {
-    .site-main p { font-size: 1.5rem; }
-    .hero-section p, .hero-section li { font-size: 1.5rem; }
+    font-weight: 700;
 }
 
 /* ========================================
@@ -678,14 +649,14 @@ h5 { font-size: 1em !important; margin-top: 0 !important; margin-bottom: 0 !impo
     height: 100% !important;
 }
 
-/* Font styling for all menu items */
+/* Font styling for all menu items - uses theme.json font */
 #mega-menu-wrap a,
 .mega-menu-link,
 .mega-menu-item a,
 .mega-menu-item:hover a,
 a.mega-menu-link:hover,
 a.mega-menu-link:focus {
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
 }
 
 .mega-menu-item:hover .mega-sub-menu { margin-top: 0 !important; }
@@ -785,7 +756,7 @@ li.mega-social-icon a {
 /* === GLOBAL FORM LAYOUT (Letter Form Only) === */
 #can_embed_form form.new_delivery,
 #can_embed_form form.js-letter-form {
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     color: #000000 !important;
     padding-bottom: 20px;
 }
@@ -797,7 +768,7 @@ li.mega-social-icon a {
 #can_letter_one_col h2,
 #can_letter_one_col h3,
 #can_letter_one_col h4 {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 1.4em !important;
     text-transform: uppercase !important;
     font-weight: bold !important;
@@ -820,7 +791,7 @@ li.mega-social-icon a {
 #can_letter_one_col input[type="text"],
 #can_letter_one_col input[type="email"],
 #can_letter_one_col textarea {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 18px !important;
     height: 52px !important;
     padding: 12px 15px !important;
@@ -860,7 +831,7 @@ li.mega-social-icon a {
 #can_letter_one_col .button {
     background-color: #CB1EAA !important;
     color: #FFFFFF !important;
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: bold !important;
     font-size: 20px !important;
     text-transform: uppercase !important;
@@ -1126,7 +1097,7 @@ li.mega-social-icon a {
 
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section h4 {
     color: #FFFFFF !important;
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 2em !important;
     text-shadow:
         0 0 20px rgba(0, 0, 0, 0.8),
@@ -1137,7 +1108,7 @@ li.mega-social-icon a {
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section p,
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section li {
     color: #FFFFFF !important;
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 20px !important;
     padding: 3px 0 !important;
     text-shadow:
@@ -1186,7 +1157,7 @@ li.mega-social-icon a {
 
 /* Year of Birth placeholder styling (Letter Form Only) */
 #can_embed_form form.new_delivery input#Year-of-Birth-YYYY {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wp--preset--font-family--glacial-indifference);
     font-size: 18px;
     height: 52px;
     padding: 0 20px;
@@ -1244,7 +1215,7 @@ li.mega-social-icon a {
 /* Apply House You styling to RSVP inputs */
 #can_embed_form form.new_rsvp input[type="text"],
 #can_embed_form form.new_rsvp input[type="email"] {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 18px !important;
     height: 52px !important;
     padding: 12px 15px !important;
@@ -1259,7 +1230,7 @@ li.mega-social-icon a {
 #can_embed_form form.new_rsvp input[type="submit"] {
     background-color: #CB1EAA !important;
     color: #FFFFFF !important;
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: bold !important;
     font-size: 20px !important;
     text-transform: uppercase !important;
@@ -1384,7 +1355,7 @@ li.mega-social-icon a {
 /* === APPLY HOUSE YOU STYLING TO RSVP INPUTS === */
 #can_embed_form form.new_rsvp input[type="text"],
 #can_embed_form form.new_rsvp input[type="email"] {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 18px !important;
     height: 52px !important;
     padding: 12px 15px !important;
@@ -1408,7 +1379,7 @@ li.mega-social-icon a {
 #can_embed_form form.new_rsvp input[type="submit"] {
     background-color: #CB1EAA !important;
     color: #FFFFFF !important;
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: bold !important;
     font-size: 20px !important;
     text-transform: uppercase !important;
@@ -1570,12 +1541,12 @@ li.mega-social-icon a {
 
 /* === STYLE THANK YOU PAGE WITH HOUSE YOU THEME === */
 #can_embed_form.can_thank_you_wrap {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
 }
 
 /* Main thank you heading */
 #can_embed_form.can_thank_you_wrap #can_thank_you h1 {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 2.5em !important;
     color: #FFFFFF !important;
     text-align: center !important;
@@ -1588,7 +1559,7 @@ li.mega-social-icon a {
 
 /* Subtitle */
 #can_embed_form.can_thank_you_wrap #can_thank_you h4 {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 1.2em !important;
     color: #FFFFFF !important;
     text-align: center !important;
@@ -1610,7 +1581,7 @@ li.mega-social-icon a {
 }
 
 #can_embed_form.can_thank_you_wrap #add-to-calendar p {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     color: #000000 !important;
     font-size: 16px !important;
     margin-bottom: 15px !important;
@@ -1620,7 +1591,7 @@ li.mega-social-icon a {
     display: inline-block !important;
     background-color: #CB1EAA !important;
     color: #FFFFFF !important;
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: bold !important;
     font-size: 16px !important;
     text-transform: uppercase !important;
@@ -1640,7 +1611,7 @@ li.mega-social-icon a {
 
 /* Share buttons section */
 #can_embed_form.can_thank_you_wrap .can_thank_you-block h4.widget_title {
-    font-family: 'Inter', sans-serif !important;
+    font-family: var(--wp--preset--font-family--glacial-indifference) !important;
     font-size: 1.4em !important;
     color: #FFFFFF !important;
     font-weight: bold !important;
@@ -1656,7 +1627,7 @@ li.mega-social-icon a {
     display: inline-block !important;
     background-color: #CB1EAA !important;
     color: #FFFFFF !important;
-    font-family: 'League Spartan', sans-serif !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
     font-weight: bold !important;
     font-size: 16px !important;
     text-transform: uppercase !important;

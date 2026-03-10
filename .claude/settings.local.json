@@ -5,7 +5,17 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(findstr:*)",
-      "Bash(wp post list:*)"
+      "Bash(wp post list:*)",
+      "Bash(curl:*)",
+      "Bash(ls -la league-spartan-*)",
+      "Bash(ls:*)",
+      "Bash(xxd:*)",
+      "WebSearch",
+      "WebFetch(domain:fontlibrary.org)",
+      "WebFetch(domain:www.fontsquirrel.com)",
+      "Bash(unzip:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.cufonfonts.com)"
     ]
   }
 }
