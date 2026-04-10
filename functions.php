@@ -1,6 +1,45 @@
 <?php declare( strict_types = 1 ); ?>
 <?php
 /**
+ * Dual-Track Debugging
+ * 1. Writes to standard wp-content/debug.log (Visible via Plugin)
+ * 2. Attempts to capture CF7 specific failures
+ */
+@ini_set( 'log_errors', 'On' );
+@ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' );
+
+// Capture CF7 specific errors and force them into the log
+add_action( 'wpcf7_mail_failed', function( $contact_form ) {
+    $submission = WPCF7_Submission::get_instance();
+    if ( $submission ) {
+        error_log( '--- CONTACT FORM 7 FAILURE DETECTED ---' );
+        error_log( 'Response: ' . print_r( $submission->get_response(), true ) );
+    }
+}, 10, 1 );
+
+/**
+ * STAGING DIAGNOSTIC: Prints CF7 errors directly to HTML source.
+ * Right-click 'View Page Source' and scroll to bottom to read.
+ */
+add_action( 'wpcf7_mail_failed', function( $contact_form ) {
+    $submission = WPCF7_Submission::get_instance();
+    if ( $submission ) {
+        $response = $submission->get_response();
+        // This hooks into the footer to print the error as an HTML comment
+        add_action( 'wp_footer', function() use ( $response ) {
+            echo "\n\n\n\n<!-- CF7 MAIL FAILED: " . esc_html( $response ) . " -->\n\n\n\n";
+        }, 999 );
+    }
+}, 10, 1 );
+
+// Optional: Log if the submission was marked as spam (common on staging)
+add_action( 'wpcf7_spam', function( $contact_form ) {
+    add_action( 'wp_footer', function() {
+        echo "\n\n<!-- CF7 SPAM DETECTED: Submission was marked as spam -->\n\n";
+    }, 999 );
+}, 10, 1 );
+
+/**
  * House You functions and definitions
  *
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
@@ -71,7 +110,7 @@ if ( ! function_exists( 'houseyou_styles' ) ) :
 			'house-you-main-style',
 			get_stylesheet_uri(),
 			array(),
-			wp_get_theme()->get( 'Version' )
+			filemtime( get_template_directory() . '/style.css' )
 		);
 
 		// Register theme stylesheet.
@@ -79,7 +118,7 @@ if ( ! function_exists( 'houseyou_styles' ) ) :
 			'house-you-style',
 			get_template_directory_uri() . '/assets/theme.css',
 			array( 'house-you-main-style' ),
-			wp_get_theme()->get( 'Version' )
+			filemtime( get_template_directory() . '/assets/theme.css' )
 		);
 
 		// Add styles inline.
@@ -110,7 +149,7 @@ function houseyou_enqueue_home_letter_action() {
 		'houseyou-home-letter-action',
 		get_template_directory_uri() . '/assets/js/home-letter-action.js',
 		array(),
-		wp_get_theme()->get( 'Version' ),
+		filemtime( get_template_directory() . '/assets/js/home-letter-action.js' ),
 		true // Load in footer
 	);
 }
@@ -133,7 +172,7 @@ function houseyou_enqueue_action_event_embed() {
 		'houseyou-action-event-embed',
 		get_template_directory_uri() . '/assets/js/action-event-embed.js',
 		array(),
-		wp_get_theme()->get( 'Version' ),
+		filemtime( get_template_directory() . '/assets/js/action-event-embed.js' ),
 		true // Load in footer
 	);
 }
@@ -157,12 +196,36 @@ function houseyou_enqueue_action_template_embed() {
 		'houseyou-action-template-embed',
 		get_template_directory_uri() . '/assets/js/action-template-embed.js',
 		array(),
-		wp_get_theme()->get( 'Version' ),
+		filemtime( get_template_directory() . '/assets/js/action-template-embed.js' ),
 		true // Load in footer
 	);
 }
 
 add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_action_template_embed' );
+
+/**
+ * Enqueue survey template embed script.
+ *
+ * Targets Action Network v6/survey widgets (form.new_response) on pages using
+ * the "survey" block template. Applies the same structural and visual fixes as
+ * action-template-embed.js — column layout, floatlabel conversion for custom
+ * fields, checkbox row layout, d_sharing opt-in section.
+ */
+function houseyou_enqueue_survey_embed() {
+	if ( ! is_page_template( 'survey' ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'houseyou-action-survey-embed',
+		get_template_directory_uri() . '/assets/js/action-survey-embed.js',
+		array(),
+		filemtime( get_template_directory() . '/assets/js/action-survey-embed.js' ),
+		true // Load in footer
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_survey_embed' );
 
 if ( ! function_exists( 'houseyou_editor_styles' ) ) :
 
@@ -569,38 +632,49 @@ add_action( 'save_post', 'houseyou_save_event_details' );
  * Events Listing Shortcode
  *
  * Displays a grid of upcoming events using the AN Events template
- * Usage: [events_listing]
+ * Usage: [events_listing tag="disaster-workshops" columns="3"]
+ *
+ * Attributes:
+ * - limit: Number of events to show (default: -1 = all)
+ * - tag: Filter by tag slug (comma-separated for multiple)
+ * - columns: Number of event cards per row on desktop (e.g., "3", "2", "4")
+ * - width: Custom max-width for desktop (e.g., "800px", "50%") - use instead of columns for precise control
+ *
+ * Note: Only affects desktop (≥769px). Mobile always shows 1 column at full width.
  */
 function houseyou_events_listing_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
-		'limit' => -1,
-		'order' => 'DESC',
-		'tag'   => '',
+		'limit'   => -1,
+		'order'   => 'DESC',
+		'tag'     => '',
+		'width'   => '',  // Optional max-width for desktop (e.g., "800px", "50%", "100%")
+		'columns' => '',  // Number of event cards per row on desktop (e.g., "3", "2", "4")
 	), $atts );
 
 	// Get today's date
 	$today = current_time( 'Y-m-d' );
 
 	// Query for pages using the AN Events template
+	// Only shows events with dates set, ordered chronologically
 	$query_args = array(
 		'post_type'      => 'page',
-		'meta_key'       => '_wp_page_template',
-		'meta_value'     => 'an-events',
 		'posts_per_page' => $atts['limit'],
 		'post_status'    => 'publish',
-		'orderby'        => 'meta_value',
-		'order'          => 'ASC',
+		'orderby'        => array(
+			'event_date_order' => 'ASC',
+		),
 		'meta_query'     => array(
-			'relation' => 'OR',
+			'relation' => 'AND',
 			array(
+				'key'     => '_wp_page_template',
+				'value'   => 'an-events',
+				'compare' => '=',
+			),
+			'event_date_order' => array(  // Named clause for ordering
 				'key'     => '_event_date',
 				'value'   => $today,
 				'compare' => '>=',
 				'type'    => 'DATE',
-			),
-			array(
-				'key'     => '_event_date',
-				'compare' => 'NOT EXISTS',
 			),
 		),
 	);
@@ -621,10 +695,23 @@ function houseyou_events_listing_shortcode( $atts ) {
 	$events = new WP_Query( $query_args );
 
 	ob_start();
+
+	// Build CSS custom properties for desktop layout
+	$style_attr = '';
+	$grid_class = '';
+
+	// Use CSS Grid when columns are specified for true column control
+	if ( ! empty( $atts['columns'] ) && is_numeric( $atts['columns'] ) ) {
+		$columns = intval( $atts['columns'] );
+		$style_attr = ' style="--events-grid-columns: ' . esc_attr( $columns ) . ';"';
+		$grid_class = ' events-grid--columned';
+	} elseif ( ! empty( $atts['width'] ) ) {
+		$style_attr = ' style="--events-grid-max-width: ' . esc_attr( $atts['width'] ) . ';"';
+	}
 	?>
 
 	<?php if ( $events->have_posts() ) : ?>
-		<div class="events-grid">
+		<div class="events-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
 			<?php while ( $events->have_posts() ) : $events->the_post();
 				$event_date = get_post_meta( get_the_ID(), '_event_date', true );
 				$event_time = get_post_meta( get_the_ID(), '_event_time', true );
@@ -752,7 +839,7 @@ function houseyou_enqueue_event_sync_scripts( $hook ) {
 		'houseyou-admin-event-sync',
 		get_template_directory_uri() . '/assets/js/admin-event-sync.js',
 		array( 'jquery' ),
-		wp_get_theme()->get( 'Version' ),
+		filemtime( get_template_directory() . '/assets/js/admin-event-sync.js' ),
 		true
 	);
 
@@ -1127,4 +1214,8 @@ add_action('wp_footer', function() {
     })();
     </script>
     <?php
-}, 99);
+}, 99 );
+
+// STAGING DIAGNOSTIC: Disable CF7 AJAX to force page reload on submission
+// This ensures diagnostic comments in HTML source are visible after form failure
+add_filter( 'wpcf7_load_js', '__return_false' );

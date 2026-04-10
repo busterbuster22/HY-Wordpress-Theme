@@ -185,7 +185,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 
 /* Comments */
 .wp-block-post-comments input[type="submit"] {
-	font-family: var(--wp--preset--font-family--red-hat-display);
+	font-family: var(--wp--preset--font-family--glacial-indifference);
 	color: var(--wp--custom--color--background);
 }
 
@@ -226,8 +226,6 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 	background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
 	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
-	margin-top: 0 !important;
-	margin-bottom: 0 !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--white, #FFFFFF) !important;
@@ -240,8 +238,6 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 	background-color: var(--wp--preset--color--white, #FFFFFF) !important;
 	color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
 	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
-	margin-top: 0 !important;
-	margin-bottom: 0 !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
@@ -254,8 +250,6 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 	background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
 	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
-	margin-top: 0 !important;
-	margin-bottom: 0 !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--white, #FFFFFF) !important;
@@ -337,7 +331,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
    CUSTOM CONTAINER CLASS
    ======================================== */
 .content-container {
-    max-width: 1800px !important;
+    max-width: var(--wp--style--global--wide-size, 1400px);
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
@@ -361,33 +355,13 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
     max-width: 100%;
 }
 
-/* Main content area - no constraints */
-.site-main {
-    width: 100%;
-    max-width: 100%;
-    padding: 0;
-    margin: 0;
-}
-
-
-/* Remove spacing around full-width sections when they're first/last in main */
-main .full-width-homepage:first-child {
-    margin-top: 0 !important;
-    padding-top: var(--wp--custom--spacing--medium) !important;
-}
-
-main .full-width-homepage:last-child {
-    margin-bottom: 0 !important;
-    padding-bottom: var(--wp--custom--spacing--medium) !important;
-}
-
 /* Constrain content inside full-width sections */
 .full-width-homepage .wp-block-columns,
 .full-width-homepage > .wp-block-heading,
 .full-width-homepage > .wp-block-paragraph,
 .full-width-homepage > .petition-row,
 .full-width-homepage > .content-container {
-    max-width: 1800px !important;
+    max-width: var(--wp--style--global--wide-size, 1400px);
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
@@ -406,7 +380,9 @@ main .full-width-homepage:last-child {
 }
 
 .wp-block-column {
-    padding-inline: var(--wp--custom--gap--baseline);
+    // Reset padding - columns are layout containers only
+    // Content spacing should be handled by inner Group blocks or gap property
+    padding-inline: 0;
 }
 
 /* Header background */
@@ -430,7 +406,7 @@ header.wp-block-template-part a {
 
 /* Apply container styling to header columns - MOBILE FIRST */
 header.wp-block-template-part .wp-block-columns.header-columns {
-    max-width: 1800px !important;
+    max-width: var(--wp--style--global--wide-size, 1400px);
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
@@ -457,6 +433,7 @@ header.wp-block-template-part .wp-block-column {
 footer.wp-block-template-part {
     width: 100%;
     max-width: 100%;
+    margin-top: var(--wp--custom--gap--vertical);
 }
 
 
@@ -464,7 +441,7 @@ footer.wp-block-template-part {
 /* Constrain footer content inside the full-width background */
 footer.wp-block-template-part .wp-block-columns,
 footer.wp-block-template-part .wp-block-paragraph {
-    max-width: 1800px !important;
+    max-width: var(--wp--style--global--wide-size, 1400px);
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
@@ -492,7 +469,7 @@ footer.site-footer-container {
 }
 
 footer.site-footer-container > .wp-block-group {
-    max-width: 1800px;
+    max-width: var(--wp--style--global--wide-size, 1400px);
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -546,7 +523,9 @@ footer.site-footer-container > .wp-block-group {
     }
 
     .wp-block-column {
-        padding-inline: var(--wp--custom--gap--horizontal);
+        // Maintain zero padding on desktop
+        // Gap property handles column separation
+        padding-inline: 0;
     }
 }
 
@@ -749,22 +728,46 @@ li.mega-social-icon a {
 }
 
 /* =========================================================================
+   ACTION NETWORK EMBED CONTAINER - REMOVE DEFAULT PADDING
+   ========================================================================= */
+
+/* Remove Action Network's default padding to prevent double-padding effect */
+/* High specificity required to override Action Network's cross-origin stylesheet */
+.wp-block-column #can_embed_form,
+body #can_embed_form,
+#can_embed_form {
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Ensure the form inner content has proper spacing */
+.wp-block-column #can_embed_form .can_embed_form_inner,
+body #can_embed_form .can_embed_form_inner,
+#can_embed_form .can_embed_form_inner {
+    padding: 0 !important;
+}
+
+/* =========================================================================
    ACTION NETWORK FORM STYLES - HOUSE YOU
    LETTER CAMPAIGN FORM ONLY (NOT RSVP)
    ========================================================================= */
 
-/* === GLOBAL FORM LAYOUT (Letter Form Only) === */
+/* === GLOBAL FORM LAYOUT (Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery,
+#can_embed_form form.new_answer,
 #can_embed_form form.js-letter-form {
     font-family: var(--wp--preset--font-family--league-spartan) !important;
     color: #000000 !important;
     padding-bottom: 20px;
 }
 
-/* === HEADINGS (Letter Form Only) === */
+/* === HEADINGS (Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery h2,
 #can_embed_form form.new_delivery h3,
 #can_embed_form form.new_delivery h4,
+#can_embed_form form.new_answer h2,
+#can_embed_form form.new_answer h3,
+#can_embed_form form.new_answer h4,
 #can_letter_one_col h2,
 #can_letter_one_col h3,
 #can_letter_one_col h4 {
@@ -774,20 +777,22 @@ li.mega-social-icon a {
     font-weight: bold !important;
     color: #ffffff !important;
     padding-bottom: 15px !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
     text-shadow:
         0 0 20px rgba(0, 0, 0, 0.8),
         0 0 40px rgba(0, 0, 0, 0.6),
         0 2px 4px rgba(0, 0, 0, 0.9) !important;
 }
 
-/* === INPUT FIELDS (House You Shadow Box Style - Letter Form Only) === */
+/* === INPUT FIELDS (House You Shadow Box Style - Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery input[type="text"],
 #can_embed_form form.new_delivery input[type="email"],
 #can_embed_form form.new_delivery input[type="tel"],
 #can_embed_form form.new_delivery textarea,
 #can_embed_form form.new_delivery select#Housing-Demographic,
+#can_embed_form form.new_answer input[type="text"],
+#can_embed_form form.new_answer input[type="email"],
+#can_embed_form form.new_answer input[type="tel"],
+#can_embed_form form.new_answer textarea,
 #can_letter_one_col input[type="text"],
 #can_letter_one_col input[type="email"],
 #can_letter_one_col textarea {
@@ -809,24 +814,29 @@ li.mega-social-icon a {
     appearance: menulist !important;
 }
 
-/* Textarea specific (Letter Form Only) */
+/* Textarea specific (Letter & Form Campaigns) */
 #can_embed_form form.new_delivery textarea,
+#can_embed_form form.new_answer textarea,
 #can_letter_one_col textarea {
     height: auto !important;
     min-height: 150px;
     padding-top: 15px !important;
 }
 
-/* Placeholder styling (Letter Form Only) */
+/* Placeholder styling (Letter & Form Campaigns) */
 #can_embed_form form.new_delivery ::placeholder,
+#can_embed_form form.new_answer ::placeholder,
 #can_letter_one_col ::placeholder {
     color: rgba(0, 0, 0, 0.5) !important;
 }
 
-/* === BUTTONS (Submit & Navigation - Letter Form Only) === */
+/* === BUTTONS (Submit & Navigation - Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery input[type="submit"],
 #can_embed_form form.new_delivery .button,
 #can_embed_form form.new_delivery .can_button,
+#can_embed_form form.new_answer input[type="submit"],
+#can_embed_form form.new_answer .button,
+#can_embed_form form.new_answer .can_button,
 #can_letter_one_col input[type="submit"],
 #can_letter_one_col .button {
     background-color: #CB1EAA !important;
@@ -846,10 +856,13 @@ li.mega-social-icon a {
     transition: all 0.3s ease;
 }
 
-/* Button hover states (Letter Form Only) */
+/* Button hover states (Letter & Form Campaigns) */
 #can_embed_form form.new_delivery input[type="submit"]:hover,
 #can_embed_form form.new_delivery .button:hover,
 #can_embed_form form.new_delivery .can_button:hover,
+#can_embed_form form.new_answer input[type="submit"]:hover,
+#can_embed_form form.new_answer .button:hover,
+#can_embed_form form.new_answer .can_button:hover,
 #can_letter_one_col input[type="submit"]:hover,
 #can_letter_one_col .button:hover {
     background-color: #A01888 !important;
@@ -857,8 +870,9 @@ li.mega-social-icon a {
     box-shadow: 12px 12px 4px 0 #2D2A2E !important;
 }
 
-/* === TWO-COLUMN LAYOUT (Letter Form ONLY - NOT RSVP) === */
-#can_embed_form form.new_delivery #form_col1 {
+/* === TWO-COLUMN LAYOUT (Letter & Form Campaigns - NOT RSVP) === */
+#can_embed_form form.new_delivery #form_col1,
+#can_embed_form form.new_answer #form_col1 {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: flex-start !important;
@@ -866,7 +880,9 @@ li.mega-social-icon a {
 }
 
 #can_embed_form form.new_delivery #form_col1 li.core_field,
-#can_embed_form form.new_delivery #form_col1 li.control-group {
+#can_embed_form form.new_delivery #form_col1 li.control-group,
+#can_embed_form form.new_answer #form_col1 li.core_field,
+#can_embed_form form.new_answer #form_col1 li.control-group {
     width: 48% !important;
     margin: 0 0 20px 0 !important;
     list-style: none !important;
@@ -874,21 +890,25 @@ li.mega-social-icon a {
     padding: 0 !important;
 }
 
-/* Submit button column takes full width (Letter Form Only) */
-#can_embed_form form.new_delivery #form_col2 {
+/* Submit button column takes full width (Letter & Form Campaigns) */
+#can_embed_form form.new_delivery #form_col2,
+#can_embed_form form.new_answer #form_col2 {
     width: 100% !important;
     clear: both !important;
 }
 
-/* === OPT-IN CHECKBOX STYLING (Letter Form Only) === */
+/* === OPT-IN CHECKBOX STYLING (Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery #d_sharing ul,
-#can_embed_form form.new_delivery #d_sharing li {
+#can_embed_form form.new_delivery #d_sharing li,
+#can_embed_form form.new_answer #d_sharing ul,
+#can_embed_form form.new_answer #d_sharing li {
     list-style: none !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-#can_embed_form form.new_delivery #d_sharing label {
+#can_embed_form form.new_delivery #d_sharing label,
+#can_embed_form form.new_answer #d_sharing label {
     color: #FFFFFF !important;
     font-size: 14px !important;
     padding-left: 0 !important;
@@ -897,8 +917,9 @@ li.mega-social-icon a {
     padding-top: 5px !important;
 }
 
-/* === WELCOME MESSAGE (Both Letter Pages) === */
+/* === WELCOME MESSAGE (Letter & Form Campaigns) === */
 #can_embed_form form.new_delivery #action_welcome_message,
+#can_embed_form form.new_answer #action_welcome_message,
 #can_letter_one_col #action_welcome_message {
     margin-bottom: 15px !important;
     display: block !important;
@@ -906,17 +927,20 @@ li.mega-social-icon a {
 }
 
 #can_embed_form form.new_delivery #action_welcome_message_inner,
+#can_embed_form form.new_answer #action_welcome_message_inner,
 #can_letter_one_col #action_welcome_message_inner {
     display: block !important;
 }
 
 #can_embed_form form.new_delivery #action_welcome_message_inner .left,
+#can_embed_form form.new_answer #action_welcome_message_inner .left,
 #can_letter_one_col #action_welcome_message_inner .left {
     display: block !important;
     float: none !important;
 }
 
 #can_embed_form form.new_delivery #action_welcome_message_inner .left > div,
+#can_embed_form form.new_answer #action_welcome_message_inner .left > div,
 #can_letter_one_col #action_welcome_message_inner .left > div {
     display: inline !important;
     margin-right: 5px !important;
@@ -929,6 +953,7 @@ li.mega-social-icon a {
 }
 
 #can_embed_form form.new_delivery #action_welcome_message_inner small,
+#can_embed_form form.new_answer #action_welcome_message_inner small,
 #can_letter_one_col #action_welcome_message_inner small {
     font-size: 25px !important;
     color: #FFFFFF !important;
@@ -939,6 +964,7 @@ li.mega-social-icon a {
 }
 
 #can_embed_form form.new_delivery #action_welcome_message_inner small a,
+#can_embed_form form.new_answer #action_welcome_message_inner small a,
 #can_letter_one_col #action_welcome_message_inner small a {
     color: #CB1EAA !important;
     text-decoration: underline !important;
@@ -949,16 +975,85 @@ li.mega-social-icon a {
 }
 
 /* =========================================================================
-   CLEANUP: HIDE BROKEN/UNWANTED ELEMENTS (Letter Form Only)
+   CLEANUP: HIDE BROKEN/UNWANTED ELEMENTS (Letter & Form Campaigns)
    ========================================================================= */
 
-/* Hide empty form builder output (Letter Form Only) */
-#can_embed_form form.new_delivery li.form_builder_output.js-form_builder_output {
+/* Remove border from embed form wrapper (Form Campaigns) */
+#can_embed_form {
+    border: none !important;
+}
+
+/* Hide heading border/underline inside form (Form Campaigns) */
+#can_embed_form form.new_answer h2 {
+    border-bottom: none !important;
+}
+
+/* Checkbox question inline layout (Form Campaigns) */
+#can_embed_form form.new_answer #form_col1 li.control-group.checkbox_group_wrap,
+#can_embed_form form.new_answer li.control-group.checkbox_group_wrap {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+}
+#can_embed_form form.new_answer #form_col1 li.control-group.checkbox_group_wrap label.control-label,
+#can_embed_form form.new_answer li.control-group.checkbox_group_wrap label.control-label {
+    flex: 0 0 auto !important;
+    margin-bottom: 0 !important;
+}
+#can_embed_form form.new_answer #form_col1 li.control-group.checkbox_group_wrap span.controls,
+#can_embed_form form.new_answer li.control-group.checkbox_group_wrap span.controls {
+    flex: 0 0 auto !important;
+}
+
+/* Checkbox label inline (checkbox + text side-by-side) */
+#can_embed_form form.new_answer #form_col1 li.control-group.checkbox_group_wrap label.checkbox,
+#can_embed_form form.new_answer li.control-group.checkbox_group_wrap label.checkbox {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Style Person #1/2/3 text inputs like floatlabel fields (Form Campaigns) */
+#can_embed_form form.new_answer #form_col1 li.control-group.js-fb-textinput,
+#can_embed_form form.new_answer li.control-group.js-fb-textinput {
+    position: relative !important;
+    margin-bottom: 20px !important;
+}
+#can_embed_form form.new_answer #form_col1 li.control-group.js-fb-textinput label.control-label,
+#can_embed_form form.new_answer li.control-group.js-fb-textinput label.control-label {
+    position: absolute !important;
+    top: -9px !important;
+    left: 9px !important;
+    font-size: 11px !important;
+    color: #666 !important;
+    background: #fff !important;
+    padding: 0 3px !important;
+    margin-bottom: 0 !important;
+    z-index: 1 !important;
+}
+#can_embed_form form.new_answer #form_col1 li.control-group.js-fb-textinput input[type="text"],
+#can_embed_form form.new_answer li.control-group.js-fb-textinput input[type="text"] {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    padding-left: 15px !important;
+    border: 1px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: rgb(45, 42, 46) 10px 10px 2px 0px !important;
+    width: 100% !important;
+}
+
+/* Hide empty form builder output (Letter & Form Campaigns) */
+#can_embed_form form.new_delivery li.form_builder_output.js-form_builder_output,
+#can_embed_form form.new_answer li.form_builder_output.js-form_builder_output {
     display: none !important;
 }
 
-/* Hide broken Select2 visual container (Letter Form Only) */
-#can_embed_form form.new_delivery div#s2id_Housing-Demographic {
+/* Hide broken Select2 visual container (Letter & Form Campaigns) */
+#can_embed_form form.new_delivery div#s2id_Housing-Demographic,
+#can_embed_form form.new_answer div#s2id_Housing-Demographic {
     display: none !important;
 }
 
@@ -1732,6 +1827,22 @@ li.mega-social-icon a {
     flex-wrap: wrap;
     gap: 25px;
     justify-content: center;
+
+    // Apply custom width only on desktop (≥769px)
+    @media (min-width: 769px) {
+        max-width: var(--events-grid-max-width, none);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    // Use CSS Grid when columns are specified (desktop only)
+    &--columned {
+        @media (min-width: 769px) {
+            display: grid;
+            grid-template-columns: repeat(var(--events-grid-columns, 3), 1fr);
+            max-width: none;
+        }
+    }
 }
 
 .event-card-link {
@@ -1739,6 +1850,13 @@ li.mega-social-icon a {
     display: block;
     width: 500px;
     flex-shrink: 0;
+
+    // In grid layout, cards should fill their grid cell
+    .events-grid--columned & {
+        @media (min-width: 769px) {
+            width: auto;
+        }
+    }
 }
 
 .event-card {
@@ -1855,4 +1973,443 @@ li.mega-social-icon a {
         width: 100%;
         max-width: 500px;
     }
+}
+
+/* =========================================================================
+   CONTACT FORM 7 - ACTION NETWORK STYLE
+   Aggressive !important overrides to match House You shadow-box look
+   ========================================================================= */
+
+/* Kill ghost spacing from CF7's empty <p> tags */
+.wpcf7-form p {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide labels — placeholders provide context */
+.wpcf7-form label {
+    display: none !important;
+}
+
+/* Shadow-box inputs */
+.wpcf7-form input[type="text"],
+.wpcf7-form input[type="email"],
+.wpcf7-form textarea {
+    background-color: #fff !important;
+    border: 2px solid #2D2A2E !important;
+    border-radius: 0 !important;
+    padding: 15px !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    color: #2D2A2E !important;
+    font-family: inherit;
+    font-size: 18px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.wpcf7-form textarea {
+    min-height: 150px !important;
+    resize: vertical;
+}
+
+/* Placeholder styling */
+.wpcf7-form input::placeholder,
+.wpcf7-form textarea::placeholder {
+    color: #2D2A2E !important;
+    opacity: 0.7 !important;
+}
+
+/* Action Pink submit button */
+.wpcf7-form .wpcf7-submit {
+    background-color: #CB1EAA !important;
+    color: #FFFFFF !important;
+    border: 2px solid #2D2A2E !important;
+    border-radius: 0 !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    font-family: 'League Spartan', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 20px !important;
+    text-transform: uppercase !important;
+    padding: 20px !important;
+    width: 100% !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.wpcf7-form .wpcf7-submit:hover {
+    background-color: #A01888 !important;
+    transform: translateY(-2px);
+    box-shadow: 12px 12px 2px 0px #2D2A2E !important;
+}
+
+/* =========================================================================
+   FLUENT FORMS - HOUSE YOU SHADOW-BOX STYLE
+   Aggressive !important overrides to match Action Network/CF7 look
+   ========================================================================= */
+
+/* Hide form wrapper borders and background */
+.fluentform,
+.frm-fluent-form {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Remove fieldset styling */
+.fluentform fieldset {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Kill ghost spacing from empty elements */
+.fluentform .ff-el-group {
+    margin-bottom: 20px !important;
+}
+
+/* Hide labels — placeholders provide context */
+.fluentform .ff-el-input--label label {
+    display: none !important;
+}
+
+/* Shadow-box inputs and textareas */
+.fluentform input[type="text"],
+.fluentform input[type="email"],
+.fluentform textarea {
+    background-color: #fff !important;
+    border: 2px solid #2D2A2E !important;
+    border-radius: 0 !important;
+    padding: 15px !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    color: #2D2A2E !important;
+    font-family: inherit;
+    font-size: 18px !important;
+    margin-bottom: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 52px !important;
+}
+
+.fluentform textarea {
+    min-height: 150px !important;
+    resize: vertical;
+}
+
+/* Placeholder styling */
+.fluentform input::placeholder,
+.fluentform textarea::placeholder {
+    color: #2D2A2E !important;
+    opacity: 0.7 !important;
+}
+
+/* Two-column name field layout */
+.fluentform .ff-t-container {
+    display: flex !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.fluentform .ff-t-cell {
+    flex: 1 !important;
+}
+
+.fluentform .ff-t-cell .ff-el-group {
+    margin-bottom: 0 !important;
+}
+
+/* Action Pink submit button */
+.fluentform .ff-btn-submit {
+    background-color: #CB1EAA !important;
+    color: #FFFFFF !important;
+    border: 2px solid #2D2A2E !important;
+    border-radius: 0 !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    font-family: 'League Spartan', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 20px !important;
+    text-transform: uppercase !important;
+    padding: 20px !important;
+    width: 100% !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fluentform .ff-btn-submit:hover {
+    background-color: #A01888 !important;
+    transform: translateY(-2px);
+    box-shadow: 12px 12px 2px 0px #2D2A2E !important;
+}
+
+/* Submit button wrapper */
+.fluentform .ff_submit_btn_wrapper {
+    margin-top: 20px !important;
+}
+
+/* =========================================================================
+   SURVEY FORM (form.new_response) — AN v6/survey widget
+   Mirrors form.new_answer styling. Loaded on pages using the "survey"
+   block template via action-survey-embed.js + this CSS.
+   ========================================================================= */
+
+/* === GLOBAL FORM LAYOUT === */
+#can_embed_form form.new_response {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: var(--wp--preset--font-family--inter) !important;
+}
+
+/* === HEADINGS === */
+#can_embed_form form.new_response h2,
+#can_embed_form form.new_response h3,
+#can_embed_form form.new_response h4 {
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    border-bottom: none !important;
+    text-shadow: none !important;
+}
+
+/* === INPUT FIELDS (House You Shadow-Box Style) === */
+#can_embed_form form.new_response input[type="text"],
+#can_embed_form form.new_response input[type="email"],
+#can_embed_form form.new_response input[type="tel"],
+#can_embed_form form.new_response textarea {
+    font-family: var(--wp--preset--font-family--inter) !important;
+    font-size: 18px !important;
+    height: 52px !important;
+    padding: 12px 15px !important;
+    border-radius: 10px !important;
+    border: 2px solid #2D2A2E !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    margin-bottom: 20px !important;
+}
+
+/* Textarea specific */
+#can_embed_form form.new_response textarea {
+    height: auto !important;
+    min-height: 120px !important;
+}
+
+/* Placeholder styling */
+#can_embed_form form.new_response ::placeholder {
+    color: rgba(0, 0, 0, 0.5) !important;
+    opacity: 1 !important;
+}
+
+/* === SUBMIT BUTTON (House You Pink Style) === */
+#can_embed_form form.new_response input[type="submit"],
+#can_embed_form form.new_response .button,
+#can_embed_form form.new_response .can_button {
+    background-color: #CB1EAA !important;
+    color: #FFFFFF !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    text-transform: uppercase !important;
+    border: none !important;
+    border-radius: 11px !important;
+    padding: 12px 32px !important;
+    box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+    cursor: pointer !important;
+    display: block !important;
+    margin: 20px auto 0 auto !important;
+    width: auto !important;
+}
+
+#can_embed_form form.new_response input[type="submit"]:hover,
+#can_embed_form form.new_response .button:hover,
+#can_embed_form form.new_response .can_button:hover {
+    background-color: #A01888 !important;
+}
+
+/* === TWO-COLUMN LAYOUT === */
+#can_embed_form form.new_response #form_col1 {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    float: none !important;
+}
+
+#can_embed_form form.new_response #form_col1 li.core_field,
+#can_embed_form form.new_response #form_col1 li.control-group.js-fb-textinput {
+    width: 48% !important;
+    flex: 0 0 48% !important;
+}
+
+#can_embed_form form.new_response #form_col2 {
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+}
+
+/* Checkbox question — stacked: question text above, Yes checkbox below */
+#can_embed_form form.new_response li.control-group.checkbox_group_wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+}
+
+#can_embed_form form.new_response li.control-group.checkbox_group_wrap label.check_radio_label {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    margin-bottom: 0 !important;
+    white-space: normal !important;
+}
+
+#can_embed_form form.new_response li.control-group.checkbox_group_wrap span.controls.check_radio_field {
+    display: flex !important;
+    align-items: center !important;
+    float: none !important;
+}
+
+#can_embed_form form.new_response li.control-group.checkbox_group_wrap label.checkbox {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 !important;
+}
+
+/* === OPT-IN CHECKBOX (#d_sharing) === */
+#can_embed_form form.new_response #d_sharing ul,
+#can_embed_form form.new_response #d_sharing li {
+    list-style: none !important;
+    padding: 0 !important;
+}
+
+#can_embed_form form.new_response #d_sharing label {
+    color: #000000 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* === FLOATLABEL === */
+#can_embed_form form.new_response .floatlabel-wrapper {
+    position: relative !important;
+    display: block !important;
+}
+
+/* === HIDE EMPTY FORM BUILDER OUTPUT === */
+#can_embed_form form.new_response li.form_builder_output.js-form_builder_output {
+    display: none !important;
+}
+
+/* === HIDE AN BRANDING === */
+#can_embed_form form.new_response .ajax-loading,
+#can_embed_form form.new_response .international_link-wrap,
+#can_embed_form form.new_response .country_drop_wrap,
+#can_embed_form form.new_response #logo_wrap,
+#can_embed_form form.new_response .can_help_text {
+    display: none !important;
+}
+
+/* === SURVEY FEEDBACK PAGE (page 2 of survey flow — #survey_questions) === */
+
+/* Question labels */
+#can_embed_form #survey_questions li.control-group label.check_radio_label,
+#can_embed_form #survey_questions li.control-group label.control-label {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+}
+
+/* Textarea styling */
+#can_embed_form #survey_questions textarea {
+    border: 2px solid #2D2A2E !important;
+    box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+    border-radius: 10px !important;
+    padding: 12px 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 100px !important;
+    font-size: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Submit button (uses <button class="button">) */
+#can_embed_form #survey_questions_footer button.button {
+    background-color: #CB1EAA !important;
+    color: #FFFFFF !important;
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    border: none !important;
+    border-radius: 11px !important;
+    padding: 12px 32px !important;
+    box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+    cursor: pointer !important;
+    display: block !important;
+    margin: 20px auto 0 auto !important;
+    vertical-align: middle !important;
+}
+
+/* Hide progress bar (single-page survey has no meaningful progress) */
+#can_embed_form #survey_progress_wrap {
+    display: none !important;
+}
+
+/* Radio/checkbox option labels */
+#can_embed_form #survey_questions label.radio,
+#can_embed_form #survey_questions label.checkbox {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 16px !important;
+    color: #000000 !important;
+    margin-bottom: 6px !important;
+}
+
+/* === SURVEY THANK-YOU PAGE === */
+/* Show only "Thanks for your support." — hide all sharing/social blocks */
+#can_embed_form.can_thank_you_wrap .can_thank_you-block,
+#can_embed_form.can_thank_you_wrap .clearfix > .can_thank_you-block {
+    display: none !important;
+}
+
+#can_embed_form.can_thank_you_wrap #can_thank_you h4 {
+    display: none !important;
+}
+
+#can_embed_form.can_thank_you_wrap #action_info {
+    display: none !important;
+}
+
+#can_embed_form.can_thank_you_wrap #logo_wrap {
+    display: none !important;
+}
+
+#can_embed_form.can_thank_you_wrap #can_thank_you h1 {
+    font-family: var(--wp--preset--font-family--league-spartan) !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+}
+
+/* Hide the entire clearfix wrapper containing sharing blocks */
+#can_embed_form.can_thank_you_wrap .clearfix:has(.can_thank_you-block) {
+    display: none !important;
 }

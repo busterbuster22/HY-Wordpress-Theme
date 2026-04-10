@@ -15,7 +15,8 @@
       "WebFetch(domain:www.fontsquirrel.com)",
       "Bash(unzip:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:www.cufonfonts.com)"
+      "WebFetch(domain:www.cufonfonts.com)",
+      "Bash(sass:*)"
     ]
   }
 }

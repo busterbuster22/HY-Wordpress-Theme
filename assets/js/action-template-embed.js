@@ -25,9 +25,10 @@
 		var col2 = document.querySelector( '#can_embed_form #form_col2' );
 
 		if ( col1 && ! col1.dataset.colFixed ) {
-			col1.style.setProperty( 'width',   '100%', 'important' );
-			col1.style.setProperty( 'float',   'none', 'important' );
-			col1.style.setProperty( 'display', 'flex', 'important' );
+			col1.style.setProperty( 'width',     '100%', 'important' );
+			col1.style.setProperty( 'float',     'none', 'important' );
+			col1.style.setProperty( 'display',   'flex', 'important' );
+			col1.style.setProperty( 'flex-wrap', 'wrap', 'important' );
 			col1.dataset.colFixed = 'true';
 		}
 
@@ -49,6 +50,36 @@
 
 	setTimeout( function () {
 		clearInterval( checkForColumns );
+	}, 5000 );
+
+	// -------------------------------------------------------------------------
+	// Block 1b — Remove border from #can_embed_form wrapper (form.new_answer)
+	// AN's stylesheet sets border: 1px solid #eaeaea which we need to override.
+	// Also hide the h2 border-bottom inside the form.
+	// -------------------------------------------------------------------------
+
+	var fixFormWrapper = function () {
+		var formWrapper = document.querySelector( '#can_embed_form' );
+		if ( formWrapper ) {
+			formWrapper.style.setProperty( 'border', 'none', 'important' );
+		}
+
+		// Hide the h2 border (AN sets border-bottom: 3px solid #e0e0e0)
+		// The h2 sits directly inside #can_embed_form_inner, NOT inside form.new_answer
+		var formH2 = document.querySelector( '#can_embed_form h2' );
+		if ( formH2 ) {
+			formH2.style.setProperty( 'border-bottom', 'none', 'important' );
+		}
+	};
+
+	var checkForWrapper = setInterval( function () {
+		if ( document.querySelector( '#can_embed_form' ) ) {
+			fixFormWrapper();
+		}
+	}, 100 );
+
+	setTimeout( function () {
+		clearInterval( checkForWrapper );
 	}, 5000 );
 
 	// -------------------------------------------------------------------------
@@ -109,7 +140,9 @@
 
 	var fixDSharing = function ( el ) {
 		// Remove dotted separator line injected by AN
-		el.style.setProperty( 'border-top', 'none', 'important' );
+		el.style.setProperty( 'border-top',  'none',  'important' );
+		// Space between the submit button above and the opt-in label below
+		el.style.setProperty( 'margin-top',  '20px',  'important' );
 
 		// Restore UL list-style (AN re-adds bullets)
 		var ul = el.querySelector( 'ul' );
@@ -124,12 +157,20 @@
 		if ( label ) {
 			label.style.setProperty( 'display',         'flex',         'important' );
 			label.style.setProperty( 'flex-direction',  'row',          'important' );
-			label.style.setProperty( 'align-items',     'flex-start',   'important' );
+			label.style.setProperty( 'align-items',     'center',       'important' );
 			label.style.setProperty( 'gap',             '8px',          'important' );
 			label.style.setProperty( 'font-size',       '20px',         'important' );
 			label.style.setProperty( 'font-weight',     'bold',         'important' );
 			label.style.setProperty( 'color',           '#000000',      'important' );
 			label.style.setProperty( 'cursor',          'pointer',      'important' );
+
+			// AN's CSS sets position:absolute on the checkbox inside the label,
+			// taking it out of flex flow and overlapping the text.
+			var checkbox = label.querySelector( 'input[type="checkbox"]' );
+			if ( checkbox ) {
+				checkbox.style.setProperty( 'position', 'static',  'important' );
+				checkbox.style.setProperty( 'display',  'inline',  'important' );
+			}
 		}
 
 		el.dataset.dSharingFixed = 'true';
@@ -425,5 +466,157 @@
 	} else {
 		showThankYouPage();
 	}
+
+	// -------------------------------------------------------------------------
+	// Block 9 — Convert Person #1, #2, #3 inputs to floatlabel-wrapper style
+	//
+	// AN renders custom text fields (js-fb-textinput) with a <label class=
+	// "control-label"> sitting above the input — outside the field border.
+	// The core fields (First Name, Email etc.) use AN's floatlabel-wrapper
+	// pattern which positions the label inside the border. This block rewraps
+	// each Person input in that same structure so they visually match.
+	//
+	// Event listeners maintain the floatlabel-label-active class (which AN's
+	// floatlabel JS would normally handle) so the label moves correctly on
+	// focus / blur / input for inputs not initialised by AN's own script.
+	// -------------------------------------------------------------------------
+
+	var fixPersonFields = function () {
+		[ 'Person-1', 'Person-2', 'Person-3' ].forEach( function ( id ) {
+			var input = document.getElementById( id );
+			if ( ! input || input.dataset.personFixed ) { return; }
+
+			var li    = input.closest( 'li.control-group' );
+			var label = li ? li.querySelector( 'label.control-label' ) : null;
+			if ( ! label ) { return; }
+
+			var labelText = label.textContent.trim();
+
+			// Hide the original above-field label
+			label.style.setProperty( 'display', 'none', 'important' );
+
+			// Force each Person li to its own full row inside the flex form_col1
+			if ( li ) {
+				li.style.setProperty( 'flex',    '0 0 100%', 'important' );
+				li.style.setProperty( 'width',   '100%',     'important' );
+				li.style.setProperty( 'display', 'block',    'important' );
+			}
+
+			// Build the floatlabel-wrapper — identical structure to what AN uses for
+			// core fields (First Name, Last Name etc.).
+			var wrapper = document.createElement( 'div' );
+			wrapper.className = 'floatlabel-wrapper';
+
+			var floatLabel = document.createElement( 'label' );
+			floatLabel.setAttribute( 'for', id );
+			floatLabel.className   = 'floatlabel-label'; // no active class initially
+			floatLabel.textContent = labelText;
+			// No inline style — AN's CSS hides .floatlabel-label (no active) by default.
+
+			// Placeholder shows when empty/unfocused, exactly like First Name/Last Name.
+			input.classList.add( 'floatlabel-input', 'floatlabel-input-slide' );
+			input.placeholder = labelText;
+
+			// Insert wrapper in place of input, move both into it
+			input.parentNode.insertBefore( wrapper, input );
+			wrapper.appendChild( floatLabel );
+			wrapper.appendChild( input );
+
+			// Active   → add class + display:block (label floats to top-left border)
+			// Inactive → remove class + display:none (hide label, placeholder shows)
+			//
+			// AN's CSS does NOT hide .floatlabel-label by default (it's always
+			// display:block and overlays the input). We explicitly hide it in inactive
+			// state so the placeholder attribute is the sole visual cue when empty.
+			// AN's CSS handles all active-state positioning via .floatlabel-label-active
+			// (top:-9px, left:9px, font-size:11px, z-index:99 …).
+			var activate = function () {
+				floatLabel.classList.add( 'floatlabel-label-active' );
+				// setProperty 'important' required — AN's CSS sets display:block !important
+				floatLabel.style.setProperty( 'display', 'block', 'important' );
+			};
+			var deactivate = function () {
+				floatLabel.classList.remove( 'floatlabel-label-active' );
+				// setProperty 'important' required — AN's CSS sets display:block !important
+				// on .floatlabel-label; plain style.display='none' loses to it.
+				floatLabel.style.setProperty( 'display', 'none', 'important' );
+			};
+
+			if ( input.value ) { activate(); } else { deactivate(); }
+
+			input.addEventListener( 'focus', activate );
+			input.addEventListener( 'blur',  function () { if ( ! input.value ) { deactivate(); } } );
+			input.addEventListener( 'input', function () { if ( input.value ) { activate(); } else { deactivate(); } } );
+
+			input.dataset.personFixed = 'true';
+		} );
+	};
+
+	var checkForPersonFields = setInterval( function () {
+		if ( document.getElementById( 'Person-1' ) ) {
+			fixPersonFields();
+			clearInterval( checkForPersonFields );
+		}
+	}, 100 );
+
+	setTimeout( function () {
+		clearInterval( checkForPersonFields );
+	}, 5000 );
+
+	// -------------------------------------------------------------------------
+	// Block 10 — Lay the "Are you going to speak?" question and Yes! checkbox
+	//            out on a single row (flex row instead of stacked block layout)
+	//
+	// AN renders li.control-group.checkbox_group_wrap with:
+	//   <label class="control-label check_radio_label">question text</label>
+	//   <span class="controls check_radio_field">…checkbox…</span>
+	// Both children are block-level so they stack. We switch the li to
+	// display:flex / flex-direction:row so question and checkbox sit side by side.
+	// setProperty('…','important') is required — AN's stylesheet uses !important
+	// on several display/layout properties inside .control-group.
+	// -------------------------------------------------------------------------
+
+	var fixCheckboxRow = function () {
+		var li = document.querySelector( 'li.control-group.checkbox_group_wrap' );
+		if ( ! li || li.dataset.checkboxFixed ) { return; }
+
+		// Take a full row inside the parent flex container (form_col1)
+		li.style.setProperty( 'flex',            '0 0 100%', 'important' );
+		li.style.setProperty( 'width',           '100%',     'important' );
+		// Then lay its own children (question label + checkbox span) in a row
+		li.style.setProperty( 'display',         'flex',    'important' );
+		li.style.setProperty( 'flex-direction',  'row',     'important' );
+		li.style.setProperty( 'align-items',     'center',  'important' );
+		li.style.setProperty( 'gap',             '16px',    'important' );
+		li.style.setProperty( 'flex-wrap',       'nowrap',  'important' );
+
+		var questionLabel = li.querySelector( 'label.check_radio_label' );
+		if ( questionLabel ) {
+			questionLabel.style.setProperty( 'margin-bottom', '0',      'important' );
+			questionLabel.style.setProperty( 'flex-shrink',   '1',      'important' );
+			questionLabel.style.setProperty( 'white-space',   'normal', 'important' );
+		}
+
+		var controlsSpan = li.querySelector( 'span.controls.check_radio_field' );
+		if ( controlsSpan ) {
+			controlsSpan.style.setProperty( 'flex-shrink', '0',      'important' );
+			controlsSpan.style.setProperty( 'display',     'flex',   'important' );
+			controlsSpan.style.setProperty( 'align-items', 'center', 'important' );
+			controlsSpan.style.setProperty( 'float',       'none',   'important' );
+		}
+
+		li.dataset.checkboxFixed = 'true';
+	};
+
+	var checkForCheckboxRow = setInterval( function () {
+		if ( document.querySelector( 'li.control-group.checkbox_group_wrap' ) ) {
+			fixCheckboxRow();
+			clearInterval( checkForCheckboxRow );
+		}
+	}, 100 );
+
+	setTimeout( function () {
+		clearInterval( checkForCheckboxRow );
+	}, 5000 );
 
 })();
