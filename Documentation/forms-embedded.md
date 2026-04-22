@@ -180,9 +180,69 @@ Action template pages can host either:
 
 ### Block-by-block breakdown
 
-#### Block 1 — Form column width fix
+#### Block 1 — Form column width, field hiding, and field-order fix
 
-AN injects `#form_col1` and `#form_col2` as floated columns at fractional widths. This block sets them to `width: 100%` / `float: none` / `clear: both` via `setProperty('…', 'important')`. Clears the interval on first find (these elements are not re-rendered).
+AN injects `#form_col1` and `#form_col2` as floated columns at fractional widths. This block sets them to `width: 100%` / `float: none` / `display: flex` / `flex-wrap: wrap` via `setProperty('…', 'important')`.
+
+After setting up the flex container, the block iterates over every `li.core_field, li.control-group` inside `#form_col1` and applies layout properties so each field occupies 48% of the row (two fields per row).
+
+**Critical: the forEach loop itself causes a hidden-field problem.**
+
+The loop applies `display: block !important` as an *inline style* on every `<li>` it processes — including the Street Address and City wrappers that `theme.css` hides with `display: none !important`. Because inline styles set via `setProperty('display','block','important')` have the highest CSS precedence and cannot be overridden by any stylesheet rule (regardless of `!important`), this completely undoes the CSS hiding of those two fields. They appear visibly in the form even though `theme.css` correctly targets them.
+
+**Fix:** in the forEach callback, detect whether the `<li>` contains `input#form-street` or `input#form-city`. If it does, apply `display: none !important` inline and return early without setting any layout properties.
+
+```js
+if ( field.querySelector('input#form-street') || field.querySelector('input#form-city') ) {
+    field.style.setProperty('display', 'none', 'important');
+    return;
+}
+```
+
+**Critical: the AN DOM field order displaces Postcode onto its own row.**
+
+The actual DOM order AN renders inside `#form_col1` for this letter campaign is:
+
+```
+FName → LName → Email → Phone → Street → HousingDem → City → YoB → Postcode
+```
+
+Note that `HousingDem` (a custom `li.control-group`) sits between the hidden `City` and `YoB` fields. After hiding Street and City, the effective flex positions are:
+
+| Effective pos | Field | Flex row |
+|---|---|---|
+| 0 | First Name | Row 1 left |
+| 1 | Last Name | Row 1 right |
+| 2 | Email | Row 2 left |
+| 3 | Phone | Row 2 right |
+| 4 | Housing Demographic | Row 3 left |
+| 5 | Year of Birth | Row 3 right |
+| 6 | Postcode | Row 4 left (alone) |
+
+This pairs HousingDem with Year of Birth and leaves Postcode alone. The desired pairing is **Postcode | Year of Birth** on the same row.
+
+**Fix:** use CSS `order` to resequence the three affected flex items so Postcode and Year of Birth are adjacent. All other fields keep the default `order: 0` (DOM order wins among equal-order items):
+
+```js
+if ( field.querySelector('input#form-zip') ) {
+    field.style.setProperty('order', '4', 'important');  // Postcode first in its row
+} else if ( field.querySelector('input#Year-of-Birth-YYYY') ) {
+    field.style.setProperty('order', '5', 'important');  // Year of Birth right after
+} else if ( field.querySelector('select#Housing-Demographic') ) {
+    field.style.setProperty('order', '10', 'important'); // Push HousingDem to last
+}
+```
+
+Result after reordering:
+
+| Effective pos | Field | Flex row |
+|---|---|---|
+| 0–3 | FName, LName, Email, Phone | Rows 1–2 |
+| 4 | Postcode (order:4) | Row 3 left |
+| 5 | Year of Birth (order:5) | Row 3 right |
+| 6 | Housing Demographic (order:10) | Row 4 left |
+
+Clears the interval on first find (these elements are not re-rendered).
 
 #### Block 1b — Remove border from `#can_embed_form` wrapper
 
@@ -304,6 +364,19 @@ Uses the standard polling pattern, but with a **10-second** expiry (doubled from
 
 CSS styling for the event form (input borders, submit button, etc.) is handled entirely in `assets/theme.css` via `#can_embed_form form.new_rsvp` selectors — no `setProperty` overrides are required because AN's event form stylesheet does not set `!important` on the properties we style.
 
+### RSVP form — hidden fields
+
+The following core fields are hidden on the RSVP form via `assets/theme.css`:
+
+| Field | Input ID | Selector used |
+|---|---|---|
+| Street Address | `input#form-street` | `li.core_field:has(input#form-street)` + `li.core_field:nth-child(6)` |
+| City | `input#form-city` | `li.core_field:has(input#form-city)` + `li.core_field:nth-child(7)` |
+
+All custom fields (`li.control-group`) are also hidden as a blanket rule.
+
+**Mobile / Phone field note:** The Mobile Number field in Action Network is a **core field** rendered as `input#form-phone` (index 3 in the DOM), with its floatlabel labelled "Mobile Number". It was previously hidden by two `form-phone` CSS rules that have since been removed. If you need to hide phone/mobile again in future, target `li.core_field:has(input#form-phone)` rather than the input directly (the `li` wrapper must be hidden, not just the input, to remove the field from layout flow).
+
 ---
 
 ## Letter Campaign Stages (v6/letter)
@@ -323,6 +396,29 @@ If the user is **already logged in** to AN when they load the page, they skip St
 ## Cache Busting
 
 All theme scripts are enqueued in [`functions.php`](../functions.php) with `wp_get_theme()->get('Version')` as the cache-buster version string. Bumping the `Version:` field in [`style.css`](../style.css) line 6 will bust the browser/CDN cache for **all** theme scripts and styles simultaneously.
+
+**Bump the version number in `style.css` first — before uploading files and before any other debugging.** This is the single most common reason a deployed change does not appear: the browser or CDN is serving the previously cached file.
+
+### WordPress.com server-side cache
+
+WordPress.com Business has its own server-side cache on top of browser caching. A version bump alone may not be enough. After uploading files, clear the server cache via either:
+
+- **Admin bar** — when viewing the live site while logged in, look for a **"Clear Cache"** button in the black admin bar at the top of the page
+- **WP Admin → Hosting → Caching** — a "Clear Cache" button is available under the Hosting section of the WP Admin dashboard
+
+### Jetpack Site Accelerator
+
+If **Jetpack → Settings → Performance → Speed up static file load times** is enabled, Jetpack serves CSS and JS files from its own CDN. This CDN caches independently of the WordPress server — uploading a new file and bumping the version number may not immediately propagate. If changes still don't appear after clearing the WordPress cache, temporarily disable this toggle and test again.
+
+### Confirming the correct file is being served
+
+To verify the live `theme.css` actually contains your changes (run in browser console on the live site):
+
+```js
+fetch(document.querySelector('link[href*="theme.css"]').href).then(r => r.text()).then(t => console.log('form-phone rules present:', t.includes('form-phone')));
+```
+
+Replace `'form-phone'` with any string unique to your change. If it returns `true` when it should be `false` (or vice versa), the old file is still being served regardless of what you uploaded.
 
 If a deployed change is not appearing in the browser, verify the correct file was uploaded:
 
@@ -443,6 +539,28 @@ Never `clearInterval` on first find for Block 6 style applications. AN's widget 
 
 A user who spends more than 5 seconds on the Stage 1 signup form will have the Block 6 interval already expired by the time they submit and AN renders Stage 2. Always pair `setInterval` blocks with a `MutationObserver` for any styling that must survive stage transitions.
 
+### forEach `display:block` undoes CSS `display:none` on hidden fields
+
+Any loop that calls `field.style.setProperty('display','block','important')` on a broad selector like `li.core_field, li.control-group` will override CSS `display:none !important` rules on fields that are supposed to be hidden. Inline styles set via `setProperty` beat every stylesheet rule. **Always check whether a field should be hidden before setting `display:block` on it:**
+
+```js
+if ( field.querySelector('input#form-street') || field.querySelector('input#form-city') ) {
+    field.style.setProperty('display', 'none', 'important');
+    return; // do NOT set display:block
+}
+```
+
+### CSS `order` is required when AN's DOM field order splits desired row pairs
+
+AN places custom form-builder fields (`li.control-group`) between standard core fields (`li.core_field`) in the DOM. When certain core fields are hidden, this can leave a custom field in an odd flex position that breaks the pairing of the remaining fields. **CSS `order` applied via `setProperty` is the correct fix** — it resequences items visually without touching the DOM and uses the same inline-`!important` mechanism that cannot be overridden by AN's stylesheet:
+
+```js
+// Push a field to a specific visual position without changing DOM order
+field.style.setProperty('order', '10', 'important');
+```
+
+**Never attempt to fix this by reordering DOM nodes.** AN's JavaScript may re-render fields and will restore its own DOM order, undoing manual reordering.
+
 ---
 
 ## AN Floatlabel System — How It Works
@@ -555,6 +673,27 @@ input.addEventListener( 'input', function () { if ( input.value ) { activate(); 
 ---
 
 ## Flex Container Layout in `#form_col1` (Block 1 + Blocks 9/10)
+
+### AN's DOM field order inside `#form_col1` (letter campaign)
+
+The actual DOM order AN renders for the letter campaign (`form.new_delivery`) is:
+
+```
+li.core_field (First Name)
+li.core_field (Last Name)
+li.core_field (Email)
+li.core_field (Phone — contains country-code combobox + number input in one li)
+li.core_field (Street Address — input#form-street — hidden)
+li.control-group (Housing Demographic — select#Housing-Demographic)
+li.core_field (City — input#form-city — hidden)
+li.control-group (Year of Birth — input#Year-of-Birth-YYYY)
+li.core_field (Postcode/Zip — input#form-zip)
+```
+
+**Key facts:**
+- The phone field is a single `li.core_field` containing both the country-code `<select>` and the phone number `<input>` — it counts as one flex item.
+- Housing Demographic (`li.control-group`) is interleaved between the hidden Street and City fields — it is NOT positioned at the end after all core fields.
+- After hiding Street and City, the field immediately before Year of Birth is Housing Demographic, and Postcode comes after Year of Birth. Without reordering, HousingDem and YoB pair together and Postcode is alone.
 
 ### Why Block 1 sets `display: flex`
 

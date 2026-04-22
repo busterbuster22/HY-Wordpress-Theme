@@ -30,6 +30,47 @@
 			col1.style.setProperty( 'display',   'flex', 'important' );
 			col1.style.setProperty( 'flex-wrap', 'wrap', 'important' );
 			col1.dataset.colFixed = 'true';
+
+			// Fix individual field widths for two-column layout.
+			//
+			// Desired row pairing: Postcode (left) | Year of Birth (right) on the same row.
+			//
+			// AN's DOM order: FName, LName, Email, Phone, Street, HousingDem, City, YoB, Postcode
+			//
+			// Problem 1: Street + City must be hidden. CSS display:none is overridden by the
+			//   display:block inline style set in this loop (inline > any stylesheet rule).
+			//   Fix: detect those fields and apply display:none inline instead.
+			//
+			// Problem 2: After hiding Street+City the effective flex order is:
+			//   …Phone, HousingDem, YoB, Postcode
+			//   This pairs HousingDem+YoB and leaves Postcode alone on the next row.
+			//   Fix: use CSS `order` to resequence the three affected fields so the
+			//   render order becomes: …Phone, Postcode(order:4), YoB(order:5), HousingDem(order:10).
+			var fields = col1.querySelectorAll( 'li.core_field, li.control-group' );
+			fields.forEach( function ( field ) {
+				// Hide street and city — inline style must be used here to prevent this
+				// loop's own display:block from revealing them.
+				if ( field.querySelector( 'input#form-street' ) || field.querySelector( 'input#form-city' ) ) {
+					field.style.setProperty( 'display', 'none', 'important' );
+					return;
+				}
+
+				field.style.setProperty( 'width', '48%', 'important' );
+				field.style.setProperty( 'margin', '0 0 20px 0', 'important' );
+				field.style.setProperty( 'list-style', 'none', 'important' );
+				field.style.setProperty( 'display', 'block', 'important' );
+				field.style.setProperty( 'padding', '0', 'important' );
+
+				// Reorder: Postcode and YoB must appear before HousingDem so they
+				// pair together on the same row.
+				if ( field.querySelector( 'input#form-zip' ) ) {
+					field.style.setProperty( 'order', '4', 'important' );
+				} else if ( field.querySelector( 'input#Year-of-Birth-YYYY' ) ) {
+					field.style.setProperty( 'order', '5', 'important' );
+				} else if ( field.querySelector( 'select#Housing-Demographic' ) ) {
+					field.style.setProperty( 'order', '10', 'important' );
+				}
+			});
 		}
 
 		if ( col2 && ! col2.dataset.colFixed ) {

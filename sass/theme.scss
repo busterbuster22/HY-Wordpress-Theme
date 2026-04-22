@@ -13,6 +13,12 @@ h1.wp-block-post-title {
 			var(--wp--custom--form--border--style) var(--wp--preset--color--primary);
 		padding-bottom: calc(var(--wp--custom--gap--vertical) * 3);
 	}
+
+	/* Reduce padding on Action and AN-Event template pages */
+	body.page-template-action &,
+	body.page-template-an-events & {
+		padding-bottom: var(--wp--custom--gap--vertical) !important;
+	}
 }
 
 /* Separator width */
@@ -225,7 +231,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-dark-section {
 	background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
-	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
+	padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--white, #FFFFFF) !important;
@@ -237,7 +243,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-light-section {
 	background-color: var(--wp--preset--color--white, #FFFFFF) !important;
 	color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
-	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
+	padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
@@ -249,7 +255,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
 .wp-block-cover.is-style-pink-section {
 	background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
 	color: var(--wp--preset--color--white, #FFFFFF) !important;
-	padding: var(--wp--custom--spacing--medium) var(--wp--custom--spacing--outer) !important;
+	padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 
 	h1, h2, h3, h4, h5, h6, p, li, a {
 		color: var(--wp--preset--color--white, #FFFFFF) !important;
@@ -355,6 +361,22 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
     max-width: 100%;
 }
 
+/* Fix 1 & 2: Remove gap between header/main/footer and between homepage sections */
+.site-main {
+    margin-top: 0 !important;
+}
+
+/* WP generates margin-block-start via > * + * selectors regardless of the CSS variable —
+   zero it directly on the section elements */
+.full-width-homepage {
+    margin-block-start: 0 !important;
+}
+
+/* Fix 1: First heading inside a section inherits global margin-top — zero it out */
+.full-width-homepage .wp-block-heading:first-child {
+    margin-top: 0;
+}
+
 /* Constrain content inside full-width sections */
 .full-width-homepage .wp-block-columns,
 .full-width-homepage > .wp-block-heading,
@@ -369,10 +391,7 @@ a:not(.ab-item):not(.screen-reader-shortcut) {
     box-sizing: border-box !important;
 }
 
-/* Content sections with vertical spacing */
-.content-section {
-    padding-block: var(--wp--custom--spacing--small);
-}
+/* Content sections - padding handled by is-style-*-section variants */
 
 /* Column spacing */
 .wp-block-columns {
@@ -421,6 +440,18 @@ header.wp-block-template-part .wp-block-column {
     padding-right: 0 !important;
 }
 
+/* Logo column: fixed width; menu column: takes remaining space */
+@media (min-width: 769px) {
+    header.wp-block-template-part .header-columns > .wp-block-column:first-child {
+        flex: 0 0 auto !important;
+        width: auto !important;
+    }
+    header.wp-block-template-part .header-columns > .wp-block-column:last-child {
+        flex: 1 1 0% !important;
+        width: auto !important;
+    }
+}
+
 /* DESKTOP OVERRIDE - must come after mobile rules */
 @media (min-width: 769px) {
     header.wp-block-template-part .wp-block-columns.header-columns {
@@ -433,7 +464,7 @@ header.wp-block-template-part .wp-block-column {
 footer.wp-block-template-part {
     width: 100%;
     max-width: 100%;
-    margin-top: var(--wp--custom--gap--vertical);
+    margin-top: 0;
 }
 
 
@@ -506,10 +537,6 @@ footer.site-footer-container > .wp-block-group {
         padding-right: var(--wp--custom--spacing--outer) !important;
     }
 
-    .content-section {
-        padding-block: var(--wp--custom--spacing--medium);
-    }
-
     /* Footer desktop padding */
     footer.wp-block-template-part .wp-block-columns,
     footer.wp-block-template-part .wp-block-paragraph {
@@ -571,6 +598,11 @@ footer.site-footer-container > .wp-block-group {
 .hero-section {
     background-size: cover !important;
     background-position: center !important;
+}
+
+// Tighten hero bottom padding — needs 3 classes to beat is-style-dark-section's 2-class specificity
+.wp-block-group.hero-section.is-style-dark-section {
+    padding-bottom: 10px !important;
 }
 
 .hero-columns { align-items: stretch; }
@@ -664,7 +696,15 @@ li.mega-social-icon a {
 
 /* Mobile menu styles */
 @media (max-width: 768px) {
-    #mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 { top: 150px !important; }
+    /* Anchor the mobile menu to the header bottom, not the wrap div */
+    header.wp-block-template-part { position: relative !important; }
+    #mega-menu-wrap-max_mega_menu_2 { position: static !important; }
+    #mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 {
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+    }
     .mega-menu-toggle { display: flex !important; justify-content: flex-end !important; width: 100% !important; }
     .mega-toggle-blocks-right { margin-left: auto !important; }
     .mega-menu { padding-top: 20px !important; }
@@ -758,7 +798,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.js-letter-form {
     font-family: var(--wp--preset--font-family--league-spartan) !important;
     color: #000000 !important;
-    padding-bottom: 20px;
+    padding-bottom: 0;
 }
 
 /* === HEADINGS (Letter & Form Campaigns) === */
@@ -1348,11 +1388,6 @@ body #can_embed_form .can_embed_form_inner,
     width: 100% !important;
 }
 
-/* Hide phone field on RSVP */
-#can_embed_form form.new_rsvp input#form-phone {
-    display: none !important;
-}
-
 /* Hide street field on RSVP */
 #can_embed_form form.new_rsvp input#form-street {
     display: none !important;
@@ -1382,14 +1417,6 @@ body #can_embed_form .can_embed_form_inner,
 
 /* === HIDE UNWANTED FIELDS ON RSVP === */
 
-/* Hide phone field wrapper on RSVP */
-#can_embed_form form.new_rsvp li.core_field input#form-phone {
-    display: none !important;
-}
-
-#can_embed_form form.new_rsvp li.core_field:has(input#form-phone) {
-    display: none !important;
-}
 
 /* Hide street field wrapper on RSVP */
 #can_embed_form form.new_rsvp li.core_field input#form-street {
@@ -1615,8 +1642,43 @@ body #can_embed_form .can_embed_form_inner,
         margin-bottom: 30px !important;
     }
 
+    /* Reduce bottom margin for the last column (embed column) */
+    body.page-template-an-events .wp-block-columns.home-block > .wp-block-column:last-child {
+        margin-bottom: 0 !important;
+    }
+
     /* Remove extra top padding from RSVP column on mobile */
     body.page-template-an-events .wp-block-column.home-block.is-vertically-aligned-top {
+        padding-top: 0 !important;
+    }
+}
+
+/* =========================================================================
+   ACTION PAGE MOBILE LAYOUT - FEATURED IMAGE & FORM ON TOP
+   ========================================================================= */
+
+/* Mobile only - reorder columns so featured image and form appear first */
+@media (max-width: 768px) {
+    /* Target the columns container on Action pages */
+    body.page-template-action .wp-block-columns.home-block {
+        display: flex !important;
+        flex-direction: column-reverse !important;
+    }
+
+    /* Ensure both columns are full width on mobile */
+    body.page-template-action .wp-block-columns.home-block > .wp-block-column {
+        width: 100% !important;
+        flex-basis: 100% !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* Reduce bottom margin for the last column (embed column) */
+    body.page-template-action .wp-block-columns.home-block > .wp-block-column:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* Remove extra top padding from form column on mobile */
+    body.page-template-action .wp-block-column.home-block.is-vertically-aligned-top {
         padding-top: 0 !important;
     }
 }
