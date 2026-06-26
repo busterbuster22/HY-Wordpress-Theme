@@ -17,7 +17,26 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.cufonfonts.com)",
       "Bash(sass:*)",
-      "Bash(npx sass:*)"
+      "Bash(npx sass:*)",
+      "WebFetch(domain:staging-ba32-houseyouorg.wpcomstaging.com)",
+      "Bash(grep -oiE \"How can you help[^<\\\\\\\\\\\\\\\\\\\\\"']{0,120}\" an_widget.js)",
+      "Bash(grep -oiE \"\\(Organise|Amplify|Media|Fundraising|Advocate|Anything else\\)[^<\\\\\\\\\\\\\\\\\\\\\"']{0,80}\" an_widget.js)",
+      "Bash(grep -oiE \"how can you help[^\\\\\\\\\\\\\\\\]{0,200}\" an_inner.js)",
+      "Bash(node -e ' *)",
+      "Bash(node \"/c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/parse2.js\" /tmp/an_inner.js)",
+      "Bash(node -e \"let s=require\\('fs'\\).readFileSync\\('an_inner.js','utf8'\\).replace\\(/\\\\\\\\\\\\\\\\\\\\\"/g,'\\\\\"'\\).replace\\(/\\\\\\\\\\\\\\\\\\\\//g,'/'\\); let m=s.match\\(/<input[^>]*class=\\\\\"[^\\\\\"]*required[^\\\\\"]*\\\\\"[^>]*>/g\\)||[]; m.forEach\\(x=>{let id=\\(x.match\\(/id=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)||[]\\)[1]; console.log\\(id\\);}\\);\")",
+      "Bash(node \"/c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/req.js\" /tmp/an_inner.js)",
+      "Bash(node --check assets/js/volunteer-form-embed.js)",
+      "Bash(php -l functions.php)",
+      "Bash('/c/Program Files/PuTTY/psftp' -batch -pw N786elCjms5mllfAISl8 -P 22 staging-ba32-houseyouorg.wordpress.com@sftp.wp.com -b /c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/verify.txt)",
+      "Bash('/c/Program Files/PuTTY/psftp' -batch -pw N786elCjms5mllfAISl8 -P 22 staging-ba32-houseyouorg.wordpress.com@sftp.wp.com -b /c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/verify2.txt)",
+      "Bash(node \"/c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/country.js\" /tmp/an_inner.js)",
+      "Bash(grep -ioE \"<h2[^>]*>.{0,60}\" an_inner.js)",
+      "Bash(printf 'cd \"wp-content/themes/house-you\"\\\\nput \"C:\\\\\\\\Users\\\\\\\\mille\\\\\\\\Local Sites\\\\\\\\houseyou-local\\\\\\\\app\\\\\\\\public\\\\\\\\wp-content\\\\\\\\themes\\\\\\\\house-you\\\\\\\\assets\\\\\\\\js\\\\\\\\volunteer-form-embed.js\" \"assets/js/volunteer-form-embed.js\"\\\\nput \"C:\\\\\\\\Users\\\\\\\\mille\\\\\\\\Local Sites\\\\\\\\houseyou-local\\\\\\\\app\\\\\\\\public\\\\\\\\wp-content\\\\\\\\themes\\\\\\\\house-you\\\\\\\\style.css\" \"style.css\"\\\\nls assets/js/volunteer-form-embed.js\\\\nbye\\\\n')",
+      "Bash('/c/Program Files/PuTTY/psftp' -batch -pw N786elCjms5mllfAISl8 -P 22 staging-ba32-houseyouorg.wordpress.com@sftp.wp.com -b /c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/upload2.txt)",
+      "Bash('/c/Program Files/PuTTY/psftp' -batch -pw N786elCjms5mllfAISl8 -P 22 staging-ba32-houseyouorg.wordpress.com@sftp.wp.com -b /c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/upload3.txt)",
+      "Bash('/c/Program Files/PuTTY/psftp' -batch -pw N786elCjms5mllfAISl8 -P 22 staging-ba32-houseyouorg.wordpress.com@sftp.wp.com -b /c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/verify3.txt)",
+      "Bash(node \"/c/Users/mille/AppData/Local/Temp/claude/C--Users-mille-Local-Sites-houseyou-local-app-public-wp-content-themes-house-you/09d367df-547e-440c-b1ca-c927ccec355d/scratchpad/struct.js\" /tmp/an_inner.js)"
     ]
   }
 }

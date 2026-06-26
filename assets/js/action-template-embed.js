@@ -48,12 +48,20 @@
 			//   render order becomes: …Phone, Postcode(order:4), YoB(order:5), HousingDem(order:10).
 			var fields = col1.querySelectorAll( 'li.core_field, li.control-group' );
 			fields.forEach( function ( field ) {
-				// Hide street and city — inline style must be used here to prevent this
-				// loop's own display:block from revealing them.
-				if ( field.querySelector( 'input#form-street' ) || field.querySelector( 'input#form-city' ) ) {
-					field.style.setProperty( 'display', 'none', 'important' );
-					return;
+			// Hide street and city — inline style must be used here to prevent this
+			// loop's own display:block from revealing them. Also remove the
+			// 'required' class so AN's validation doesn't silently block the
+			// form submission when these fields are configured as required in AN.
+			if ( field.querySelector( 'input#form-street' ) || field.querySelector( 'input#form-city' ) ) {
+				field.style.setProperty( 'display', 'none', 'important' );
+				var input = field.querySelector( 'input' );
+				if ( input ) {
+					input.classList.remove( 'required' );
+					input.removeAttribute( 'required' );
+					input.disabled = true;
 				}
+				return;
+			}
 
 				field.style.setProperty( 'width', '48%', 'important' );
 				field.style.setProperty( 'margin', '0 0 20px 0', 'important' );

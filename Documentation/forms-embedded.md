@@ -8,9 +8,12 @@ There are three distinct use cases across the theme:
 
 | Template | Block Template File | Widget Type | Form Class | JS Script |
 |---|---|---|---|---|
-| Home page | `block-templates/home-2026.html` | `v6/letter` | `form.new_delivery` | `assets/js/home-letter-action.js` |
+| Home page (letter) | `block-templates/home-2026.html` | `v6/letter` | `form.new_delivery` | `assets/js/home-letter-action.js` |
+| Home page (volunteer) | `home-2026-test` (DB template) | `v6/form` | `form.new_answer` | `assets/js/volunteer-form-embed.js` |
 | Action template | `block-templates/action.html` | `v6/letter` or `v5/form` | `form.new_delivery` or `form.new_answer` | `assets/js/action-template-embed.js` |
 | Events template | `block-templates/an-events.html` | `v6/event` | `form.new_rsvp` | `assets/js/action-event-embed.js` |
+
+> **Multiple AN forms can share a page.** Both `home-letter-action.js` and `volunteer-form-embed.js` enqueue on `is_front_page()`, but each early-exits unless *its own* container ID is present (`#can-letter-area-…` vs `#can-form-area-volunteer-form-22`). Only the script whose form is actually embedded runs — they never collide.
 
 ---
 
@@ -190,14 +193,22 @@ After setting up the flex container, the block iterates over every `li.core_fiel
 
 The loop applies `display: block !important` as an *inline style* on every `<li>` it processes — including the Street Address and City wrappers that `theme.css` hides with `display: none !important`. Because inline styles set via `setProperty('display','block','important')` have the highest CSS precedence and cannot be overridden by any stylesheet rule (regardless of `!important`), this completely undoes the CSS hiding of those two fields. They appear visibly in the form even though `theme.css` correctly targets them.
 
-**Fix:** in the forEach callback, detect whether the `<li>` contains `input#form-street` or `input#form-city`. If it does, apply `display: none !important` inline and return early without setting any layout properties.
+**Fix:** in the forEach callback, detect whether the `<li>` contains `input#form-street` or `input#form-city`. If it does, apply `display: none !important` inline, **remove the `required` class and attribute and disable the input** to prevent AN's validation from silently blocking form submission (see below), then return early without setting any layout properties.
 
 ```js
 if ( field.querySelector('input#form-street') || field.querySelector('input#form-city') ) {
     field.style.setProperty('display', 'none', 'important');
+    var input = field.querySelector('input');
+    if ( input ) {
+        input.classList.remove('required');
+        input.removeAttribute('required');
+        input.disabled = true;
+    }
     return;
 }
 ```
+
+**Why `required` removal + `disabled` is also required:** AN's form validation runs on submit and checks all inputs with the `required` class — even those whose parent `<li>` is hidden via `display: none`. If a hidden field is marked `required` in the AN campaign configuration, validation silently fails (no visible error, no console output) and the "Start Writing" button does nothing. Removing the class/attribute and disabling the input causes AN to skip the field entirely during validation. This is campaign-specific: only campaigns where Street/City are configured as required in AN will hit this.
 
 **Critical: the AN DOM field order displaces Postcode onto its own row.**
 
@@ -346,6 +357,26 @@ textEls.forEach(function(el) {
 ```
 
 A `.final-step-confirmation` guard prevents double-injection.
+
+---
+
+## Volunteer Signup Form — `assets/js/volunteer-form-embed.js`
+
+Loaded on `is_front_page()`; early-exits unless `#can-form-area-volunteer-form-22` is present. The widget is a `v6/form` (`form.new_answer`) — **single-page; AN has no native multi-step for Form widgets** (only Survey widgets page natively). The two-step UX is therefore faked client-side: every field stays in the DOM (so it submits normally) and only visibility is toggled.
+
+Most field/input/button styling already comes from the shared `#can_embed_form form.new_answer …` rules in `theme.css`. This script only adds what CSS cannot do on this page:
+
+| Block | What it does |
+|---|---|
+| Block 1 | `can_float` bracket fix — `theme.css` only suppresses the `::before`/`::after` pink brackets under `.page-template-action`, not the home page, so we inject the suppressing `<style>` here. |
+| Block 2 | `#d_sharing` opt-in — removes AN's dotted `border-top` and resets the absolutely-positioned checkbox to a flex row. |
+| Block 3 | Housing Demographic — prepends a disabled "Your housing situation" placeholder option (mirrors `home-letter-action.js` Block 1). |
+| Block 4 | Styles the **"How can you help?"** group (`li.js-fb-multiplecheckboxes`) as a vertical white checklist, and forces both that `li` and the "Anything else?" textarea `li` to `width:100%` (overriding the 48% that `theme.css` applies to every `li.control-group`). |
+| Block 5 | **Two-step flow.** Step 1 = First/Last/Email/Postcode/Phone + Housing Demographic; Step 2 = "How can you help?" + "Anything else?" + opt-in + submit. Injects "Continue →" / "← Back" buttons and a Step-1 validator (the 5 core fields are AN-`required`; email is format-checked). |
+
+**Field reference (volunteer-form-22):** core fields `#form-first_name`, `#form-last_name`, `#form-email`, `#form-zip_code`, `#form-phone` (all `required`); custom `select#Housing-Demographic` (uses AN Select2 — `js-form_select2`); checkbox group `li.js-fb-multiplecheckboxes` (5 options: Organise/Amplify/Media/Fundraising/Advocate, no element IDs — names like `How can you help House You?_Organise (…)`); textarea `#Additional_context` ("Anything else?"). No Street/City/Year-of-Birth fields, so the hidden-required-field problem from the action template does **not** apply here.
+
+**Why faked steps don't break AN submission:** hidden Step-1 fields keep their values (they're only `display:none`, never `disabled`), so AN's on-submit validation passes and all answers post. This differs from the action-template Street/City case, where hidden fields were *empty* and `required` — those had to be `disabled` to avoid silently blocking submit.
 
 ---
 
@@ -546,9 +577,19 @@ Any loop that calls `field.style.setProperty('display','block','important')` on 
 ```js
 if ( field.querySelector('input#form-street') || field.querySelector('input#form-city') ) {
     field.style.setProperty('display', 'none', 'important');
+    // Also prevent AN validation from blocking submit on campaigns
+    // where Street/City are configured as required fields:
+    var input = field.querySelector('input');
+    if ( input ) {
+        input.classList.remove('required');
+        input.removeAttribute('required');
+        input.disabled = true;
+    }
     return; // do NOT set display:block
 }
 ```
+
+**Why `required` removal matters:** AN's form validation checks all inputs with class `required` on submit, even if their parent container is `display: none`. If a hidden field is required by the campaign configuration, AN silently fails validation — no error logged to console, no visible message, the button simply does nothing. Removing the class/attribute and disabling the input causes AN to skip it during validation.
 
 ### CSS `order` is required when AN's DOM field order splits desired row pairs
 

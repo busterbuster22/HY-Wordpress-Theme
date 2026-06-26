@@ -157,6 +157,31 @@ function houseyou_enqueue_home_letter_action() {
 add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_home_letter_action' );
 
 /**
+ * Enqueue volunteer signup form script.
+ *
+ * Only loads on the front page, where the Action Network "volunteer-form-22"
+ * form widget (form.new_answer) is embedded. The script itself early-exits
+ * unless its unique container (#can-form-area-volunteer-form-22) is present,
+ * so it can never affect any other Action Network form. Styles the
+ * "How can you help?" checkbox group and drives the two-step flow.
+ */
+function houseyou_enqueue_volunteer_form_embed() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'houseyou-volunteer-form-embed',
+		get_template_directory_uri() . '/assets/js/volunteer-form-embed.js',
+		array(),
+		filemtime( get_template_directory() . '/assets/js/volunteer-form-embed.js' ),
+		true // Load in footer
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'houseyou_enqueue_volunteer_form_embed' );
+
+/**
  * Enqueue Action Network event embed script.
  *
  * Only loads on pages using the "AN Events" page template, where the
