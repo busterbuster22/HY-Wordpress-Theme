@@ -523,5 +523,5 @@ When making changes:
 5. Check navigation on mobile (hamburger menu)
 6. Test Action Network embeds still display correctly
 7. Check header/footer alignment with body content
-8. Note: saving any theme file **auto-deploys it to staging immediately** via SFTP (no manual deploy step) — so verify before saving; changes are instantly live on staging
+8. Deploy to staging: **saving in VS Code auto-uploads** via the SFTP extension; **agent/CLI edits do NOT** — push those with `scp` over SSH (`...@ssh.wp.com:wp-content/themes/house-you/<path>`), then verify on staging (grep the remote file or `wp`)
 9. Finally, "Push to production" from the WordPress.com dashboard to promote staging → live

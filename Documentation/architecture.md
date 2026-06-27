@@ -636,9 +636,22 @@ Meta is saved in [`houseyou_save_event_details()`](functions.php:400) on the `sa
 
 - **Runtime:** [Local by Flywheel](https://localwp.com/) — runs WordPress locally on the development machine
 - **Editor:** VS Code with the [SFTP extension](https://marketplace.visualstudio.com/items?itemName=Natizyskunk.sftp) (`.vscode/sftp.json` config — not committed to git)
-- **Auto-upload (critical):** Any change to a theme file is **automatically uploaded to the WordPress.com Business staging site the instant the file is written to disk** — for every write, including automated/agent edits, not just manual VS Code saves. There is **no separate deploy step**: editing a theme file *is* deploying it to staging.
+- **Auto-upload on VS Code save:** When a theme file is **saved in VS Code**, the SFTP
+  extension uploads it to the WordPress.com Business staging site automatically. This is the
+  normal human workflow — save = deploy to staging.
+- **Agent/CLI edits do NOT auto-upload (critical):** Files written by tools/scripts/agents
+  (or any editor other than VS Code with the extension running) **do not** trigger the
+  watcher, so they stay local-only. They must be pushed explicitly. The reliable way is
+  `scp` over the working SSH connection (the SFTP home is the WP root `/srv/htdocs`):
+  ```
+  scp <file> staging-ba32-houseyouorg.wordpress.com@ssh.wp.com:wp-content/themes/house-you/<path>
+  ```
+  After deploying PHP that registers taxonomies/rewrites, run `wp rewrite flush` over SSH.
 
-> **Treat every theme-file edit as a live deploy to staging.** Changes are instantly visible on the staging URL, so build, lint, and verify *before* writing — there is no staging "preview gate" to catch mistakes first. To preview a change without touching staging, work on the **Local** site instead.
+> **A theme edit is not live on staging until it's uploaded.** For VS Code saves that's
+> automatic; for agent edits it is not — push via `scp` and verify on staging (e.g. grep the
+> remote file or use `wp`) before assuming a change took effect. To preview without touching
+> staging at all, work on the **Local** site.
 
 ### What syncs via SFTP
 
@@ -676,11 +689,13 @@ Meta is saved in [`houseyou_save_event_details()`](functions.php:400) on the `sa
 ### Workflow summary
 
 ```
-Theme file written to disk (any editor or automated edit)
-  ↓ (auto-upload, immediate, via SFTP extension — no manual step)
-WordPress.com staging  ← theme edits are LIVE here the moment you save
-  ↓ (manual "Push to production" via WP.com dashboard — files + DB)
-WordPress.com production (live site)
+Theme file edited
+  ├─ saved in VS Code      → auto-upload via SFTP extension → staging
+  └─ written by agent/CLI  → NOT auto-uploaded → push manually via scp → staging
+                                                          ↓
+                                          WordPress.com staging
+                                                          ↓ (manual "Push to production" — files + DB)
+                                          WordPress.com production (live site)
 ```
 
 ---

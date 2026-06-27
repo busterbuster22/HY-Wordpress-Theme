@@ -24,10 +24,15 @@ See [architecture.md](architecture.md) for how the theme is built (FSE block the
 | ✅ **Brand pink darkened** `#CB1EAA` → `#A8178C` | `theme.json` token + all `sass/theme.scss` uses. Aesthetic (original already passed AA ~4.9:1). |
 | ✅ **Readability: prose measure + paragraph rhythm** | Scoped `max-width: 42rem` + spacing on `.wp-block-post-content` text blocks; excludes homepage/action/an-events. (Did NOT change global `contentSize`.) |
 | ✅ **Reconciled SCSS drift** | Ported an orphaned volunteer-form CSS block back into `sass/theme.scss`. |
-| ✅ **Doc debt** | `architecture.md` / `CLAUDE.md` updated for fonts + auto-deploy. |
+| ✅ **Doc debt** | `architecture.md` / `CLAUDE.md` updated for fonts + deploy reality. |
+| ✅ **Archived old pages (§12)** | Drafted both Joint Statement pages (3398, 3477) + 9 past events. Survey 3289 kept. Removed dead "Joint Statement" nav item. |
+| ✅ **`campaign` taxonomy + `[content_cards]`** | Registered taxonomy; built generic card-grid shortcode + `.card-grid`/`.card` CSS. |
+| ✅ **Campaigns page + nav (§11)** | Tagged 5 action pages `campaigns`; renamed `Actions`→**Campaigns** (slug `campaigns`, old slug auto-redirects), added `[content_cards]`; added Campaigns to header menu. |
+| ✅ **Conditional Events nav (§10)** | `houseyou_has_active_events()` + `wp_nav_menu_objects` filter; flagged EVENTS item `nav-requires-event`. Verified hidden via standard `wp_nav_menu` (⚠ confirm Max Mega Menu honours it on the live header — see §10). |
 
-**Up next (this plan):** conditional Events nav (§10), Campaigns page via `campaigns` tag
-(§11), archive old pages (§12), then homepage decomposition + remaining new pages.
+**Up next:** homepage decomposition (teasers + Read-more + campaign card row), remaining new
+pages (Partners, Take Action locations, long-form read-more), 2 missing petitions; enrich
+campaign pages with featured images + excerpts so cards show imagery.
 
 ---
 

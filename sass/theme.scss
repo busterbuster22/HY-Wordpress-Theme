@@ -2075,6 +2075,107 @@ body #can_embed_form .can_embed_form_inner,
 }
 
 /* =========================================================================
+   CONTENT CARDS — reusable grid (Campaigns / Media / Projects / homepage)
+   Self-contained; mirrors the event-card look. Output by [content_cards].
+   ========================================================================= */
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+
+    &--columned {
+        @media (min-width: 769px) {
+            display: grid;
+            grid-template-columns: repeat(var(--card-grid-columns, 3), 1fr);
+        }
+    }
+}
+
+.card-link {
+    text-decoration: none;
+    display: block;
+    width: 360px;
+    flex-shrink: 0;
+
+    .card-grid--columned & {
+        @media (min-width: 769px) {
+            width: auto;
+        }
+    }
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    min-height: 250px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+
+    > *:not(.card-image) {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    > .card-title {
+        padding-top: 20px;
+    }
+
+    > .card-excerpt:last-child,
+    > .card-title:last-child {
+        padding-bottom: 25px;
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.card-image {
+    margin: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: #f0f0f0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.card-title {
+    color: var(--wp--preset--color--ash-grey);
+    margin: 0 0 12px 0;
+    font-size: 1.4rem;
+    line-height: 1.3;
+}
+
+.card-excerpt {
+    color: var(--wp--preset--color--ash-grey);
+    margin: 0 0 0 0;
+    padding-bottom: 25px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.card-grid-empty {
+    text-align: center;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .card-link {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+/* =========================================================================
    CONTACT FORM 7 - ACTION NETWORK STYLE
    Aggressive !important overrides to match House You shadow-box look
    ========================================================================= */

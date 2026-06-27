@@ -734,6 +734,170 @@ function houseyou_events_listing_shortcode( $atts ) {
 add_shortcode( 'events_listing', 'houseyou_events_listing_shortcode' );
 
 /**
+ * Content Cards Shortcode
+ *
+ * Generic card grid for any content in a taxonomy — used for the Campaigns landing
+ * page, the homepage campaign row, and reusable for Media/Projects. Renders featured
+ * image + title + excerpt as linked cards using the .card-grid / .card styles.
+ *
+ * Usage:
+ *   [content_cards]                                   all content with any 'campaign' term
+ *   [content_cards term="public-housing"]             only that campaign term
+ *   [content_cards tax="post_tag" term="media"]       any taxonomy/term
+ *   [content_cards post_type="page,post" columns="3" limit="6"]
+ *
+ * Attributes:
+ * - tax:       taxonomy slug (default: campaign)
+ * - term:      term slug(s), comma-separated. Empty = any post that has a term in `tax`.
+ * - post_type: comma-separated (default: page,post)
+ * - limit:     posts to show (default: -1 = all)
+ * - columns:   cards per row on desktop, e.g. "3" (default: flex wrap)
+ * - orderby / order: WP_Query args (default: menu_order title / ASC)
+ */
+function houseyou_content_cards_shortcode( $atts ) {
+	$atts = shortcode_atts( array(
+		'tax'       => 'campaign',
+		'term'      => '',
+		'post_type' => 'page,post',
+		'limit'     => -1,
+		'columns'   => '',
+		'orderby'   => 'menu_order title',
+		'order'     => 'ASC',
+	), $atts );
+
+	$post_types = array_map( 'trim', explode( ',', $atts['post_type'] ) );
+
+	$query_args = array(
+		'post_type'           => $post_types,
+		'posts_per_page'      => intval( $atts['limit'] ),
+		'post_status'         => 'publish',
+		'orderby'             => $atts['orderby'],
+		'order'               => $atts['order'],
+		'ignore_sticky_posts' => true,
+	);
+
+	if ( ! empty( $atts['term'] ) ) {
+		$terms = array_map( 'trim', explode( ',', $atts['term'] ) );
+		$query_args['tax_query'] = array(
+			array(
+				'taxonomy' => $atts['tax'],
+				'field'    => 'slug',
+				'terms'    => $terms,
+				'operator' => 'IN',
+			),
+		);
+	} else {
+		// No term given: show any post that carries at least one term in this taxonomy.
+		$query_args['tax_query'] = array(
+			array(
+				'taxonomy' => $atts['tax'],
+				'operator' => 'EXISTS',
+			),
+		);
+	}
+
+	$cards = new WP_Query( $query_args );
+
+	$style_attr = '';
+	$grid_class = '';
+	if ( ! empty( $atts['columns'] ) && is_numeric( $atts['columns'] ) ) {
+		$style_attr = ' style="--card-grid-columns: ' . esc_attr( intval( $atts['columns'] ) ) . ';"';
+		$grid_class = ' card-grid--columned';
+	}
+
+	ob_start();
+	?>
+	<?php if ( $cards->have_posts() ) : ?>
+		<div class="card-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
+			<?php while ( $cards->have_posts() ) : $cards->the_post(); ?>
+				<a href="<?php the_permalink(); ?>" class="card-link">
+					<div class="card">
+						<?php if ( has_post_thumbnail() ) : ?>
+							<div class="card-image"><?php the_post_thumbnail( 'medium' ); ?></div>
+						<?php endif; ?>
+						<h3 class="card-title"><?php the_title(); ?></h3>
+						<?php if ( has_excerpt() ) : ?>
+							<p class="card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 22 ) ); ?></p>
+						<?php endif; ?>
+					</div>
+				</a>
+			<?php endwhile; ?>
+		</div>
+	<?php else : ?>
+		<p class="card-grid-empty">Nothing here yet.</p>
+	<?php endif;
+	wp_reset_postdata();
+	return ob_get_clean();
+}
+add_shortcode( 'content_cards', 'houseyou_content_cards_shortcode' );
+
+/**
+ * Conditional "Events" navigation item.
+ *
+ * Shows the Events nav item only when at least one upcoming event exists. Give the
+ * Events menu item the CSS class `nav-requires-event` (Appearance → Menus / Max Mega
+ * Menu → item → CSS Classes); it is then removed from the rendered menu whenever there
+ * are no upcoming events.
+ */
+function houseyou_has_active_events() {
+	$cached = get_transient( 'houseyou_has_active_events' );
+	if ( false !== $cached ) {
+		return '1' === $cached;
+	}
+
+	$today = current_time( 'Y-m-d' );
+	$query = new WP_Query( array(
+		'post_type'      => 'page',
+		'posts_per_page' => 1,
+		'post_status'    => 'publish',
+		'fields'         => 'ids',
+		'no_found_rows'  => true,
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'     => '_wp_page_template',
+				'value'   => 'an-events',
+				'compare' => '=',
+			),
+			array(
+				'key'     => '_event_date',
+				'value'   => $today,
+				'compare' => '>=',
+				'type'    => 'DATE',
+			),
+		),
+	) );
+
+	$has = $query->have_posts();
+	set_transient( 'houseyou_has_active_events', $has ? '1' : '0', HOUR_IN_SECONDS );
+	return $has;
+}
+
+/**
+ * Bust the active-events cache whenever a page is saved (event date may have changed).
+ */
+function houseyou_bust_active_events_cache() {
+	delete_transient( 'houseyou_has_active_events' );
+}
+add_action( 'save_post_page', 'houseyou_bust_active_events_cache' );
+
+/**
+ * Remove nav items flagged `nav-requires-event` when there are no upcoming events.
+ */
+function houseyou_filter_event_nav_items( $items ) {
+	if ( houseyou_has_active_events() ) {
+		return $items;
+	}
+	foreach ( $items as $key => $item ) {
+		if ( ! empty( $item->classes ) && in_array( 'nav-requires-event', (array) $item->classes, true ) ) {
+			unset( $items[ $key ] );
+		}
+	}
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'houseyou_filter_event_nav_items' );
+
+/**
  * Shortcode: [event_meta_display]
  * Outputs date, time (start–end), and location for the current event page.
  */
@@ -1054,6 +1218,37 @@ function houseyou_enable_tags_for_pages() {
 	register_taxonomy_for_object_type( 'post_tag', 'page' );
 }
 add_action( 'init', 'houseyou_enable_tags_for_pages' );
+
+/**
+ * Register the dedicated "Campaign" taxonomy.
+ *
+ * Tag-like (non-hierarchical) taxonomy applied to pages and posts. Used to group
+ * all actions/campaigns onto the Campaigns landing page (and the homepage card row)
+ * via the [content_cards tax="campaign" term="..."] shortcode. Kept separate from
+ * core post tags so campaign grouping doesn't mix with editorial tags.
+ */
+function houseyou_register_campaign_taxonomy() {
+	register_taxonomy(
+		'campaign',
+		array( 'page', 'post' ),
+		array(
+			'labels'            => array(
+				'name'          => __( 'Campaigns', 'house-you' ),
+				'singular_name' => __( 'Campaign', 'house-you' ),
+				'menu_name'     => __( 'Campaigns', 'house-you' ),
+				'add_new_item'  => __( 'Add New Campaign', 'house-you' ),
+				'search_items'  => __( 'Search Campaigns', 'house-you' ),
+			),
+			'public'            => true,
+			'hierarchical'      => false,
+			'show_ui'           => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => array( 'slug' => 'campaign' ),
+		)
+	);
+}
+add_action( 'init', 'houseyou_register_campaign_taxonomy' );
 
 /**
  * Action Network Embed Shortcode
