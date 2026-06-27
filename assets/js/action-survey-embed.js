@@ -318,16 +318,16 @@
 		var submitBtn = document.querySelector( '#survey_questions_footer button[type="submit"]' );
 		if ( submitBtn ) {
 			submitBtn.textContent = 'Complete';
-			submitBtn.style.setProperty( 'background-color',  '#CB1EAA',                    'important' );
+			submitBtn.style.setProperty( 'background-color',  '#A8178C',                    'important' );
 			submitBtn.style.setProperty( 'color',             '#FFFFFF',                    'important' );
-			submitBtn.style.setProperty( 'font-family',       'League Spartan, sans-serif', 'important' );
+			submitBtn.style.setProperty( 'font-family',       'var(--wp--preset--font-family--lexend), sans-serif', 'important' );
 			submitBtn.style.setProperty( 'font-weight',       '700',                        'important' );
 			submitBtn.style.setProperty( 'font-size',         '20px',                       'important' );
 			submitBtn.style.setProperty( 'text-transform',    'uppercase',                  'important' );
 			submitBtn.style.setProperty( 'border',            'none',                       'important' );
-			submitBtn.style.setProperty( 'border-radius',     '11px',                       'important' );
+			submitBtn.style.setProperty( 'border-radius',     '0',                       'important' );
 			submitBtn.style.setProperty( 'padding',           '12px 32px',                  'important' );
-			submitBtn.style.setProperty( 'box-shadow',        '10px 10px 2px 0 #2D2A2E',   'important' );
+			submitBtn.style.setProperty( 'box-shadow',        '7px 7px 0 0 #141414',   'important' );
 			submitBtn.style.setProperty( 'cursor',            'pointer',                    'important' );
 			submitBtn.style.setProperty( 'display',           'block',                      'important' );
 			submitBtn.style.setProperty( 'margin',            '20px auto 0 auto',           'important' );
@@ -337,9 +337,9 @@
 
 		// Inline textarea styles (in case CSS hasn't applied to new DOM nodes)
 		qList.querySelectorAll( 'textarea' ).forEach( function ( ta ) {
-			ta.style.setProperty( 'border',       '2px solid #2D2A2E',        'important' );
-			ta.style.setProperty( 'box-shadow',   '10px 10px 0px 0px #2D2A2E','important' );
-			ta.style.setProperty( 'border-radius','10px',                      'important' );
+			ta.style.setProperty( 'border',       '3px solid #141414',        'important' );
+			ta.style.setProperty( 'box-shadow',   '7px 7px 0 0 #A8178C','important' );
+			ta.style.setProperty( 'border-radius','0',                      'important' );
 			ta.style.setProperty( 'padding',      '12px 15px',                 'important' );
 			ta.style.setProperty( 'width',        '100%',                      'important' );
 			ta.style.setProperty( 'box-sizing',   'border-box',                'important' );
@@ -396,7 +396,7 @@
 			var h1 = thankYouDiv.querySelector( 'h1' );
 			if ( h1 ) {
 				h1.classList.add( 'hy-survey-done' );
-				h1.style.setProperty( 'font-family',  'League Spartan, sans-serif', 'important' );
+				h1.style.setProperty( 'font-family',  'var(--wp--preset--font-family--lexend), sans-serif', 'important' );
 				h1.style.setProperty( 'font-size',    '32px',       'important' );
 				h1.style.setProperty( 'font-weight',  '700',        'important' );
 				h1.style.setProperty( 'color',        '#000000',    'important' );

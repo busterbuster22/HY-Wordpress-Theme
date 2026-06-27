@@ -215,7 +215,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
    ========================================================================= */
 .wp-block-group.is-style-dark-section,
 .wp-block-cover.is-style-dark-section {
-  background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  background-color: var(--wp--preset--color--ash-grey, #141414) !important;
   color: var(--wp--preset--color--white, #FFFFFF) !important;
   padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 }
@@ -235,7 +235,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 .wp-block-group.is-style-light-section,
 .wp-block-cover.is-style-light-section {
   background-color: var(--wp--preset--color--white, #FFFFFF) !important;
-  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
   padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 }
 .wp-block-group.is-style-light-section h1, .wp-block-group.is-style-light-section h2, .wp-block-group.is-style-light-section h3, .wp-block-group.is-style-light-section h4, .wp-block-group.is-style-light-section h5, .wp-block-group.is-style-light-section h6, .wp-block-group.is-style-light-section p, .wp-block-group.is-style-light-section li, .wp-block-group.is-style-light-section a,
@@ -248,7 +248,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 .wp-block-cover.is-style-light-section p,
 .wp-block-cover.is-style-light-section li,
 .wp-block-cover.is-style-light-section a {
-  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
 }
 
 .wp-block-group.is-style-pink-section,
@@ -276,7 +276,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
    ========================================================================= */
 .editor-styles-wrapper .wp-block-group.is-style-dark-section,
 .editor-styles-wrapper .wp-block-cover.is-style-dark-section {
-  background-color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  background-color: var(--wp--preset--color--ash-grey, #141414) !important;
   color: var(--wp--preset--color--white, #FFFFFF) !important;
 }
 .editor-styles-wrapper .wp-block-group.is-style-dark-section h1, .editor-styles-wrapper .wp-block-group.is-style-dark-section h2, .editor-styles-wrapper .wp-block-group.is-style-dark-section h3, .editor-styles-wrapper .wp-block-group.is-style-dark-section h4, .editor-styles-wrapper .wp-block-group.is-style-dark-section h5, .editor-styles-wrapper .wp-block-group.is-style-dark-section h6, .editor-styles-wrapper .wp-block-group.is-style-dark-section p, .editor-styles-wrapper .wp-block-group.is-style-dark-section li, .editor-styles-wrapper .wp-block-group.is-style-dark-section a,
@@ -296,7 +296,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 .editor-styles-wrapper .wp-block-group.is-style-light-section,
 .editor-styles-wrapper .wp-block-cover.is-style-light-section {
   background-color: var(--wp--preset--color--white, #FFFFFF) !important;
-  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
 }
 .editor-styles-wrapper .wp-block-group.is-style-light-section h1, .editor-styles-wrapper .wp-block-group.is-style-light-section h2, .editor-styles-wrapper .wp-block-group.is-style-light-section h3, .editor-styles-wrapper .wp-block-group.is-style-light-section h4, .editor-styles-wrapper .wp-block-group.is-style-light-section h5, .editor-styles-wrapper .wp-block-group.is-style-light-section h6, .editor-styles-wrapper .wp-block-group.is-style-light-section p, .editor-styles-wrapper .wp-block-group.is-style-light-section li, .editor-styles-wrapper .wp-block-group.is-style-light-section a,
 .editor-styles-wrapper .wp-block-group.is-style-light-section .block-editor-rich-text__editable,
@@ -310,7 +310,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 .editor-styles-wrapper .wp-block-cover.is-style-light-section li,
 .editor-styles-wrapper .wp-block-cover.is-style-light-section a,
 .editor-styles-wrapper .wp-block-cover.is-style-light-section .block-editor-rich-text__editable {
-  color: var(--wp--preset--color--ash-grey, #2D2A2E) !important;
+  color: var(--wp--preset--color--ash-grey, #141414) !important;
 }
 .editor-styles-wrapper .wp-block-group.is-style-pink-section,
 .editor-styles-wrapper .wp-block-cover.is-style-pink-section {
@@ -421,7 +421,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 
 /* Header background */
 header.wp-block-template-part {
-  background-color: var(--wp--preset--color--ash-grey, #2D2A2E);
+  background-color: var(--wp--preset--color--ash-grey, #141414);
   color: var(--wp--preset--color--white, #FFFFFF);
 }
 
@@ -872,11 +872,11 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
-  border-radius: 10px !important;
-  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
   background: #FFFFFF !important;
   color: #000000 !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
   margin-bottom: 20px !important;
   width: 100% !important;
   box-sizing: border-box;
@@ -916,10 +916,10 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 20px !important;
   text-transform: uppercase !important;
   border: none !important;
-  border-radius: 11px !important;
+  border-radius: 0 !important;
   padding: 12px 32px !important;
   cursor: pointer;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   display: block;
   margin: 20px auto 0 auto !important;
   width: auto !important;
@@ -936,8 +936,8 @@ body #can_embed_form .can_embed_form_inner,
 #can_letter_one_col input[type=submit]:hover,
 #can_letter_one_col .button:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px);
-  box-shadow: 12px 12px 4px 0 #2D2A2E !important;
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* === TWO-COLUMN LAYOUT (Letter & Form Campaigns - NOT RSVP) === */
@@ -1103,9 +1103,9 @@ body #can_embed_form .can_embed_form_inner,
   padding-top: 12px !important;
   padding-bottom: 12px !important;
   padding-left: 15px !important;
-  border: 1px solid #000 !important;
-  border-radius: 10px !important;
-  box-shadow: rgb(45, 42, 46) 10px 10px 2px 0px !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
+  border-radius: 0 !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
   width: 100% !important;
 }
 
@@ -1311,10 +1311,10 @@ body #can_embed_form .can_embed_form_inner,
   height: 52px;
   padding: 0 20px;
   border: 1px solid #000;
-  border-radius: 10px;
+  border-radius: 0;
   background: #fff;
   color: #000;
-  box-shadow: 10px 10px 2px 0 #2D2A2E;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink);
 }
 
 #can_embed_form form.new_delivery input#Year-of-Birth-YYYY::placeholder {
@@ -1364,11 +1364,11 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
-  border-radius: 10px !important;
-  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
   background: #FFFFFF !important;
   color: #000000 !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
 }
 
 /* Apply House You styling to RSVP submit button */
@@ -1379,9 +1379,9 @@ body #can_embed_form .can_embed_form_inner,
   font-weight: bold !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
-  border-radius: 11px !important;
+  border-radius: 0 !important;
   padding: 12px 32px !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* Show opt-in checkbox on RSVP */
@@ -1487,11 +1487,11 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
-  border-radius: 10px !important;
-  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
   background: #FFFFFF !important;
   color: #000000 !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
   margin-bottom: 20px !important;
   width: 100% !important;
   box-sizing: border-box;
@@ -1512,10 +1512,10 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 20px !important;
   text-transform: uppercase !important;
   border: none !important;
-  border-radius: 11px !important;
+  border-radius: 0 !important;
   padding: 12px 32px !important;
   cursor: pointer;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   display: block;
   margin: 0 auto !important;
   width: auto !important;
@@ -1524,8 +1524,8 @@ body #can_embed_form .can_embed_form_inner,
 
 #can_embed_form form.new_rsvp input[type=submit]:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px);
-  box-shadow: 12px 12px 4px 0 #2D2A2E !important;
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* === SHOW AND STYLE OPT-IN CHECKBOX ON RSVP === */
@@ -1716,10 +1716,10 @@ body #can_embed_form .can_embed_form_inner,
 /* Add to Calendar section */
 #can_embed_form.can_thank_you_wrap #add-to-calendar {
   background: #FFFFFF !important;
-  border-radius: 10px !important;
+  border-radius: 0 !important;
   padding: 25px !important;
   margin: 30px 0 !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
 }
 
 #can_embed_form.can_thank_you_wrap #add-to-calendar p {
@@ -1738,17 +1738,17 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 16px !important;
   text-transform: uppercase !important;
   text-decoration: none !important;
-  border-radius: 8px !important;
+  border-radius: 0 !important;
   padding: 10px 20px !important;
   margin: 5px !important;
   transition: all 0.3s ease !important;
-  box-shadow: 5px 5px 1px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 #can_embed_form.can_thank_you_wrap #add-to-calendar a:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 7px 7px 2px 0 #2D2A2E !important;
+  transform: translate(3px, 3px) !important;
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* Share buttons section */
@@ -1771,17 +1771,17 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 16px !important;
   text-transform: uppercase !important;
   text-decoration: none !important;
-  border-radius: 8px !important;
+  border-radius: 0 !important;
   padding: 12px 24px !important;
   margin: 10px 10px 10px 0 !important;
   transition: all 0.3s ease !important;
-  box-shadow: 5px 5px 1px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 #can_embed_form.can_thank_you_wrap .share_button:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 7px 7px 2px 0 #2D2A2E !important;
+  transform: translate(3px, 3px) !important;
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 #can_embed_form.can_thank_you_wrap .share_button span {
@@ -1863,92 +1863,10 @@ body #can_embed_form .can_embed_form_inner,
 }
 
 /* =========================================================================
-   EVENTS LISTING SHORTCODE
+   EVENT META SIDEBAR — individual event pages (an-events template)
+   Legacy .event-card / .events-grid listing styles were removed; the
+   [content_cards] engine below now renders every card grid on the site.
    ========================================================================= */
-.events-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  justify-content: center;
-}
-@media (min-width: 769px) {
-  .events-grid {
-    max-width: var(--events-grid-max-width, none);
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-@media (min-width: 769px) {
-  .events-grid--columned {
-    display: grid;
-    grid-template-columns: repeat(var(--events-grid-columns, 3), 1fr);
-    max-width: none;
-  }
-}
-
-.event-card-link {
-  text-decoration: none;
-  display: block;
-  width: 500px;
-  flex-shrink: 0;
-}
-@media (min-width: 769px) {
-  .events-grid--columned .event-card-link {
-    width: auto;
-  }
-}
-
-.event-card {
-  background-color: white;
-  padding: 0;
-  border-radius: 10px;
-  min-height: 250px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.event-card > *:not(.event-image) {
-  padding: 0 25px;
-}
-
-.event-card > h3.event-title {
-  padding-top: 20px;
-}
-
-.event-card > .event-excerpt,
-.event-card > .event-meta:last-of-type {
-  padding-bottom: 25px;
-}
-
-.event-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.event-card.no-date {
-  border: 2px solid #FF9800;
-}
-
-.event-warning {
-  background-color: #FF9800;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  display: inline-block;
-  margin-bottom: 10px;
-}
-
-.event-title {
-  color: var(--wp--preset--color--ash-grey);
-  margin: 0 0 15px 0;
-  font-size: 1.4rem;
-  line-height: 1.3;
-}
-
-/* Event meta sidebar — used on individual event pages (an-events template) */
 .event-meta-sidebar {
   margin: 15px 0 35px;
   font-size: 1.6rem;
@@ -1961,57 +1879,6 @@ body #can_embed_form .can_embed_form_inner,
   display: block;
 }
 
-.event-meta {
-  background-color: #f5f5f5;
-  padding: 20px 12px 12px;
-  padding-top: 20px !important;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--wp--preset--color--ash-grey);
-}
-
-.event-meta > div {
-  margin: 5px 0;
-}
-
-.event-date,
-.event-time,
-.event-location {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.event-image {
-  margin: 0;
-  width: 100%;
-  aspect-ratio: 16/9;
-  overflow: hidden;
-  background-color: #f0f0f0;
-}
-
-.event-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.event-excerpt {
-  color: var(--wp--preset--color--ash-grey);
-  margin: 10px 0 0 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-/* Responsive: smaller cards on mobile */
-@media (max-width: 768px) {
-  .event-card-link {
-    width: 100%;
-    max-width: 500px;
-  }
-}
 /* =========================================================================
    CONTENT CARDS — single reusable card grid for the whole theme
    Used by [content_cards] and (via delegation) [events_listing]: Campaigns,
@@ -2204,11 +2071,11 @@ body #can_embed_form .can_embed_form_inner,
 .wpcf7-form input[type=email],
 .wpcf7-form textarea {
   background-color: #fff !important;
-  border: 2px solid #2D2A2E !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
   border-radius: 0 !important;
   padding: 15px !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
-  color: #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
+  color: var(--wp--preset--color--ash-grey) !important;
   font-family: inherit;
   font-size: 18px !important;
   margin-bottom: 20px !important;
@@ -2224,7 +2091,7 @@ body #can_embed_form .can_embed_form_inner,
 /* Placeholder styling */
 .wpcf7-form input::placeholder,
 .wpcf7-form textarea::placeholder {
-  color: #2D2A2E !important;
+  color: var(--wp--preset--color--ash-grey) !important;
   opacity: 0.7 !important;
 }
 
@@ -2232,9 +2099,9 @@ body #can_embed_form .can_embed_form_inner,
 .wpcf7-form .wpcf7-submit {
   background-color: #A8178C !important;
   color: #FFFFFF !important;
-  border: 2px solid #2D2A2E !important;
+  border: 2px solid var(--wp--preset--color--ash-grey) !important;
   border-radius: 0 !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   font-family: "Lexend", sans-serif !important;
   font-weight: 900 !important;
   font-size: 20px !important;
@@ -2247,8 +2114,8 @@ body #can_embed_form .can_embed_form_inner,
 
 .wpcf7-form .wpcf7-submit:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px);
-  box-shadow: 12px 12px 2px 0px #2D2A2E !important;
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* =========================================================================
@@ -2285,11 +2152,11 @@ body #can_embed_form .can_embed_form_inner,
 .fluentform input[type=email],
 .fluentform textarea {
   background-color: #fff !important;
-  border: 2px solid #2D2A2E !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
   border-radius: 0 !important;
   padding: 15px !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
-  color: #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
+  color: var(--wp--preset--color--ash-grey) !important;
   font-family: inherit;
   font-size: 18px !important;
   margin-bottom: 0 !important;
@@ -2307,7 +2174,7 @@ body #can_embed_form .can_embed_form_inner,
 /* Placeholder styling */
 .fluentform input::placeholder,
 .fluentform textarea::placeholder {
-  color: #2D2A2E !important;
+  color: var(--wp--preset--color--ash-grey) !important;
   opacity: 0.7 !important;
 }
 
@@ -2330,9 +2197,9 @@ body #can_embed_form .can_embed_form_inner,
 .fluentform .ff-btn-submit {
   background-color: #A8178C !important;
   color: #FFFFFF !important;
-  border: 2px solid #2D2A2E !important;
+  border: 2px solid var(--wp--preset--color--ash-grey) !important;
   border-radius: 0 !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   font-family: "Lexend", sans-serif !important;
   font-weight: 900 !important;
   font-size: 20px !important;
@@ -2345,8 +2212,8 @@ body #can_embed_form .can_embed_form_inner,
 
 .fluentform .ff-btn-submit:hover {
   background-color: #A01888 !important;
-  transform: translateY(-2px);
-  box-shadow: 12px 12px 2px 0px #2D2A2E !important;
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey) !important;
 }
 
 /* Submit button wrapper */
@@ -2388,9 +2255,9 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
-  border-radius: 10px !important;
-  border: 2px solid #2D2A2E !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
+  border-radius: 0 !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
   background: #FFFFFF !important;
   color: #000000 !important;
   width: 100% !important;
@@ -2422,9 +2289,9 @@ body #can_embed_form .can_embed_form_inner,
   font-size: 20px !important;
   text-transform: uppercase !important;
   border: none !important;
-  border-radius: 11px !important;
+  border-radius: 0 !important;
   padding: 12px 32px !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   cursor: pointer !important;
   display: block !important;
   margin: 20px auto 0 auto !important;
@@ -2542,9 +2409,9 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Textarea styling */
 #can_embed_form #survey_questions textarea {
-  border: 2px solid #2D2A2E !important;
-  box-shadow: 10px 10px 0px 0px #2D2A2E !important;
-  border-radius: 10px !important;
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
+  border-radius: 0 !important;
   padding: 12px 15px !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -2563,9 +2430,9 @@ body #can_embed_form .can_embed_form_inner,
   line-height: 1 !important;
   text-transform: uppercase !important;
   border: none !important;
-  border-radius: 11px !important;
+  border-radius: 0 !important;
   padding: 12px 32px !important;
-  box-shadow: 10px 10px 2px 0 #2D2A2E !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
   cursor: pointer !important;
   display: block !important;
   margin: 20px auto 0 auto !important;
@@ -2616,6 +2483,102 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Hide the entire clearfix wrapper containing sharing blocks */
 #can_embed_form.can_thank_you_wrap .clearfix:has(.can_thank_you-block) {
+  display: none !important;
+}
+
+/* =========================================================================
+   ACTION NETWORK — UNIVERSAL SHADOW-BOX CATCH-ALL
+   The per-form-type rules miss some controls on multi-step / volunteer
+   (form.new_answer) embeds — e.g. the hero "Continue" button and the
+   "Your housing situation" <select> (its styling was scoped to new_delivery).
+   Normalise every AN control to the shadow-box so nothing stays rounded or
+   unstyled. Per-type rules above keep their pink input accent (higher
+   specificity wins); these only fill the gaps.
+   ========================================================================= */
+/* Square every control regardless of tag/type */
+#can_embed_form input,
+#can_embed_form select,
+#can_embed_form textarea,
+#can_embed_form button,
+#can_embed_form a.can_button,
+#can_embed_form .can_button,
+#can_embed_form .button {
+  border-radius: 0 !important;
+}
+
+/* Give any <select> the same shadow-box as the text inputs (pink accent) */
+#can_embed_form select {
+  border: 3px solid var(--wp--preset--color--ash-grey) !important;
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink) !important;
+  background-color: #fff !important;
+  height: 52px !important;
+  padding: 12px 15px !important;
+  color: #000 !important;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+/* Offset shadow for buttons the per-type rules don't reach (e.g. the
+   multi-step "Continue" button) — ash so it reads on a pink-filled button */
+#can_embed_form button,
+#can_embed_form a.can_button {
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
+}
+
+/* -------------------------------------------------------------------------
+   HOMEPAGE ONLY — the hero form sits on the pink banner image, where a pink
+   offset shadow disappears into the background. Recolour the homepage form
+   shadows to ash-grey (the style-guide variant for coloured backgrounds).
+   Scoped to body.home so every other form keeps its pink accent.
+   ------------------------------------------------------------------------- */
+body.home #can_embed_form input[type=text],
+body.home #can_embed_form input[type=email],
+body.home #can_embed_form input[type=tel],
+body.home #can_embed_form input[type=number],
+body.home #can_embed_form textarea,
+body.home #can_embed_form select,
+body.home #can_embed_form input[type=submit],
+body.home #can_embed_form button,
+body.home #can_embed_form a.can_button,
+body.home #can_embed_form .can_button,
+body.home #can_embed_form .button {
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey) !important;
+}
+
+/* =========================================================================
+   HOMEPAGE CARD ROWS
+   [content_cards]/[substack_articles] with heading="" + more_text/more_url
+   render a heading, a card grid, and a centred "See more" button. On the
+   homepage they sit inside full-width is-style-* bands, so constrain the
+   shortcode-rendered children to the content width like the other sections.
+   ========================================================================= */
+.card-row-more {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.full-width-homepage .card-grid,
+.full-width-homepage > .card-row-heading,
+.full-width-homepage > .card-row-more {
+  max-width: var(--wp--style--global--wide-size, 1400px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 769px) {
+  .full-width-homepage .card-grid,
+  .full-width-homepage > .card-row-heading,
+  .full-width-homepage > .card-row-more {
+    padding-left: var(--wp--custom--spacing--outer);
+    padding-right: var(--wp--custom--spacing--outer);
+  }
+}
+/* A band tagged .home-conditional-row removes itself when its row produced no
+   cards (the shortcode returned nothing, so no .card-grid is present). */
+.home-conditional-row:not(:has(.card-grid)) {
   display: none !important;
 }
 

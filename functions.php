@@ -51,6 +51,9 @@ add_action( 'wpcf7_spam', function( $contact_form ) {
 // Load Action Network API client
 require_once get_template_directory() . '/inc/action-network-api.php';
 
+// Load Substack RSS feed client
+require_once get_template_directory() . '/inc/substack-api.php';
+
 /**
  * Add class to body if post/page has a featured image.
  */
@@ -659,6 +662,24 @@ function houseyou_card_excerpt( $post, $words = 24 ) {
  * Presentation: columns="3", width="800px", button_text="Read more",
  * excerpt_words="24", show_excerpt, show_image, auto_excerpt, empty_text.
  */
+/**
+ * Wrap a card grid as a homepage "row": an optional heading above the grid and
+ * a "See more" button below. Shared by [content_cards] and [substack_articles]
+ * so a homepage band can show a heading + a few cards + a link to the full page.
+ */
+function houseyou_card_row_wrap( $grid_html, $heading, $more_text, $more_url ) {
+	$out = '';
+	if ( '' !== $heading ) {
+		$out .= '<h2 class="wp-block-heading card-row-heading">' . esc_html( $heading ) . '</h2>';
+	}
+	$out .= $grid_html;
+	if ( '' !== $more_text && '' !== $more_url ) {
+		$out .= '<div class="card-row-more"><a class="wp-block-button__link wp-element-button" href="'
+			. esc_url( $more_url ) . '">' . esc_html( $more_text ) . '</a></div>';
+	}
+	return $out;
+}
+
 function houseyou_content_cards_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'tax'           => '',
@@ -679,6 +700,10 @@ function houseyou_content_cards_shortcode( $atts ) {
 		'show_image'    => 'true',
 		'auto_excerpt'  => 'true',
 		'empty_text'    => 'Nothing here yet.',
+		'heading'       => '',
+		'more_text'     => '',
+		'more_url'      => '',
+		'hide_if_empty' => 'false',
 	), $atts, 'content_cards' );
 
 	$event_meta   = filter_var( $atts['event_meta'], FILTER_VALIDATE_BOOLEAN );
@@ -767,6 +792,9 @@ function houseyou_content_cards_shortcode( $atts ) {
 
 	if ( ! $cards->have_posts() ) {
 		wp_reset_postdata();
+		if ( filter_var( $atts['hide_if_empty'], FILTER_VALIDATE_BOOLEAN ) ) {
+			return '';
+		}
 		return '<p class="card-grid-empty">' . esc_html( $atts['empty_text'] ) . '</p>';
 	}
 
@@ -829,9 +857,94 @@ function houseyou_content_cards_shortcode( $atts ) {
 	</div>
 	<?php
 	wp_reset_postdata();
-	return ob_get_clean();
+	return houseyou_card_row_wrap( ob_get_clean(), $atts['heading'], $atts['more_text'], $atts['more_url'] );
 }
 add_shortcode( 'content_cards', 'houseyou_content_cards_shortcode' );
+
+/**
+ * Substack RSS feed shortcode.
+ *
+ * Outputs a card grid of articles from a Substack RSS feed, reusing the
+ * existing card grid CSS classes.
+ *
+ * Usage: [substack_articles limit="6" columns="3" button_text="Read on Substack"]
+ */
+function houseyou_substack_shortcode( $atts ) {
+	$atts = shortcode_atts( array(
+		'limit'         => 12,
+		'columns'       => '',
+		'width'         => '',
+		'button_text'   => '',
+		'excerpt_words' => 24,
+		'empty_text'    => 'No articles yet.',
+		'heading'       => '',
+		'more_text'     => '',
+		'more_url'      => '',
+		'hide_if_empty' => 'false',
+	), $atts, 'substack_articles' );
+
+	$articles = houseyou_substack_fetch_articles(
+		intval( $atts['limit'] ),
+		intval( $atts['excerpt_words'] )
+	);
+
+	if ( empty( $articles ) ) {
+		if ( filter_var( $atts['hide_if_empty'], FILTER_VALIDATE_BOOLEAN ) ) {
+			return '';
+		}
+		return '<p class="card-grid-empty">' . esc_html( $atts['empty_text'] ) . '</p>';
+	}
+
+	$styles     = array();
+	$grid_class = '';
+	if ( ! empty( $atts['columns'] ) && is_numeric( $atts['columns'] ) ) {
+		$styles[]   = '--card-grid-columns: ' . intval( $atts['columns'] );
+		$grid_class = ' card-grid--columned';
+	}
+	if ( ! empty( $atts['width'] ) ) {
+		$styles[] = '--card-grid-max-width: ' . $atts['width'];
+	}
+	$style_attr = $styles ? ' style="' . esc_attr( implode( '; ', $styles ) ) . '"' : '';
+
+	ob_start();
+	?>
+	<div class="card-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
+		<?php foreach ( $articles as $article ) : ?>
+			<a href="<?php echo esc_url( $article['url'] ); ?>" class="card-link" target="_blank" rel="noopener">
+				<div class="card">
+					<?php if ( ! empty( $article['image'] ) ) : ?>
+						<div class="card-image">
+							<img src="<?php echo esc_url( $article['image'] ); ?>" alt="" loading="lazy">
+						</div>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $article['date'] ) ) : ?>
+						<span class="card-eyebrow"><?php echo esc_html( $article['date'] ); ?></span>
+					<?php endif; ?>
+
+					<h3 class="card-title"><?php echo esc_html( $article['title'] ); ?></h3>
+
+					<?php if ( ! empty( $article['author'] ) || ! empty( $article['publication'] ) ) :
+						$subline_parts = array_filter( array( $article['publication'], $article['author'] ) );
+					?>
+						<p class="card-subline"><?php echo esc_html( implode( '   ·   ', $subline_parts ) ); ?></p>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $article['excerpt'] ) ) : ?>
+						<p class="card-excerpt"><?php echo esc_html( $article['excerpt'] ); ?></p>
+					<?php endif; ?>
+
+					<?php if ( '' !== $atts['button_text'] ) : ?>
+						<span class="card-button"><?php echo esc_html( $atts['button_text'] ); ?></span>
+					<?php endif; ?>
+				</div>
+			</a>
+		<?php endforeach; ?>
+	</div>
+	<?php
+	return houseyou_card_row_wrap( ob_get_clean(), $atts['heading'], $atts['more_text'], $atts['more_url'] );
+}
+add_shortcode( 'substack_articles', 'houseyou_substack_shortcode' );
 
 /**
  * Conditional "Events" navigation item.
@@ -1140,6 +1253,85 @@ function houseyou_an_settings_page() {
 
 		<h2>Support</h2>
 		<p>For issues with Action Network API access, contact Action Network support directly.</p>
+	</div>
+	<?php
+}
+
+/**
+ * Substack settings page.
+ */
+function houseyou_substack_add_settings_page() {
+	add_options_page(
+		'Substack Feed',
+		'Substack Feed',
+		'manage_options',
+		'houseyou-substack',
+		'houseyou_substack_settings_page'
+	);
+}
+add_action( 'admin_menu', 'houseyou_substack_add_settings_page' );
+
+function houseyou_substack_register_settings() {
+	register_setting( 'houseyou_substack_settings', 'houseyou_substack_feed_url' );
+}
+add_action( 'admin_init', 'houseyou_substack_register_settings' );
+
+function houseyou_substack_settings_page() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	if ( isset( $_POST['houseyou_substack_save'] ) && check_admin_referer( 'houseyou_substack_settings' ) ) {
+		$feed_url = esc_url_raw( $_POST['houseyou_substack_feed_url'] );
+		update_option( 'houseyou_substack_feed_url', $feed_url );
+		echo '<div class="notice notice-success"><p>Settings saved!</p></div>';
+	}
+
+	$feed_url = get_option( 'houseyou_substack_feed_url', '' );
+	?>
+	<div class="wrap">
+		<h1>Substack Feed Settings</h1>
+
+		<p>Pull articles from your Substack publication into the Articles page via RSS.</p>
+
+		<form method="post" action="">
+			<?php wp_nonce_field( 'houseyou_substack_settings' ); ?>
+
+			<table class="form-table">
+				<tr>
+					<th scope="row">
+						<label for="houseyou_substack_feed_url">Substack RSS Feed URL</label>
+					</th>
+					<td>
+						<input type="text"
+							   id="houseyou_substack_feed_url"
+							   name="houseyou_substack_feed_url"
+							   value="<?php echo esc_attr( $feed_url ); ?>"
+							   class="regular-text"
+							   placeholder="https://yourpublication.substack.com/feed">
+						<p class="description">
+							Your Substack RSS feed URL. Usually <code>https://yourpublication.substack.com/feed</code>
+						</p>
+					</td>
+				</tr>
+			</table>
+
+			<?php if ( ! empty( $feed_url ) ) : ?>
+				<div style="background: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 20px 0;">
+					<h3 style="margin-top: 0;">Feed URL Configured</h3>
+					<p>Use the shortcode <code>[substack_articles columns="3" button_text="Read on Substack"]</code> on the Articles page.</p>
+				</div>
+			<?php else : ?>
+				<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 20px 0;">
+					<h3 style="margin-top: 0;">Feed URL Required</h3>
+					<p>Enter your Substack RSS feed URL above to enable the Articles page.</p>
+				</div>
+			<?php endif; ?>
+
+			<p class="submit">
+				<input type="submit" name="houseyou_substack_save" class="button button-primary" value="Save Settings">
+			</p>
+		</form>
 	</div>
 	<?php
 }

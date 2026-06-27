@@ -305,11 +305,11 @@
 			el.style.setProperty( 'font-size',     '18px',                     'important' );
 			el.style.setProperty( 'height',        '52px',                     'important' );
 			el.style.setProperty( 'padding',       '12px 15px',                'important' );
-			el.style.setProperty( 'border-radius', '10px',                     'important' );
-			el.style.setProperty( 'border',        '1px solid #000000',        'important' );
+			el.style.setProperty( 'border-radius', '0',                     'important' );
+			el.style.setProperty( 'border',        '3px solid #141414',        'important' );
 			el.style.setProperty( 'background',    '#FFFFFF',                  'important' );
 			el.style.setProperty( 'color',         '#000000',                  'important' );
-			el.style.setProperty( 'box-shadow',    '10px 10px 2px 0 #2D2A2E', 'important' );
+			el.style.setProperty( 'box-shadow',    '7px 7px 0 0 #A8178C', 'important' );
 			el.style.setProperty( 'margin-bottom', '20px',                     'important' );
 			el.style.setProperty( 'width',         '100%',                     'important' );
 			el.style.setProperty( 'display',       'block',                    'important' );
@@ -324,11 +324,11 @@
 			textarea.style.setProperty( 'height',        'auto',                     'important' );
 			textarea.style.setProperty( 'min-height',    '300px',                    'important' );
 			textarea.style.setProperty( 'padding',       '15px',                     'important' );
-			textarea.style.setProperty( 'border-radius', '10px',                     'important' );
-			textarea.style.setProperty( 'border',        '1px solid #000000',        'important' );
+			textarea.style.setProperty( 'border-radius', '0',                     'important' );
+			textarea.style.setProperty( 'border',        '3px solid #141414',        'important' );
 			textarea.style.setProperty( 'background',    '#FFFFFF',                  'important' );
 			textarea.style.setProperty( 'color',         '#000000',                  'important' );
-			textarea.style.setProperty( 'box-shadow',    '10px 10px 2px 0 #2D2A2E', 'important' );
+			textarea.style.setProperty( 'box-shadow',    '7px 7px 0 0 #A8178C', 'important' );
 			textarea.style.setProperty( 'margin-bottom', '20px',                     'important' );
 			textarea.style.setProperty( 'width',         '100%',                     'important' );
 			textarea.style.setProperty( 'display',       'block',                    'important' );
@@ -338,16 +338,16 @@
 		// --- Submit button (pink House You style) ---
 		var submit = letterCol.querySelector( 'input[type="submit"]' );
 		if ( submit ) {
-			submit.style.setProperty( 'background-color', '#CB1EAA',                    'important' );
+			submit.style.setProperty( 'background-color', '#A8178C',                    'important' );
 			submit.style.setProperty( 'color',            '#FFFFFF',                    'important' );
-			submit.style.setProperty( 'font-family',      'League Spartan, sans-serif', 'important' );
+			submit.style.setProperty( 'font-family',      'var(--wp--preset--font-family--lexend), sans-serif', 'important' );
 			submit.style.setProperty( 'font-weight',      'bold',                       'important' );
 			submit.style.setProperty( 'font-size',        '20px',                       'important' );
 			submit.style.setProperty( 'text-transform',   'uppercase',                  'important' );
 			submit.style.setProperty( 'border',           'none',                       'important' );
-			submit.style.setProperty( 'border-radius',    '11px',                       'important' );
+			submit.style.setProperty( 'border-radius',    '0',                       'important' );
 			submit.style.setProperty( 'padding',          '12px 32px',                  'important' );
-			submit.style.setProperty( 'box-shadow',       '10px 10px 2px 0 #2D2A2E',   'important' );
+			submit.style.setProperty( 'box-shadow',       '7px 7px 0 0 #141414',   'important' );
 			submit.style.setProperty( 'cursor',           'pointer',                    'important' );
 			submit.style.setProperty( 'display',          'block',                      'important' );
 			submit.style.setProperty( 'margin',           '20px auto 0 auto',           'important' );

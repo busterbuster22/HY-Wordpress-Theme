@@ -126,11 +126,11 @@
 
 		setImp( native, {
 			position: 'static', clip: 'auto', opacity: '1', left: 'auto', top: 'auto',
-			'font-family': 'var(--wp--preset--font-family--league-spartan)',
-			'font-size': '18px', height: '52px', padding: '12px 15px', 'border-radius': '10px',
-			border: '1px solid #000000', background: '#FFFFFF',
+			'font-family': 'var(--wp--preset--font-family--lexend)',
+			'font-size': '18px', height: '52px', padding: '12px 15px', 'border-radius': '0',
+			border: '3px solid #141414', background: '#FFFFFF',
 			color: native.value === '' ? '#999' : '#000',
-			'box-shadow': '10px 10px 2px 0 #2D2A2E', 'margin-bottom': '20px', width: '100%',
+			'box-shadow': '7px 7px 0 0 #141414', 'margin-bottom': '20px', width: '100%',
 			'box-sizing': 'border-box', display: 'block',
 			'-webkit-appearance': 'menulist', appearance: 'menulist'
 		} );
@@ -167,7 +167,7 @@
 			|| document.querySelector( '#can-form-area-volunteer-form-22 h2' );
 		if ( ! h2 ) { return; }
 		setImp( h2, {
-			'font-family': 'var(--wp--preset--font-family--league-spartan)',
+			'font-family': 'var(--wp--preset--font-family--lexend)',
 			'font-size': '1.9rem', 'line-height': '1.1', 'text-transform': 'uppercase',
 			color: '#FFFFFF', 'text-shadow': SHADOW,
 			margin: '0 0 16px 0', padding: '0', border: 'none'
@@ -210,7 +210,7 @@
 	// Design (House You): each option is a selectable card — translucent white over
 	// the dark hero, lifting into the brand's hard 10px offset shadow on hover, and
 	// pink-tinted when selected. The native box is replaced by a 26px tick that fills
-	// House You Pink (#CB1EAA) with a white check. Long descriptions use a readable
+	// House You Pink (#A8178C) with a white check. Long descriptions use a readable
 	// body font rather than heavy uppercase.
 	function injectStyles() {
 		if ( document.getElementById( 'hy-volunteer-styles' ) ) { return; }
@@ -218,27 +218,27 @@
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox{' +
 			'display:flex !important;align-items:flex-start !important;gap:14px !important;' +
 			'margin:0 0 10px 0 !important;padding:14px 16px !important;' +
-			'font-family:var(--wp--preset--font-family--glacial-indifference),"Inter",sans-serif !important;' +
+			'font-family:var(--wp--preset--font-family--poppins),"Inter",sans-serif !important;' +
 			'font-size:17px !important;font-weight:700 !important;line-height:1.4 !important;' +
-			'color:#FFFFFF !important;background:rgba(45,42,46,.55) !important;' +
-			'border:2px solid rgba(255,255,255,.4) !important;border-radius:12px !important;' +
+			'color:#FFFFFF !important;background:rgba(20,20,20,.55) !important;' +
+			'border:2px solid rgba(255,255,255,.4) !important;border-radius:0 !important;' +
 			'cursor:pointer !important;text-shadow:none !important;' +
 			'transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease !important;}' +
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox:hover{' +
-			'background:rgba(45,42,46,.72) !important;border-color:#FFFFFF !important;' +
-			'transform:translate(-2px,-2px) !important;box-shadow:6px 6px 0 0 #2D2A2E !important;}' +
+			'background:rgba(20,20,20,.72) !important;border-color:#FFFFFF !important;' +
+			'transform:translate(-2px,-2px) !important;box-shadow:6px 6px 0 0 #141414 !important;}' +
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox:has(input:checked){' +
-			'background:rgba(203,30,170,.6) !important;border-color:#CB1EAA !important;' +
-			'box-shadow:6px 6px 0 0 #2D2A2E !important;}' +
+			'background:rgba(168,23,140,.6) !important;border-color:#A8178C !important;' +
+			'box-shadow:6px 6px 0 0 #141414 !important;}' +
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]{' +
 			'-webkit-appearance:none !important;appearance:none !important;' +
 			'position:relative !important;float:none !important;flex:0 0 auto !important;' +
 			'width:26px !important;height:26px !important;margin:0 !important;' +
-			'border:2px solid #2D2A2E !important;border-radius:7px !important;' +
+			'border:2px solid #141414 !important;border-radius:0 !important;' +
 			'background:#FFFFFF !important;cursor:pointer !important;display:inline-block !important;' +
 			'transition:background .12s ease,border-color .12s ease !important;}' +
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]:checked{' +
-			'background:#CB1EAA !important;border-color:#CB1EAA !important;}' +
+			'background:#A8178C !important;border-color:#A8178C !important;}' +
 		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]:checked::after{' +
 			'content:"" !important;position:absolute !important;left:8px !important;top:3px !important;' +
 			'width:6px !important;height:13px !important;border:solid #FFFFFF !important;' +
@@ -258,7 +258,7 @@
 		fullWidthLi( li );
 
 		setImp( li.querySelector( 'label.check_radio_label' ), {
-			display: 'block', 'font-family': 'var(--wp--preset--font-family--league-spartan)',
+			display: 'block', 'font-family': 'var(--wp--preset--font-family--lexend)',
 			'font-size': '22px', 'font-weight': 'bold', color: '#FFFFFF',
 			'text-shadow': SHADOW, 'margin-bottom': '16px'
 		} );
@@ -277,7 +277,7 @@
 		if ( ! li || li.dataset.hyStyled ) { return; }
 		fullWidthLi( li );
 		setImp( li.querySelector( 'label.control-label' ), {
-			display: 'block', 'font-family': 'var(--wp--preset--font-family--league-spartan)',
+			display: 'block', 'font-family': 'var(--wp--preset--font-family--lexend)',
 			'font-size': '20px', 'font-weight': 'bold', color: '#FFFFFF',
 			'text-shadow': SHADOW, 'margin-bottom': '8px'
 		} );
@@ -301,7 +301,7 @@
 		var iconShadow = 'filter:drop-shadow(0 3px 6px rgba(0,0,0,.9)) drop-shadow(0 0 14px rgba(0,0,0,.7));';
 		embedForm.innerHTML =
 			'<div class="hy-volunteer-thanks" style="text-align:center;padding:10px 0 4px;">' +
-				'<h3 style="font-family:var(--wp--preset--font-family--league-spartan),sans-serif;font-size:1.9rem;text-transform:uppercase;font-weight:bold;color:#fff;margin:0 0 16px;' + sh + '">Welcome to the movement!</h3>' +
+				'<h3 style="font-family:var(--wp--preset--font-family--lexend),sans-serif;font-size:1.9rem;text-transform:uppercase;font-weight:bold;color:#fff;margin:0 0 16px;' + sh + '">Welcome to the movement!</h3>' +
 				'<p style="color:#fff;font-size:23px;font-weight:bold;margin:0 0 18px;' + sh + '">We won\'t win because we\'re right. We\'ll win because we\'re organised.</p>' +
 				'<p style="color:#fff;font-size:23px;font-weight:bold;margin:0 0 8px;' + sh + '"><strong>Next steps:</strong></p>' +
 				'<ol style="color:#fff;text-align:left;max-width:560px;margin:0 auto 22px;font-size:20px;font-weight:bold;line-height:1.5;' + sh + '">' +
@@ -340,7 +340,7 @@
 		var b = document.createElement( 'button' );
 		b.type = 'button';
 		b.textContent = text;
-		b.style.cssText = 'background-color:#CB1EAA;color:#fff;font-family:var(--wp--preset--font-family--league-spartan),sans-serif;font-weight:bold;font-size:20px;text-transform:uppercase;border:none;border-radius:11px;padding:12px 32px;cursor:pointer;box-shadow:10px 10px 2px 0 #2D2A2E;margin:0;';
+		b.style.cssText = 'background-color:#A8178C;color:#fff;font-family:var(--wp--preset--font-family--lexend),sans-serif;font-weight:bold;font-size:20px;text-transform:uppercase;border:none;border-radius:0;padding:12px 32px;cursor:pointer;box-shadow:7px 7px 0 0 #141414;margin:0;';
 		return b;
 	}
 
@@ -348,7 +348,7 @@
 		var b = document.createElement( 'button' );
 		b.type = 'button';
 		b.textContent = '← Back';
-		b.style.cssText = 'background:transparent;color:#fff;font-family:var(--wp--preset--font-family--league-spartan),sans-serif;font-weight:bold;font-size:16px;text-transform:uppercase;border:2px solid #fff;border-radius:11px;padding:8px 20px;cursor:pointer;text-shadow:' + SHADOW + ';';
+		b.style.cssText = 'background:transparent;color:#fff;font-family:var(--wp--preset--font-family--lexend),sans-serif;font-weight:bold;font-size:16px;text-transform:uppercase;border:2px solid #fff;border-radius:0;padding:8px 20px;cursor:pointer;text-shadow:' + SHADOW + ';';
 		return b;
 	}
 
