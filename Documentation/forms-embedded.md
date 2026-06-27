@@ -364,19 +364,57 @@ A `.final-step-confirmation` guard prevents double-injection.
 
 Loaded on `is_front_page()`; early-exits unless `#can-form-area-volunteer-form-22` is present. The widget is a `v6/form` (`form.new_answer`) — **single-page; AN has no native multi-step for Form widgets** (only Survey widgets page natively). The two-step UX is therefore faked client-side: every field stays in the DOM (so it submits normally) and only visibility is toggled.
 
-Most field/input/button styling already comes from the shared `#can_embed_form form.new_answer …` rules in `theme.css`. This script only adds what CSS cannot do on this page:
+Most field/input/button styling already comes from the shared `#can_embed_form form.new_answer …` rules in `theme.css`. This script only adds what CSS cannot do on this page.
 
-| Block | What it does |
+### Architecture — resilient driver
+
+AN injects the form HTML asynchronously via its loader script, and **re-renders the form node** after initial inject (and again after validation errors), wiping any inline styles or injected nodes. Every fix function is therefore **idempotent** and re-run by `applyAll()`, driven by:
+
+1. **Initial burst** — `setInterval(applyAll, 150)` for the first 8 seconds (covers AN's async render / re-render).
+2. **MutationObserver** — watches `document.body` for structural changes, debounced to one run per `requestAnimationFrame` so our own inline-style writes don't retrigger it.
+3. **Each fix wrapped in try/catch** — one failure (e.g. from Select2-mangled DOM) can't cascade and block the rest.
+
+### Fix functions (idempotent, safe to call repeatedly)
+
+Functions run in `applyAll()` in this order:
+
+| Function | What it does |
 |---|---|
-| Block 1 | `can_float` bracket fix — `theme.css` only suppresses the `::before`/`::after` pink brackets under `.page-template-action`, not the home page, so we inject the suppressing `<style>` here. |
-| Block 2 | `#d_sharing` opt-in — removes AN's dotted `border-top` and resets the absolutely-positioned checkbox to a flex row. |
-| Block 3 | Housing Demographic — prepends a disabled "Your housing situation" placeholder option (mirrors `home-letter-action.js` Block 1). |
-| Block 4 | Styles the **"How can you help?"** group (`li.js-fb-multiplecheckboxes`) as a vertical white checklist, and forces both that `li` and the "Anything else?" textarea `li` to `width:100%` (overriding the 48% that `theme.css` applies to every `li.control-group`). |
-| Block 5 | **Two-step flow.** Step 1 = First/Last/Email/Postcode/Phone + Housing Demographic; Step 2 = "How can you help?" + "Anything else?" + opt-in + submit. Injects "Continue →" / "← Back" buttons and a Step-1 validator (the 5 core fields are AN-`required`; email is format-checked). |
+| `injectStyles()` | Injects a scoped `<style id="hy-volunteer-styles">` (once) holding the **checkbox-option card design** — these need `:hover` / `:checked` states that inline styles can't express. Each `label.checkbox` is a dark-translucent card (`rgba(45,42,46,.55)`, bold white text) with a white border; it lifts into the brand's hard `6px 6px #2D2A2E` shadow on hover and tints House You Pink (`rgba(203,30,170,.6)`) when selected. The native box is replaced by a 26px tick that fills pink with a white check (`appearance:none` + `:checked::after`). Scoped to `#can-form-area-volunteer-form-22 #form_col1` with `!important` (beats AN's stylesheet) and lives in `<head>`, so it survives AN's re-renders without re-application. |
+| `showThankYou()` | When `#can_embed_form` gains `can_thank_you_wrap` (or `#can_thank_you` renders), replaces AN's default thank-you with the House You "follow & share" page: a **"WELCOME TO THE MOVEMENT!"** heading, the "We won't win because we're right. We'll win because we're organised." line, a bold "Next steps" list, and Instagram + Facebook logo links (images loaded from `houseyou.org`). White text with a heavy triple-layer `text-shadow`; the icons get a `drop-shadow()` filter (no card behind them on the hero). Guarded by `.hy-volunteer-thanks`. |
+| `fixCanFloat()` | Removes `can_float` bracket artefacts (`[ ]` pseudo-elements). `theme.css` only suppresses these under `.page-template-action`, so a `<style>` tag is injected here for the home page. |
+| `fixDSharing()` | Removes AN's dotted `border-top` on `#d_sharing` and resets the checkbox to a flex row with 8px gap + text-shadow. |
+| `fixHousingSelect()` | **Disables Select2.** AN initialises Select2 (`js-form_select2`) on `select#Housing-Demographic`, hiding the native `<select>` offscreen and rendering its own `.select2-container` widget (the "weird box" + offscreen `.select2-focusser`). This function: (1) hides every `.select2-container` + `input.select2-focusser`, (2) removes the `select2-offscreen` class from the native `<select>`, (3) adds a disabled "Your housing situation" placeholder with grey-out wiring, (4) applies shadow-box styling on the native control to match the other fields. |
+| `hideFieldLabels()` | Hides the redundant per-field labels — the core-field floatlabels (`.floatlabel-label`, whose text just duplicates the placeholder) and the stray Housing Demographic label Select2 generates (`label.js-fb-selectbasic`, whose `for` Select2 rewrites to `s2id_autogen1`). Each field is represented by its placeholder instead. The "How can you help?" / "Anything else?" prompts use `.check_radio_label` / `.control-label` and are untouched. |
+| `hideCountry()` | Hides both the "Not in AU? Australia" link (`.js-international_link-wrap`) and the country select wrapper (`.js-country_drop_wrap`). Country defaults to Australia and still submits — the field is not required. |
+| `fixEntryTitle()` | Sizes the "Join House You" `<h2 class="entry-title">` to `1.9rem` (it sits in `#can_main_col`, OUTSIDE `form.new_answer`, so `theme.css` never reaches it; the selector is scoped to `#can-form-area-volunteer-form-22`, not `#can_embed_form`, because the title isn't under the latter in the live DOM — an earlier `#can_embed_form` scope made the whole function bail). Then zeros **both physical and logical** top spacing (`margin-top` / `margin-block-start` / `padding-top` / `padding-block-start`) on every wrapper up to and including the `.wp-block-column` — this kills the WordPress block-gap (`var(--wp--custom--gap--vertical)`) that lands on `#can-form-area` because it is the sibling *after* the AN `<script>` (flow-layout's `* + *` rule). |
+| `hideSpinner()` | Hides AN's AJAX loading spinner (`img.ajax-loading`) if it lingers after init. |
+| `fixFieldOrder()` | Reorders Step 1 fields visually using CSS `order` so the render sequence is First, Last, Email, Mobile, Postcode, Housing Demographic (AN's DOM order is first,last,email,zip,phone,housing — Mobile before Postcode; Housing right of Postcode). |
+| `styleHowCanYouHelp()` | **Structural** bits of the multi-checkbox group (`li.js-fb-multiplecheckboxes`): full-width row (inline, to beat `theme.css`'s 2-ID 48% rule), group heading as white bold 22px League Spartan, controls span to block. The option **cards** themselves live in `injectStyles()`. Guarded by `dataset.hyStyled`. |
+| `styleAnythingElse()` | The "Anything else?" textarea (`#Additional_context`) row: full-width, label as white bold 20px League Spartan. Guarded by `dataset.hyStyled`. |
+| `setupSteps()` | **Two-step flow.** Injects "Continue →" / "← Back" nav buttons and a Step 1 validator. **The validator enforces only the fields AN itself marks `required`** (`input.classList.contains('required')`) plus an email-format check, so it auto-syncs with the AN form config (e.g. Mobile/Postcode being optional in AN are optional here too). Uses `dataset.hyStepsInit` so it runs once per form node. |
 
-**Field reference (volunteer-form-22):** core fields `#form-first_name`, `#form-last_name`, `#form-email`, `#form-zip_code`, `#form-phone` (all `required`); custom `select#Housing-Demographic` (uses AN Select2 — `js-form_select2`); checkbox group `li.js-fb-multiplecheckboxes` (5 options: Organise/Amplify/Media/Fundraising/Advocate, no element IDs — names like `How can you help House You?_Organise (…)`); textarea `#Additional_context` ("Anything else?"). No Street/City/Year-of-Birth fields, so the hidden-required-field problem from the action template does **not** apply here.
+### Field reference (volunteer-form-22)
 
-**Why faked steps don't break AN submission:** hidden Step-1 fields keep their values (they're only `display:none`, never `disabled`), so AN's on-submit validation passes and all answers post. This differs from the action-template Street/City case, where hidden fields were *empty* and `required` — those had to be `disabled` to avoid silently blocking submit.
+- **Core fields:** `#form-first_name`, `#form-last_name`, `#form-email` (currently `required` in AN), `#form-zip_code`, `#form-phone` (currently optional). Required status is driven by AN's `class="required"`; `setupSteps()` reads it live rather than hardcoding, so changing required fields in AN needs no code change.
+- **Custom select:** `select#Housing-Demographic` (AN Select2 — `js-form_select2`, disabled by `fixHousingSelect()`)
+- **Checkbox group:** `li.js-fb-multiplecheckboxes` (5 options: Organise/Amplify/Media/Fundraising/Advocate; no element IDs — names like `How can you help House You?_Organise (…)`)
+- **Textarea:** `#Additional_context` ("Anything else?")
+- **Opt-in:** `#d_sharing` (opt-in checkbox for sharing personal info)
+
+No Street/City/Year-of-Birth fields, so the hidden-required-field problem from the action template does **not** apply here.
+
+### Why faked steps don't break AN submission
+
+Hidden Step-1 fields keep their values (they're only `display:none`, never `disabled`), so AN's on-submit validation passes and all answers post. This differs from the action-template Street/City case, where hidden fields were *empty* and `required` — those had to be `disabled` to avoid silently blocking submit.
+
+### Background / colour assumption
+
+The volunteer form overlays the **dark hero image**, so all labels, headings, checkbox text and the thank-you page are white + text-shadow. The checkbox option cards use a *dark* translucent fill (`rgba(45,42,46,.55)`) so the white text stays legible regardless of what's behind them on the hero. **If the form is ever moved onto a light/white section, the white text will be invisible and the scheme needs flipping to dark** (and the card fill flipping to translucent white).
+
+### Browser note
+
+The selected-card pink tint uses CSS `:has(input:checked)`. Supported in current Chrome/Firefox/Safari; in an old browser the row won't tint but the tick box still fills pink, so selection stays clear.
 
 ---
 

@@ -136,25 +136,15 @@
 		} );
 	}
 
-	// AN renders <label for="Housing-Demographic"> as a sibling BEFORE the select's
-	// <li> (not inside it), so with the field reorder it floats to the top. Move it
-	// inside the li, directly above the select.
-	function fixHousingLabel() {
-		// Select2 rewrites this label's `for` to its own autogen id, so match by
-		// class (there is only one js-fb-selectbasic label on this form).
-		var label  = document.querySelector( '#can_embed_form label.js-fb-selectbasic' );
-		var select = document.getElementById( 'Housing-Demographic' );
-		if ( ! label || ! select ) { return; }
-		var li = select.closest( 'li' );
-		if ( ! li ) { return; }
-		if ( label.parentNode !== li ) {
-			li.insertBefore( label, select );
-		}
-		setImp( label, {
-			display: 'block', 'font-family': 'var(--wp--preset--font-family--league-spartan)',
-			'font-size': '16px', 'font-weight': 'bold', color: '#FFFFFF',
-			'text-shadow': SHADOW, margin: '0 0 6px 0', padding: '0'
-		} );
+	// Hide the redundant per-field labels: the core-field floatlabels (First Name,
+	// Last Name, Email, Postcode, Mobile — their text just duplicates the field's
+	// placeholder) and the stray Housing Demographic label Select2 generates. Each
+	// field is represented by its placeholder. The "How can you help?" and "Anything
+	// else?" prompts use .check_radio_label / .control-label and are NOT touched.
+	function hideFieldLabels() {
+		document.querySelectorAll(
+			'#can_embed_form .floatlabel-label, #can_embed_form label.js-fb-selectbasic'
+		).forEach( hide );
 	}
 
 	// Hide the "Not in AU? Australia" link AND the country select wrapper. Country
@@ -170,22 +160,34 @@
 	// it inherits the theme's oversized H2 + AN's top spacing (misaligned with the
 	// left column). Shrink it and zero the top spacing on it and its wrapper.
 	function fixEntryTitle() {
-		var h2 = document.querySelector( '#can_embed_form .entry-title' );
+		// Scope to the whole form area, not #can_embed_form — in the live DOM the
+		// title h2 may sit outside #can_embed_form, which is why a #can_embed_form
+		// scoped selector (and thus our inline override) was missing it.
+		var h2 = document.querySelector( '#can-form-area-volunteer-form-22 .entry-title' )
+			|| document.querySelector( '#can-form-area-volunteer-form-22 h2' );
 		if ( ! h2 ) { return; }
 		setImp( h2, {
 			'font-family': 'var(--wp--preset--font-family--league-spartan)',
-			'font-size': '1.5rem', 'line-height': '1.1', 'text-transform': 'uppercase',
+			'font-size': '1.9rem', 'line-height': '1.1', 'text-transform': 'uppercase',
 			color: '#FFFFFF', 'text-shadow': SHADOW,
 			margin: '0 0 16px 0', padding: '0', border: 'none'
 		} );
-		// Zero the top spacing on every wrapper between the title and the form area
-		// so it aligns with the top of the column on the left.
-		var stop = document.getElementById( 'can-form-area-volunteer-form-22' );
+		// Zero the top spacing on every wrapper between the title and (and including)
+		// the WordPress form column, so the title aligns with the top of the column
+		// on the left. The chain is: h2 → #can_main_col → .clearfix → #can_embed_form
+		// → .can_embed → #can-form-area → .wp-block-column (stop, inclusive).
+		// Zero BOTH the physical (margin-top/padding-top) and logical
+		// (margin-block-start/padding-block-start) properties. WordPress's flow-layout
+		// rule applies `margin-block-start: var(--wp--custom--gap--vertical)` to
+		// #can-form-area (it's the sibling after the AN <script> tag), and a physical
+		// margin-top override does not reliably beat a logical one in the cascade.
 		var node = h2.parentNode;
 		while ( node && node !== document.body ) {
 			node.style.setProperty( 'margin-top', '0', 'important' );
+			node.style.setProperty( 'margin-block-start', '0', 'important' );
 			node.style.setProperty( 'padding-top', '0', 'important' );
-			if ( node === stop ) { break; }
+			node.style.setProperty( 'padding-block-start', '0', 'important' );
+			if ( node.classList && node.classList.contains( 'wp-block-column' ) ) { break; }
 			node = node.parentNode;
 		}
 	}
@@ -200,7 +202,56 @@
 		setImp( li, { flex: '0 0 100%', width: '100%' } );
 	}
 
-	// "How can you help?" js-fb-multiplecheckboxes group → vertical white checklist.
+	// Inject the brand-styled checkbox CSS once. A <style> tag (vs inline) is
+	// required because the option cards need :hover / :checked states. Scoped to the
+	// form area with high specificity + !important so it beats AN's stylesheet, and
+	// it survives AN's re-renders (it lives in <head>, not on the form nodes).
+	//
+	// Design (House You): each option is a selectable card — translucent white over
+	// the dark hero, lifting into the brand's hard 10px offset shadow on hover, and
+	// pink-tinted when selected. The native box is replaced by a 26px tick that fills
+	// House You Pink (#CB1EAA) with a white check. Long descriptions use a readable
+	// body font rather than heavy uppercase.
+	function injectStyles() {
+		if ( document.getElementById( 'hy-volunteer-styles' ) ) { return; }
+		var css =
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox{' +
+			'display:flex !important;align-items:flex-start !important;gap:14px !important;' +
+			'margin:0 0 10px 0 !important;padding:14px 16px !important;' +
+			'font-family:var(--wp--preset--font-family--glacial-indifference),"Inter",sans-serif !important;' +
+			'font-size:17px !important;font-weight:700 !important;line-height:1.4 !important;' +
+			'color:#FFFFFF !important;background:rgba(45,42,46,.55) !important;' +
+			'border:2px solid rgba(255,255,255,.4) !important;border-radius:12px !important;' +
+			'cursor:pointer !important;text-shadow:none !important;' +
+			'transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease !important;}' +
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox:hover{' +
+			'background:rgba(45,42,46,.72) !important;border-color:#FFFFFF !important;' +
+			'transform:translate(-2px,-2px) !important;box-shadow:6px 6px 0 0 #2D2A2E !important;}' +
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox:has(input:checked){' +
+			'background:rgba(203,30,170,.6) !important;border-color:#CB1EAA !important;' +
+			'box-shadow:6px 6px 0 0 #2D2A2E !important;}' +
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]{' +
+			'-webkit-appearance:none !important;appearance:none !important;' +
+			'position:relative !important;float:none !important;flex:0 0 auto !important;' +
+			'width:26px !important;height:26px !important;margin:0 !important;' +
+			'border:2px solid #2D2A2E !important;border-radius:7px !important;' +
+			'background:#FFFFFF !important;cursor:pointer !important;display:inline-block !important;' +
+			'transition:background .12s ease,border-color .12s ease !important;}' +
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]:checked{' +
+			'background:#CB1EAA !important;border-color:#CB1EAA !important;}' +
+		'#can-form-area-volunteer-form-22 #form_col1 label.checkbox input[type="checkbox"]:checked::after{' +
+			'content:"" !important;position:absolute !important;left:8px !important;top:3px !important;' +
+			'width:6px !important;height:13px !important;border:solid #FFFFFF !important;' +
+			'border-width:0 3px 3px 0 !important;transform:rotate(45deg) !important;}';
+		var style = document.createElement( 'style' );
+		style.id = 'hy-volunteer-styles';
+		style.textContent = css;
+		document.head.appendChild( style );
+	}
+
+	// "How can you help?" js-fb-multiplecheckboxes group. Structural bits stay inline
+	// (full-width must beat theme.css's 2-ID 48% rule). The option-row "cards" and
+	// custom tick boxes — which need :hover / :checked states — live in injectStyles().
 	function styleHowCanYouHelp() {
 		var li = document.querySelector( '#can_embed_form li.js-fb-multiplecheckboxes' );
 		if ( ! li || li.dataset.hyStyled ) { return; }
@@ -208,24 +259,12 @@
 
 		setImp( li.querySelector( 'label.check_radio_label' ), {
 			display: 'block', 'font-family': 'var(--wp--preset--font-family--league-spartan)',
-			'font-size': '20px', 'font-weight': 'bold', color: '#FFFFFF',
-			'text-shadow': SHADOW, 'margin-bottom': '14px'
+			'font-size': '22px', 'font-weight': 'bold', color: '#FFFFFF',
+			'text-shadow': SHADOW, 'margin-bottom': '16px'
 		} );
 
 		setImp( li.querySelector( 'span.controls.check_radio_field' ), {
 			display: 'block', float: 'none', width: '100%'
-		} );
-
-		li.querySelectorAll( 'label.checkbox' ).forEach( function ( opt ) {
-			setImp( opt, {
-				display: 'flex', 'flex-direction': 'row', 'align-items': 'flex-start',
-				gap: '10px', margin: '0 0 12px 0', padding: '0', color: '#FFFFFF',
-				'font-size': '16px', 'line-height': '1.4', 'text-shadow': SHADOW, cursor: 'pointer'
-			} );
-			setImp( opt.querySelector( 'input[type="checkbox"]' ), {
-				position: 'static', float: 'none', margin: '3px 0 0 0',
-				'flex-shrink': '0', width: '18px', height: '18px'
-			} );
 		} );
 
 		li.dataset.hyStyled = 'true';
@@ -243,6 +282,37 @@
 			'text-shadow': SHADOW, 'margin-bottom': '8px'
 		} );
 		li.dataset.hyStyled = 'true';
+	}
+
+	// Replace AN's default thank-you page with the House You "follow & share" content
+	// (ported from the letter action's thank-you), styled white for the dark hero,
+	// with Instagram + Facebook logos. Idempotent via the .hy-volunteer-thanks guard.
+	function showThankYou() {
+		var area = document.getElementById( 'can-form-area-volunteer-form-22' );
+		if ( ! area ) { return; }
+		var embedForm = area.querySelector( '#can_embed_form' );
+		if ( ! embedForm ) { return; }
+		var isThankYou = embedForm.classList.contains( 'can_thank_you_wrap' ) || area.querySelector( '#can_thank_you' );
+		if ( ! isThankYou || embedForm.querySelector( '.hy-volunteer-thanks' ) ) { return; }
+
+		// Stronger drop-shadow than the form fields use — the thank-you text sits
+		// directly on the hero with no card behind it, so it needs more to stay legible.
+		var sh = 'text-shadow:0 2px 6px rgba(0,0,0,.95),0 0 18px rgba(0,0,0,.85),0 0 40px rgba(0,0,0,.7);';
+		var iconShadow = 'filter:drop-shadow(0 3px 6px rgba(0,0,0,.9)) drop-shadow(0 0 14px rgba(0,0,0,.7));';
+		embedForm.innerHTML =
+			'<div class="hy-volunteer-thanks" style="text-align:center;padding:10px 0 4px;">' +
+				'<h3 style="font-family:var(--wp--preset--font-family--league-spartan),sans-serif;font-size:1.9rem;text-transform:uppercase;font-weight:bold;color:#fff;margin:0 0 16px;' + sh + '">Welcome to the movement!</h3>' +
+				'<p style="color:#fff;font-size:23px;font-weight:bold;margin:0 0 18px;' + sh + '">We won\'t win because we\'re right. We\'ll win because we\'re organised.</p>' +
+				'<p style="color:#fff;font-size:23px;font-weight:bold;margin:0 0 8px;' + sh + '"><strong>Next steps:</strong></p>' +
+				'<ol style="color:#fff;text-align:left;max-width:560px;margin:0 auto 22px;font-size:20px;font-weight:bold;line-height:1.5;' + sh + '">' +
+					'<li style="margin-bottom:8px;font-weight:700 !important;font-size:20px !important;">Share this with 3 people right now &mdash; text your bestie, call your folks, DM your mate.</li>' +
+					'<li style="font-weight:700 !important;font-size:20px !important;">Follow, engage &amp; share our content &mdash; shift the narrative, end house hoarding &amp; everybody gets a house!</li>' +
+				'</ol>' +
+				'<div style="display:flex;justify-content:center;gap:24px;align-items:center;flex-wrap:wrap;">' +
+					'<a href="https://www.instagram.com/house_you__/?hl=en" target="_blank" rel="noopener"><img src="https://houseyou.org/wp-content/uploads/2025/11/hy-insta-scaled.png" alt="Follow House You on Instagram" width="72" style="display:block;border:0;' + iconShadow + '"></a>' +
+					'<a href="https://www.facebook.com/p/House-You-61551436109729/" target="_blank" rel="noopener"><img src="https://houseyou.org/wp-content/uploads/2025/11/hy-fb2-scaled.png" alt="Like House You on Facebook" width="72" style="display:block;border:0;' + iconShadow + '"></a>' +
+				'</div>' +
+			'</div>';
 	}
 
 	// Reorder Step 1 fields so render order is First, Last, Email, Mobile, Postcode,
@@ -339,13 +409,18 @@
 
 		function validateStep1() {
 			var firstInvalid = null;
-			[ 'form-first_name', 'form-last_name', 'form-email', 'form-zip_code', 'form-phone' ].forEach( function ( id ) {
+			STEP1_IDS.forEach( function ( id ) {
 				var input = document.getElementById( id );
 				if ( ! input ) { return; }
-				var empty   = ! input.value.trim();
-				var badMail = id === 'form-email' && input.value && ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( input.value );
-				if ( ( empty || badMail ) && ! firstInvalid ) { firstInvalid = input; }
-				input.style.setProperty( 'border-color', ( empty || badMail ) ? '#E64BC8' : '', empty || badMail ? 'important' : '' );
+				// Only enforce fields Action Network itself marks required (class
+				// "required"), so this stays in sync with the AN form config —
+				// e.g. Mobile/Postcode being optional in AN means optional here.
+				var required = input.classList.contains( 'required' );
+				var empty    = required && ! String( input.value ).trim();
+				var badMail  = id === 'form-email' && input.value && ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( input.value );
+				var bad      = empty || badMail;
+				if ( bad && ! firstInvalid ) { firstInvalid = input; }
+				input.style.setProperty( 'border-color', bad ? '#E64BC8' : '', bad ? 'important' : '' );
 			} );
 			return firstInvalid;
 		}
@@ -372,9 +447,9 @@
 	// =========================================================================
 
 	function applyAll() {
-		[ fixCanFloat, fixDSharing, fixHousingSelect, fixHousingLabel, hideCountry,
-			fixEntryTitle, hideSpinner, fixFieldOrder, styleHowCanYouHelp,
-			styleAnythingElse, setupSteps
+		[ injectStyles, showThankYou, fixCanFloat, fixDSharing, fixHousingSelect,
+			hideFieldLabels, hideCountry, fixEntryTitle, hideSpinner, fixFieldOrder,
+			styleHowCanYouHelp, styleAnythingElse, setupSteps
 		].forEach( function ( fn ) {
 			// Never let one fix's error block the rest (e.g. Select2-mangled DOM).
 			try { fn(); } catch ( e ) {}

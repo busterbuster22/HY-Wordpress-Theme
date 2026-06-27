@@ -287,117 +287,46 @@ if ( ! function_exists( 'houseyou_get_font_face_styles' ) ) :
 
 		return "
 		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 400;
+			font-family: 'Lexend';
+			font-weight: 100 900;
 			font-style: normal;
-			font-stretch: normal;
 			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-regular.woff2' ) . "') format('woff2');
+			src: url('" . get_theme_file_uri( 'assets/fonts/lexend-variable.woff2' ) . "') format('woff2');
 		}
 		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-500.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 700;
-			font-style: normal;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-700.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 900;
-			font-style: normal;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-900.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 400;
-			font-style: italic;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-italic.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 500;
-			font-style: italic;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-500italic.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 700;
-			font-style: italic;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-700italic.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Red Hat Display';
-			font-weight: 900;
-			font-style: italic;
-			font-stretch: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/red-hat-display-900italic.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'League Spartan';
+			font-family: 'Poppins';
 			font-weight: 400;
 			font-style: normal;
 			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/league-spartan-400.woff2' ) . "') format('woff2');
+			src: url('" . get_theme_file_uri( 'assets/fonts/poppins-regular.woff2' ) . "') format('woff2');
 		}
 		@font-face{
-			font-family: 'League Spartan';
+			font-family: 'Poppins';
+			font-weight: 400;
+			font-style: italic;
+			font-display: swap;
+			src: url('" . get_theme_file_uri( 'assets/fonts/poppins-italic.woff2' ) . "') format('woff2');
+		}
+		@font-face{
+			font-family: 'Poppins';
 			font-weight: 500;
 			font-style: normal;
 			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/league-spartan-500.woff2' ) . "') format('woff2');
+			src: url('" . get_theme_file_uri( 'assets/fonts/poppins-500.woff2' ) . "') format('woff2');
 		}
 		@font-face{
-			font-family: 'League Spartan';
-			font-weight: 600;
-			font-style: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/league-spartan-600.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'League Spartan';
+			font-family: 'Poppins';
 			font-weight: 700;
 			font-style: normal;
 			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/league-spartan-700.woff2' ) . "') format('woff2');
+			src: url('" . get_theme_file_uri( 'assets/fonts/poppins-700.woff2' ) . "') format('woff2');
 		}
 		@font-face{
-			font-family: 'Glacial Indifference';
-			font-weight: 400;
-			font-style: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/glacial-indifference-regular.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Glacial Indifference';
-			font-weight: 400;
+			font-family: 'Poppins';
+			font-weight: 700;
 			font-style: italic;
 			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/glacial-indifference-italic.woff2' ) . "') format('woff2');
-		}
-		@font-face{
-			font-family: 'Glacial Indifference';
-			font-weight: 700;
-			font-style: normal;
-			font-display: swap;
-			src: url('" . get_theme_file_uri( 'assets/fonts/glacial-indifference-bold.woff2' ) . "') format('woff2');
+			src: url('" . get_theme_file_uri( 'assets/fonts/poppins-700italic.woff2' ) . "') format('woff2');
 		}
 		";
 
@@ -421,10 +350,9 @@ if ( ! function_exists( 'houseyou_preload_webfonts' ) ) :
 	 */
 	function houseyou_preload_webfonts() {
 		?>
-		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/red-hat-display-regular.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
-		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/red-hat-display-700.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
-		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/league-spartan-700.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
-		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/glacial-indifference-regular.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/lexend-variable.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/poppins-regular.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/poppins-700.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
 		<?php
 	}
 

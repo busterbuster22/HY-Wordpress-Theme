@@ -44,6 +44,28 @@ a {
   color: var(--wp--custom--color--background);
 }
 
+/* =========================================================================
+   READABILITY — prose measure & paragraph rhythm
+   contentSize/wideSize are both 1400px, so long-form body copy runs to ~130
+   chars/line. Cap text-level blocks to a readable measure (~65–70 chars) and
+   open up paragraph spacing (global blockGap is only 0.5em).
+   Scoped to default reading pages: excludes the homepage and the custom-layout
+   templates (action / an-events), and only targets DIRECT text-level children
+   so columns, images, embeds and wide/full blocks keep their full width.
+   The left edge is unchanged (no auto-centring) — lines are just shorter.
+   ========================================================================= */
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > p,
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > ul,
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > ol,
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > .wp-block-heading,
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > blockquote {
+  max-width: 42rem; /* ~672px ≈ 65–70 chars at 1.25rem body */
+}
+body:not(.home):not(.page-template-action):not(.page-template-an-events) .wp-block-post-content > p {
+  margin-top: 0.9em;
+  margin-bottom: 0.9em;
+}
+
 .wp-block-post-comments .comment-meta > a,
 .wp-block-post-comments .comment-body > p > a,
 .wp-block-post-comments .comment-edit-link,
@@ -161,7 +183,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 
 /* Comments */
 .wp-block-post-comments input[type=submit] {
-  font-family: var(--wp--preset--font-family--glacial-indifference);
+  font-family: var(--wp--preset--font-family--poppins);
   color: var(--wp--custom--color--background);
 }
 
@@ -231,7 +253,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 
 .wp-block-group.is-style-pink-section,
 .wp-block-cover.is-style-pink-section {
-  background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
+  background-color: var(--wp--preset--color--house-you-pink, #A8178C) !important;
   color: var(--wp--preset--color--white, #FFFFFF) !important;
   padding: var(--wp--custom--spacing--small) var(--wp--custom--spacing--outer) !important;
 }
@@ -292,7 +314,7 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
 }
 .editor-styles-wrapper .wp-block-group.is-style-pink-section,
 .editor-styles-wrapper .wp-block-cover.is-style-pink-section {
-  background-color: var(--wp--preset--color--house-you-pink, #CB1EAA) !important;
+  background-color: var(--wp--preset--color--house-you-pink, #A8178C) !important;
   color: var(--wp--preset--color--white, #FFFFFF) !important;
 }
 .editor-styles-wrapper .wp-block-group.is-style-pink-section h1, .editor-styles-wrapper .wp-block-group.is-style-pink-section h2, .editor-styles-wrapper .wp-block-group.is-style-pink-section h3, .editor-styles-wrapper .wp-block-group.is-style-pink-section h4, .editor-styles-wrapper .wp-block-group.is-style-pink-section h5, .editor-styles-wrapper .wp-block-group.is-style-pink-section h6, .editor-styles-wrapper .wp-block-group.is-style-pink-section p, .editor-styles-wrapper .wp-block-group.is-style-pink-section li, .editor-styles-wrapper .wp-block-group.is-style-pink-section a,
@@ -310,14 +332,14 @@ a:not(.ab-item):not(.screen-reader-shortcut):focus {
   color: var(--wp--preset--color--white, #FFFFFF) !important;
 }
 .editor-styles-wrapper .wp-block-group.is-style-full-width {
-  border-left: 4px solid var(--wp--preset--color--house-you-pink, #CB1EAA);
+  border-left: 4px solid var(--wp--preset--color--house-you-pink, #A8178C);
   padding-left: 20px;
 }
 .editor-styles-wrapper .wp-block-group.is-style-full-width::before {
   content: "Full Width";
   display: block;
   font-size: 12px;
-  color: var(--wp--preset--color--house-you-pink, #CB1EAA);
+  color: var(--wp--preset--color--house-you-pink, #A8178C);
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -540,7 +562,7 @@ footer.site-footer-container > .wp-block-group {
    ======================================== */
 /* Intro text blocks */
 .intro-block {
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: 500 !important;
   line-height: 1.2 !important;
   color: white !important;
@@ -646,7 +668,7 @@ footer.site-footer-container > .wp-block-group {
 .mega-menu-item:hover a,
 a.mega-menu-link:hover,
 a.mega-menu-link:focus {
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
 }
 
 .mega-menu-item:hover .mega-sub-menu {
@@ -784,6 +806,16 @@ body #can_embed_form,
   background: transparent !important;
 }
 
+/* Zero top margin/padding on the AN embed container and its entry-title */
+/* The JS fixEntryTitle handles this too, but CSS catches it before JS runs */
+.wp-block-column #can-form-area-volunteer-form-22,
+body #can-form-area-volunteer-form-22,
+#can-form-area-volunteer-form-22,
+#can_embed_form .entry-title {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 /* Ensure the form inner content has proper spacing */
 .wp-block-column #can_embed_form .can_embed_form_inner,
 body #can_embed_form .can_embed_form_inner,
@@ -799,7 +831,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.new_delivery,
 #can_embed_form form.new_answer,
 #can_embed_form form.js-letter-form {
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   color: #000000 !important;
   padding-bottom: 0;
 }
@@ -814,7 +846,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_letter_one_col h2,
 #can_letter_one_col h3,
 #can_letter_one_col h4 {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 1.4em !important;
   text-transform: uppercase !important;
   font-weight: bold !important;
@@ -836,7 +868,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_letter_one_col input[type=text],
 #can_letter_one_col input[type=email],
 #can_letter_one_col textarea {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
@@ -849,8 +881,6 @@ body #can_embed_form .can_embed_form_inner,
   width: 100% !important;
   box-sizing: border-box;
   display: block !important;
-  -webkit-appearance: menulist !important;
-  -moz-appearance: menulist !important;
   appearance: menulist !important;
 }
 
@@ -879,9 +909,9 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.new_answer .can_button,
 #can_letter_one_col input[type=submit],
 #can_letter_one_col .button {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: bold !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -1000,7 +1030,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.new_delivery #action_welcome_message_inner small a,
 #can_embed_form form.new_answer #action_welcome_message_inner small a,
 #can_letter_one_col #action_welcome_message_inner small a {
-  color: #CB1EAA !important;
+  color: #A8178C !important;
   text-decoration: underline !important;
   text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
 }
@@ -1222,7 +1252,7 @@ body #can_embed_form .can_embed_form_inner,
 
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section h4 {
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 2em !important;
   text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
 }
@@ -1230,7 +1260,7 @@ body #can_embed_form .can_embed_form_inner,
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section p,
 #can-letter-area-end-the-tax-breaks-and-fund-housing-first #can_embed_form.can_thank_you_wrap .form-section li {
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 20px !important;
   padding: 3px 0 !important;
   text-shadow: 0 0 16px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
@@ -1276,7 +1306,7 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Year of Birth placeholder styling (Letter Form Only) */
 #can_embed_form form.new_delivery input#Year-of-Birth-YYYY {
-  font-family: var(--wp--preset--font-family--glacial-indifference);
+  font-family: var(--wp--preset--font-family--poppins);
   font-size: 18px;
   height: 52px;
   padding: 0 20px;
@@ -1330,7 +1360,7 @@ body #can_embed_form .can_embed_form_inner,
 /* Apply House You styling to RSVP inputs */
 #can_embed_form form.new_rsvp input[type=text],
 #can_embed_form form.new_rsvp input[type=email] {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
@@ -1343,9 +1373,9 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Apply House You styling to RSVP submit button */
 #can_embed_form form.new_rsvp input[type=submit] {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: bold !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -1453,7 +1483,7 @@ body #can_embed_form .can_embed_form_inner,
 /* === APPLY HOUSE YOU STYLING TO RSVP INPUTS === */
 #can_embed_form form.new_rsvp input[type=text],
 #can_embed_form form.new_rsvp input[type=email] {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 18px !important;
   height: 52px !important;
   padding: 12px 15px !important;
@@ -1475,9 +1505,9 @@ body #can_embed_form .can_embed_form_inner,
 
 /* === APPLY HOUSE YOU STYLING TO RSVP SUBMIT BUTTON === */
 #can_embed_form form.new_rsvp input[type=submit] {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: bold !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -1659,12 +1689,12 @@ body #can_embed_form .can_embed_form_inner,
 
 /* === STYLE THANK YOU PAGE WITH HOUSE YOU THEME === */
 #can_embed_form.can_thank_you_wrap {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
 }
 
 /* Main thank you heading */
 #can_embed_form.can_thank_you_wrap #can_thank_you h1 {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 2.5em !important;
   color: #FFFFFF !important;
   text-align: center !important;
@@ -1674,7 +1704,7 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Subtitle */
 #can_embed_form.can_thank_you_wrap #can_thank_you h4 {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 1.2em !important;
   color: #FFFFFF !important;
   text-align: center !important;
@@ -1693,7 +1723,7 @@ body #can_embed_form .can_embed_form_inner,
 }
 
 #can_embed_form.can_thank_you_wrap #add-to-calendar p {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   color: #000000 !important;
   font-size: 16px !important;
   margin-bottom: 15px !important;
@@ -1701,9 +1731,9 @@ body #can_embed_form .can_embed_form_inner,
 
 #can_embed_form.can_thank_you_wrap #add-to-calendar a {
   display: inline-block !important;
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: bold !important;
   font-size: 16px !important;
   text-transform: uppercase !important;
@@ -1723,7 +1753,7 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Share buttons section */
 #can_embed_form.can_thank_you_wrap .can_thank_you-block h4.widget_title {
-  font-family: var(--wp--preset--font-family--glacial-indifference) !important;
+  font-family: var(--wp--preset--font-family--poppins) !important;
   font-size: 1.4em !important;
   color: #FFFFFF !important;
   font-weight: bold !important;
@@ -1734,9 +1764,9 @@ body #can_embed_form .can_embed_form_inner,
 /* Social share buttons */
 #can_embed_form.can_thank_you_wrap .share_button {
   display: inline-block !important;
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: bold !important;
   font-size: 16px !important;
   text-transform: uppercase !important;
@@ -2028,12 +2058,12 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Action Pink submit button */
 .wpcf7-form .wpcf7-submit {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
   border: 2px solid #2D2A2E !important;
   border-radius: 0 !important;
   box-shadow: 10px 10px 0px 0px #2D2A2E !important;
-  font-family: "League Spartan", sans-serif !important;
+  font-family: "Lexend", sans-serif !important;
   font-weight: 900 !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -2126,12 +2156,12 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Action Pink submit button */
 .fluentform .ff-btn-submit {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
   border: 2px solid #2D2A2E !important;
   border-radius: 0 !important;
   box-shadow: 10px 10px 0px 0px #2D2A2E !important;
-  font-family: "League Spartan", sans-serif !important;
+  font-family: "Lexend", sans-serif !important;
   font-weight: 900 !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -2170,7 +2200,7 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.new_response h2,
 #can_embed_form form.new_response h3,
 #can_embed_form form.new_response h4 {
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: 700 !important;
   color: #000000 !important;
   border-bottom: none !important;
@@ -2213,9 +2243,9 @@ body #can_embed_form .can_embed_form_inner,
 #can_embed_form form.new_response input[type=submit],
 #can_embed_form form.new_response .button,
 #can_embed_form form.new_response .can_button {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: 700 !important;
   font-size: 20px !important;
   text-transform: uppercase !important;
@@ -2353,9 +2383,9 @@ body #can_embed_form .can_embed_form_inner,
 
 /* Submit button (uses <button class="button">) */
 #can_embed_form #survey_questions_footer button.button {
-  background-color: #CB1EAA !important;
+  background-color: #A8178C !important;
   color: #FFFFFF !important;
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-weight: 700 !important;
   font-size: 20px !important;
   line-height: 1 !important;
@@ -2406,7 +2436,7 @@ body #can_embed_form .can_embed_form_inner,
 }
 
 #can_embed_form.can_thank_you_wrap #can_thank_you h1 {
-  font-family: var(--wp--preset--font-family--league-spartan) !important;
+  font-family: var(--wp--preset--font-family--lexend) !important;
   font-size: 32px !important;
   font-weight: 700 !important;
   color: #000000 !important;

@@ -523,5 +523,5 @@ When making changes:
 5. Check navigation on mobile (hamburger menu)
 6. Test Action Network embeds still display correctly
 7. Check header/footer alignment with body content
-8. Then deploy to staging
-9. Finally push to live
+8. Note: saving any theme file **auto-deploys it to staging immediately** via SFTP (no manual deploy step) — so verify before saving; changes are instantly live on staging
+9. Finally, "Push to production" from the WordPress.com dashboard to promote staging → live
