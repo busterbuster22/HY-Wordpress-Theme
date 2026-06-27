@@ -29,10 +29,20 @@ See [architecture.md](architecture.md) for how the theme is built (FSE block the
 | ✅ **`campaign` taxonomy + `[content_cards]`** | Registered taxonomy; built generic card-grid shortcode + `.card-grid`/`.card` CSS. |
 | ✅ **Campaigns page + nav (§11)** | Tagged 5 action pages `campaigns`; renamed `Actions`→**Campaigns** (slug `campaigns`, old slug auto-redirects), added `[content_cards]`; added Campaigns to header menu. |
 | ✅ **Conditional Events nav (§10)** | `houseyou_has_active_events()` + `wp_nav_menu_objects` filter; flagged EVENTS item `nav-requires-event`. Verified hidden via standard `wp_nav_menu` (⚠ confirm Max Mega Menu honours it on the live header — see §10). |
+| ✅ **Unified card system** | `[content_cards]` is now the single engine (taxonomy / parent / template modes, optional event meta, Read-more button, auto-excerpt). `[events_listing]` delegates to it. One `.card-grid`/`.card` CSS (`.card-meta`, `.card-warning`, `.card-button`). Legacy `.event-card`/`.events-grid` CSS now unused (left in place — safe to delete later). |
+| ✅ **Campaign card content** | Curated excerpts set on all 5 campaign pages. |
+| ✅ **Card redesign (shadow-box)** | Adopted the site's hard-offset shadow-box language: 3px ash border + pink offset shadow, press-in hover, sharp corners. Removed the grey meta box + emoji → pink date **eyebrow** + quiet **subline**. Read-more buttons removed (whole card is clickable). Consistent across Campaigns/Events/Media. Reduced-motion + focus-visible handled. |
+| ✅ **Media page fixed + consolidated** | Media's `[hy_page_cards]` (inactive draft WPCode snippet — printed raw on the page) replaced with `[content_cards parent="current"]`. The WPCode "Landing Pages" snippet is now fully redundant. |
 
-**Up next:** homepage decomposition (teasers + Read-more + campaign card row), remaining new
-pages (Partners, Take Action locations, long-form read-more), 2 missing petitions; enrich
-campaign pages with featured images + excerpts so cards show imagery.
+**⚠ Needs human input — featured images:** 4 of 5 campaign pages have **no featured image**
+(only `mullum-public-housing` 3449 does), so those cards show no image. Set a featured image
+on `tax-breaks` (2300), `defend-public-housing` (182), `the-housing-crisis-is-killing-people`
+(3489), `shift-the-conversation` (2654) — in the editor, or give me media IDs and I'll set them.
+
+**Up next:** homepage decomposition (teasers + Read-more + campaign card row via
+`[content_cards limit="6" button_text="Sign the petition"]`), remaining new pages (Partners,
+Take Action locations, long-form read-more), 2 missing petitions. Consider retiring the
+`[hy_page_cards]` WPCode snippet by switching Media to `[content_cards parent="current"]`.
 
 ---
 

@@ -2013,8 +2013,10 @@ body #can_embed_form .can_embed_form_inner,
   }
 }
 /* =========================================================================
-   CONTENT CARDS — reusable grid (Campaigns / Media / Projects / homepage)
-   Self-contained; mirrors the event-card look. Output by [content_cards].
+   CONTENT CARDS — single reusable card grid for the whole theme
+   Used by [content_cards] and (via delegation) [events_listing]: Campaigns,
+   Events, Media, Projects, homepage. Supersedes the old .event-card markup
+   (legacy .event-card/.events-grid rules below are now unused — safe to drop).
    ========================================================================= */
 .card-grid {
   display: flex;
@@ -2023,9 +2025,17 @@ body #can_embed_form .can_embed_form_inner,
   justify-content: center;
 }
 @media (min-width: 769px) {
+  .card-grid {
+    max-width: var(--card-grid-max-width, none);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (min-width: 769px) {
   .card-grid--columned {
     display: grid;
     grid-template-columns: repeat(var(--card-grid-columns, 3), 1fr);
+    max-width: none;
   }
 }
 
@@ -2041,29 +2051,41 @@ body #can_embed_form .can_embed_form_inner,
   }
 }
 
+/* Signature: the House You "shadow-box" — solid ash border + hard pink offset
+   shadow (the same language as the site's form inputs), with a press-in hover.
+   This is the one bold move; everything else stays quiet. */
 .card {
-  background-color: white;
-  border-radius: 10px;
-  min-height: 250px;
-  transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  background-color: #fff;
+  border: 3px solid var(--wp--preset--color--ash-grey, #141414);
+  box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  /* Inner padding for everything except the full-bleed image */
 }
 .card > *:not(.card-image) {
-  padding-left: 25px;
-  padding-right: 25px;
+  padding-left: 22px;
+  padding-right: 22px;
 }
-.card > .card-title {
-  padding-top: 20px;
+.card > :first-child:not(.card-image),
+.card .card-image + * {
+  padding-top: 22px;
 }
-.card > .card-excerpt:last-child,
-.card > .card-title:last-child {
-  padding-bottom: 25px;
+.card > :last-child:not(.card-image) {
+  padding-bottom: 24px;
 }
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+.card-link:hover .card,
+.card-link:focus-visible .card {
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+
+.card-link:focus-visible {
+  outline: 3px solid var(--wp--preset--color--house-you-pink, #A8178C);
+  outline-offset: 4px;
 }
 
 .card-image {
@@ -2071,7 +2093,8 @@ body #can_embed_form .can_embed_form_inner,
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #efefef;
+  border-bottom: 3px solid var(--wp--preset--color--ash-grey, #141414);
 }
 .card-image img {
   width: 100%;
@@ -2079,19 +2102,66 @@ body #can_embed_form .can_embed_form_inner,
   object-fit: cover;
 }
 
+/* Pink eyebrow — event date (and a hook for future category labels) */
+.card-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--wp--preset--color--house-you-pink, #A8178C);
+  font-family: var(--wp--preset--font-family--lexend);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .card-title {
-  color: var(--wp--preset--color--ash-grey);
-  margin: 0 0 12px 0;
-  font-size: 1.4rem;
-  line-height: 1.3;
+  margin: 0;
+  color: var(--wp--preset--color--ash-grey, #141414);
+  font-family: var(--wp--preset--font-family--lexend);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Quiet supporting line — event time / location */
+.card-subline {
+  margin: 8px 0 0 0;
+  color: #5b5b5b;
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
 .card-excerpt {
-  color: var(--wp--preset--color--ash-grey);
-  margin: 0 0 0 0;
-  padding-bottom: 25px;
+  margin: 12px 0 0 0;
+  color: #3a3a3a;
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+/* "Date not set" — quiet on-brand flag, not a loud block */
+.card-warning {
+  display: block;
+  margin-bottom: 6px;
+  color: #b26a00;
+  font-family: var(--wp--preset--font-family--lexend);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Optional CTA button inside a card (off by default — the whole card is clickable) */
+.card-button {
+  align-self: flex-start;
+  margin-top: 18px;
+  padding: 0.55em 1.4em;
+  background-color: var(--wp--preset--color--ash-grey, #141414);
+  color: #fff;
+  font-family: var(--wp--preset--font-family--lexend);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .card-grid-empty {
@@ -2103,6 +2173,15 @@ body #can_embed_form .can_embed_form_inner,
   .card-link {
     width: 100%;
     max-width: 500px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  .card-link:hover .card,
+  .card-link:focus-visible .card {
+    transform: none;
   }
 }
 /* =========================================================================

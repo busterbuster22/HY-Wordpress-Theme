@@ -584,248 +584,250 @@ add_action( 'save_post', 'houseyou_save_event_details' );
 /**
  * Events Listing Shortcode
  *
- * Displays a grid of upcoming events using the AN Events template
- * Usage: [events_listing tag="disaster-workshops" columns="3"]
+ * Thin wrapper around [content_cards] (the single card engine) for upcoming events.
+ * Usage: [events_listing tag="disaster-workshops" columns="3" width="800px"]
  *
- * Attributes:
- * - limit: Number of events to show (default: -1 = all)
- * - tag: Filter by tag slug (comma-separated for multiple)
- * - columns: Number of event cards per row on desktop (e.g., "3", "2", "4")
- * - width: Custom max-width for desktop (e.g., "800px", "50%") - use instead of columns for precise control
- *
- * Note: Only affects desktop (≥769px). Mobile always shows 1 column at full width.
+ * Attributes: limit, tag, columns, width (order retained for back-compat; upcoming
+ * events always order by date ascending).
  */
 function houseyou_events_listing_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'limit'   => -1,
 		'order'   => 'DESC',
 		'tag'     => '',
-		'width'   => '',  // Optional max-width for desktop (e.g., "800px", "50%", "100%")
-		'columns' => '',  // Number of event cards per row on desktop (e.g., "3", "2", "4")
+		'width'   => '',
+		'columns' => '',
 	), $atts );
 
-	// Get today's date
-	$today = current_time( 'Y-m-d' );
-
-	// Query for pages using the AN Events template
-	// Only shows events with dates set, ordered chronologically
-	$query_args = array(
-		'post_type'      => 'page',
-		'posts_per_page' => $atts['limit'],
-		'post_status'    => 'publish',
-		'orderby'        => array(
-			'event_date_order' => 'ASC',
-		),
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'     => '_wp_page_template',
-				'value'   => 'an-events',
-				'compare' => '=',
-			),
-			'event_date_order' => array(  // Named clause for ordering
-				'key'     => '_event_date',
-				'value'   => $today,
-				'compare' => '>=',
-				'type'    => 'DATE',
-			),
-		),
+	$args = array(
+		'template'   => 'an-events',
+		'upcoming'   => 'true',
+		'event_meta' => 'true',
+		'post_type'  => 'page',
+		'limit'      => $atts['limit'],
+		'columns'    => $atts['columns'],
+		'width'      => $atts['width'],
+		'empty_text' => 'No upcoming events.',
 	);
 
-	// Filter by tags if specified
 	if ( ! empty( $atts['tag'] ) ) {
-		$tags = array_map( 'trim', explode( ',', $atts['tag'] ) );
-		$query_args['tax_query'] = array(
-			array(
-				'taxonomy' => 'post_tag',
-				'field'    => 'slug',
-				'terms'    => $tags,
-				'operator' => 'IN',
-			),
-		);
+		$args['tax']  = 'post_tag';
+		$args['term'] = $atts['tag'];
 	}
 
-	$events = new WP_Query( $query_args );
-
-	ob_start();
-
-	// Build CSS custom properties for desktop layout
-	$style_attr = '';
-	$grid_class = '';
-
-	// Use CSS Grid when columns are specified for true column control
-	if ( ! empty( $atts['columns'] ) && is_numeric( $atts['columns'] ) ) {
-		$columns = intval( $atts['columns'] );
-		$style_attr = ' style="--events-grid-columns: ' . esc_attr( $columns ) . ';"';
-		$grid_class = ' events-grid--columned';
-	} elseif ( ! empty( $atts['width'] ) ) {
-		$style_attr = ' style="--events-grid-max-width: ' . esc_attr( $atts['width'] ) . ';"';
-	}
-	?>
-
-	<?php if ( $events->have_posts() ) : ?>
-		<div class="events-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
-			<?php while ( $events->have_posts() ) : $events->the_post();
-				$event_date = get_post_meta( get_the_ID(), '_event_date', true );
-				$event_time = get_post_meta( get_the_ID(), '_event_time', true );
-				$event_end_time = get_post_meta( get_the_ID(), '_event_end_time', true );
-				$event_location = get_post_meta( get_the_ID(), '_event_location', true );
-			?>
-				<a href="<?php the_permalink(); ?>" class="event-card-link">
-					<div class="event-card<?php echo empty( $event_date ) ? ' no-date' : ''; ?>">
-						<?php if ( has_post_thumbnail() ) : ?>
-							<div class="event-image">
-								<?php the_post_thumbnail( 'medium' ); ?>
-							</div>
-						<?php endif; ?>
-
-						<?php if ( empty( $event_date ) ) : ?>
-							<div class="event-warning">⚠ Date not set</div>
-						<?php endif; ?>
-
-						<h3 class="event-title">
-							<?php the_title(); ?>
-						</h3>
-
-						<?php if ( ! empty( $event_date ) || ! empty( $event_time ) || ! empty( $event_location ) ) : ?>
-							<div class="event-meta">
-								<?php if ( ! empty( $event_date ) ) : ?>
-									<div class="event-date">
-										📅 <?php echo esc_html( date_i18n( 'D, jS F Y', strtotime( $event_date ) ) ); ?>
-									</div>
-								<?php endif; ?>
-
-								<?php if ( ! empty( $event_time ) ) : ?>
-									<div class="event-time">
-										🕐 <?php
-											echo esc_html( date_i18n( 'g:i A', strtotime( $event_time ) ) );
-											if ( ! empty( $event_end_time ) ) {
-												echo ' - ' . esc_html( date_i18n( 'g:i A', strtotime( $event_end_time ) ) );
-											}
-										?>
-									</div>
-								<?php endif; ?>
-
-								<?php if ( ! empty( $event_location ) ) : ?>
-									<div class="event-location">
-										📍 <?php echo esc_html( $event_location ); ?>
-									</div>
-								<?php endif; ?>
-							</div>
-						<?php endif; ?>
-
-						<?php if ( has_excerpt() ) : ?>
-							<p class="event-excerpt">
-								<?php echo wp_trim_words( get_the_excerpt(), 15 ); ?>
-							</p>
-						<?php endif; ?>
-					</div>
-				</a>
-			<?php endwhile; ?>
-		</div>
-	<?php else : ?>
-		<p class="events-no-events">No upcoming events.</p>
-	<?php endif;
-	wp_reset_postdata(); ?>
-
-	<?php
-	return ob_get_clean();
+	return houseyou_content_cards_shortcode( $args );
 }
 add_shortcode( 'events_listing', 'houseyou_events_listing_shortcode' );
 
 /**
- * Content Cards Shortcode
+ * Resolve a page reference (id, slug, or "current") to a page ID for [content_cards parent=...].
+ */
+function houseyou_cards_resolve_page_id( $value ) {
+	if ( '' === $value || 'current' === $value ) {
+		return get_the_ID();
+	}
+	if ( is_numeric( $value ) ) {
+		return absint( $value );
+	}
+	$page = get_page_by_path( sanitize_title( $value ), OBJECT, 'page' );
+	return $page ? $page->ID : 0;
+}
+
+/**
+ * Card excerpt: explicit excerpt if set, otherwise derived from page content.
+ */
+function houseyou_card_excerpt( $post, $words = 24 ) {
+	if ( ! empty( $post->post_excerpt ) ) {
+		return wp_trim_words( $post->post_excerpt, $words, '…' );
+	}
+	$content = wp_strip_all_tags( strip_shortcodes( $post->post_content ) );
+	return wp_trim_words( $content, $words, '…' );
+}
+
+/**
+ * Content Cards — the single card-grid engine for the whole theme.
  *
- * Generic card grid for any content in a taxonomy — used for the Campaigns landing
- * page, the homepage campaign row, and reusable for Media/Projects. Renders featured
- * image + title + excerpt as linked cards using the .card-grid / .card styles.
+ * Powers the Campaigns grid, the homepage campaign row, and (via [events_listing])
+ * the events grid. Selection modes (combine as needed):
+ *   - taxonomy: tax="campaign" [term="slug,slug"]   (term empty = any term in tax)
+ *   - parent:   parent="current|slug|123"           (child pages of a page)
+ *   - template: template="an-events"                (filter by page template)
  *
- * Usage:
- *   [content_cards]                                   all content with any 'campaign' term
- *   [content_cards term="public-housing"]             only that campaign term
- *   [content_cards tax="post_tag" term="media"]       any taxonomy/term
- *   [content_cards post_type="page,post" columns="3" limit="6"]
+ * Event extras: event_meta="true" shows date/time/location; upcoming="true" limits to
+ * future-dated events and orders by date.
  *
- * Attributes:
- * - tax:       taxonomy slug (default: campaign)
- * - term:      term slug(s), comma-separated. Empty = any post that has a term in `tax`.
- * - post_type: comma-separated (default: page,post)
- * - limit:     posts to show (default: -1 = all)
- * - columns:   cards per row on desktop, e.g. "3" (default: flex wrap)
- * - orderby / order: WP_Query args (default: menu_order title / ASC)
+ * Presentation: columns="3", width="800px", button_text="Read more",
+ * excerpt_words="24", show_excerpt, show_image, auto_excerpt, empty_text.
  */
 function houseyou_content_cards_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
-		'tax'       => 'campaign',
-		'term'      => '',
-		'post_type' => 'page,post',
-		'limit'     => -1,
-		'columns'   => '',
-		'orderby'   => 'menu_order title',
-		'order'     => 'ASC',
-	), $atts );
+		'tax'           => '',
+		'term'          => '',
+		'parent'        => '',
+		'template'      => '',
+		'post_type'     => 'page',
+		'limit'         => -1,
+		'orderby'       => 'menu_order title',
+		'order'         => 'ASC',
+		'event_meta'    => 'false',
+		'upcoming'      => 'false',
+		'columns'       => '',
+		'width'         => '',
+		'button_text'   => '',
+		'excerpt_words' => 24,
+		'show_excerpt'  => 'true',
+		'show_image'    => 'true',
+		'auto_excerpt'  => 'true',
+		'empty_text'    => 'Nothing here yet.',
+	), $atts, 'content_cards' );
 
-	$post_types = array_map( 'trim', explode( ',', $atts['post_type'] ) );
+	$event_meta   = filter_var( $atts['event_meta'], FILTER_VALIDATE_BOOLEAN );
+	$upcoming     = filter_var( $atts['upcoming'], FILTER_VALIDATE_BOOLEAN );
+	$show_excerpt = filter_var( $atts['show_excerpt'], FILTER_VALIDATE_BOOLEAN );
+	$show_image   = filter_var( $atts['show_image'], FILTER_VALIDATE_BOOLEAN );
+	$auto_excerpt = filter_var( $atts['auto_excerpt'], FILTER_VALIDATE_BOOLEAN );
+	$words        = absint( $atts['excerpt_words'] );
 
 	$query_args = array(
-		'post_type'           => $post_types,
+		'post_type'           => array_map( 'trim', explode( ',', $atts['post_type'] ) ),
 		'posts_per_page'      => intval( $atts['limit'] ),
 		'post_status'         => 'publish',
-		'orderby'             => $atts['orderby'],
-		'order'               => $atts['order'],
 		'ignore_sticky_posts' => true,
 	);
 
-	if ( ! empty( $atts['term'] ) ) {
-		$terms = array_map( 'trim', explode( ',', $atts['term'] ) );
-		$query_args['tax_query'] = array(
-			array(
+	// Parent (child-page) mode.
+	if ( '' !== $atts['parent'] ) {
+		$parent_id = houseyou_cards_resolve_page_id( $atts['parent'] );
+		if ( ! $parent_id ) {
+			return '';
+		}
+		$query_args['post_parent'] = $parent_id;
+	}
+
+	// Meta query: template filter + upcoming events.
+	$meta_query = array();
+	if ( '' !== $atts['template'] ) {
+		$meta_query[] = array(
+			'key'     => '_wp_page_template',
+			'value'   => $atts['template'],
+			'compare' => '=',
+		);
+	}
+	if ( $upcoming ) {
+		$meta_query['event_date_order'] = array(
+			'key'     => '_event_date',
+			'value'   => current_time( 'Y-m-d' ),
+			'compare' => '>=',
+			'type'    => 'DATE',
+		);
+	}
+	if ( ! empty( $meta_query ) ) {
+		$meta_query['relation']   = 'AND';
+		$query_args['meta_query'] = $meta_query;
+	}
+
+	// Taxonomy mode.
+	if ( '' !== $atts['tax'] ) {
+		if ( '' !== $atts['term'] ) {
+			$query_args['tax_query'] = array( array(
 				'taxonomy' => $atts['tax'],
 				'field'    => 'slug',
-				'terms'    => $terms,
+				'terms'    => array_map( 'trim', explode( ',', $atts['term'] ) ),
 				'operator' => 'IN',
-			),
-		);
-	} else {
-		// No term given: show any post that carries at least one term in this taxonomy.
-		$query_args['tax_query'] = array(
-			array(
+			) );
+		} else {
+			$query_args['tax_query'] = array( array(
 				'taxonomy' => $atts['tax'],
 				'operator' => 'EXISTS',
-			),
-		);
+			) );
+		}
+	}
+
+	// Ordering.
+	if ( $upcoming ) {
+		$query_args['orderby'] = array( 'event_date_order' => 'ASC' );
+	} else {
+		$query_args['orderby'] = $atts['orderby'];
+		$query_args['order']   = $atts['order'];
 	}
 
 	$cards = new WP_Query( $query_args );
 
-	$style_attr = '';
+	// Grid wrapper classes / inline custom properties.
+	$styles     = array();
 	$grid_class = '';
 	if ( ! empty( $atts['columns'] ) && is_numeric( $atts['columns'] ) ) {
-		$style_attr = ' style="--card-grid-columns: ' . esc_attr( intval( $atts['columns'] ) ) . ';"';
+		$styles[]   = '--card-grid-columns: ' . intval( $atts['columns'] );
 		$grid_class = ' card-grid--columned';
+	}
+	if ( ! empty( $atts['width'] ) ) {
+		$styles[] = '--card-grid-max-width: ' . $atts['width'];
+	}
+	$style_attr = $styles ? ' style="' . esc_attr( implode( '; ', $styles ) ) . '"' : '';
+
+	if ( ! $cards->have_posts() ) {
+		wp_reset_postdata();
+		return '<p class="card-grid-empty">' . esc_html( $atts['empty_text'] ) . '</p>';
 	}
 
 	ob_start();
 	?>
-	<?php if ( $cards->have_posts() ) : ?>
-		<div class="card-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
-			<?php while ( $cards->have_posts() ) : $cards->the_post(); ?>
-				<a href="<?php the_permalink(); ?>" class="card-link">
-					<div class="card">
-						<?php if ( has_post_thumbnail() ) : ?>
-							<div class="card-image"><?php the_post_thumbnail( 'medium' ); ?></div>
-						<?php endif; ?>
-						<h3 class="card-title"><?php the_title(); ?></h3>
-						<?php if ( has_excerpt() ) : ?>
-							<p class="card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 22 ) ); ?></p>
-						<?php endif; ?>
-					</div>
-				</a>
-			<?php endwhile; ?>
-		</div>
-	<?php else : ?>
-		<p class="card-grid-empty">Nothing here yet.</p>
-	<?php endif;
+	<div class="card-grid<?php echo $grid_class; ?>"<?php echo $style_attr; ?>>
+		<?php while ( $cards->have_posts() ) : $cards->the_post();
+			$post_id = get_the_ID();
+			$ev_date = $event_meta ? get_post_meta( $post_id, '_event_date', true ) : '';
+			$ev_time = $event_meta ? get_post_meta( $post_id, '_event_time', true ) : '';
+			$ev_end  = $event_meta ? get_post_meta( $post_id, '_event_end_time', true ) : '';
+			$ev_loc  = $event_meta ? get_post_meta( $post_id, '_event_location', true ) : '';
+			$no_date = $event_meta && empty( $ev_date );
+			$excerpt = '';
+			if ( $show_excerpt ) {
+				$excerpt = $auto_excerpt
+					? houseyou_card_excerpt( get_post(), $words )
+					: ( has_excerpt() ? wp_trim_words( get_the_excerpt(), $words, '…' ) : '' );
+			}
+		?>
+			<a href="<?php the_permalink(); ?>" class="card-link">
+				<div class="card<?php echo $no_date ? ' no-date' : ''; ?>">
+					<?php if ( $show_image && has_post_thumbnail() ) : ?>
+						<div class="card-image"><?php the_post_thumbnail( 'medium' ); ?></div>
+					<?php endif; ?>
+
+					<?php if ( $no_date ) : ?>
+						<span class="card-warning">Date not set</span>
+					<?php endif; ?>
+
+					<?php if ( $event_meta && $ev_date ) : ?>
+						<span class="card-eyebrow"><?php echo esc_html( date_i18n( 'D j M Y', strtotime( $ev_date ) ) ); ?></span>
+					<?php endif; ?>
+
+					<h3 class="card-title"><?php the_title(); ?></h3>
+
+					<?php
+					if ( $event_meta && ( $ev_time || $ev_loc ) ) :
+						$subline = array();
+						if ( $ev_time ) {
+							$t = date_i18n( 'g:i A', strtotime( $ev_time ) );
+							if ( $ev_end ) { $t .= ' – ' . date_i18n( 'g:i A', strtotime( $ev_end ) ); }
+							$subline[] = $t;
+						}
+						if ( $ev_loc ) { $subline[] = $ev_loc; }
+					?>
+						<p class="card-subline"><?php echo esc_html( implode( '   ·   ', $subline ) ); ?></p>
+					<?php endif; ?>
+
+					<?php if ( $excerpt ) : ?>
+						<p class="card-excerpt"><?php echo esc_html( $excerpt ); ?></p>
+					<?php endif; ?>
+
+					<?php if ( '' !== $atts['button_text'] ) : ?>
+						<span class="card-button"><?php echo esc_html( $atts['button_text'] ); ?></span>
+					<?php endif; ?>
+				</div>
+			</a>
+		<?php endwhile; ?>
+	</div>
+	<?php
 	wp_reset_postdata();
 	return ob_get_clean();
 }
