@@ -450,6 +450,25 @@ header.wp-block-template-part a {
     color: var(--wp--preset--color--white, #FFFFFF);
 }
 
+/* === Navigation link pink ===
+   Header (MaxMegaMenu) + footer menu links use the BRIGHT logo/icon magenta
+   (#CB1EAA), NOT the deeper #A8178C that section backgrounds + buttons use.
+   The header colour otherwise comes from the MaxMegaMenu plugin's own DB
+   settings (which differ per environment), so we force it here. Two IDs +
+   !important to outrank the plugin's stylesheet. */
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 a.mega-menu-link,
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 a.mega-menu-link:hover,
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 a.mega-menu-link:focus {
+    color: #CB1EAA !important;
+}
+/* Footer text-link nav is the last footer column; the social-icon nav (first
+   column) keeps its icon-only treatment and is untouched. */
+.pre-footer .wp-block-columns > .wp-block-column:last-child .wp-block-navigation a,
+.pre-footer .wp-block-columns > .wp-block-column:last-child .wp-block-navigation a:hover,
+.pre-footer .wp-block-columns > .wp-block-column:last-child .wp-block-navigation a:focus {
+    color: #CB1EAA !important;
+}
+
 /* Apply container styling to header columns - MOBILE FIRST */
 header.wp-block-template-part .wp-block-columns.header-columns {
     max-width: var(--wp--style--global--wide-size, 1400px);
@@ -627,8 +646,11 @@ footer.site-footer-container > .wp-block-group {
     background-position: center !important;
 }
 
-// Tighten hero bottom padding — needs 3 classes to beat is-style-dark-section's 2-class specificity
+// Tighten hero top/bottom padding — needs 3 classes to beat is-style-dark-section's 2-class specificity.
+// The hero block carries an inline padding-top of spacing--80 (~81px), which pushes the banner
+// content far below the header; pull it up so the hero sits close under the black header bar.
 .wp-block-group.hero-section.is-style-dark-section {
+    padding-top: 30px !important;
     padding-bottom: 10px !important;
 }
 
@@ -641,6 +663,41 @@ footer.site-footer-container > .wp-block-group {
 }
 
 .home-block { padding: 0 !important; }
+
+/* Hero copy: full message on desktop, trimmed to headline + subhead + form on
+   mobile (so the landing screen isn't a wall of text). Same words — the long
+   paragraphs are hidden on small screens, not deleted. */
+@media (max-width: 768px) {
+    .hero-desktop-only { display: none !important; }
+}
+
+/* IN THE MEDIA — give the press clippings the shadow-box offset (pink reads on
+   the dark band), square, with the same press-in hover the cards use. */
+.media-row .wp-block-image img {
+    display: block;
+    border-radius: 0;
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.media-row .wp-block-image a:hover img,
+.media-row .wp-block-image a:focus-visible img {
+    transform: translate(3px, 3px);
+    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .media-row .wp-block-image img { transition: none; }
+    .media-row .wp-block-image a:hover img,
+    .media-row .wp-block-image a:focus-visible img { transform: none; }
+}
+
+/* Centre the row headings (Campaigns/Articles/Events use .card-row-heading;
+   IN THE MEDIA is a plain heading inside .media-row). */
+.media-row > h2,
+.media-row > .wp-block-heading {
+    text-align: center;
+}
 
 /* ========================================
    PETITION/CRISIS DRIVERS ROW
@@ -698,6 +755,58 @@ a.mega-menu-link:focus {
 }
 
 .mega-menu-item:hover .mega-sub-menu { margin-top: 0 !important; }
+
+/* --------------------------------------------------------------
+   HEADER DROPDOWN (flyout sub-menu, e.g. under "About Us")
+   The plugin ships a #1a1b1c grey panel with cramped links. Make
+   it a seamless extension of the ash-grey header/hero, give the
+   links room to breathe, and tie the panel to the shadow-box
+   identity with a hard, blur-free pink offset shadow.
+   Scoped to max_mega_menu_2 (the header menu) so the footer
+   menu is untouched.
+   -------------------------------------------------------------- */
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu {
+    background-color: var(--wp--preset--color--ash-grey, #141414) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 6px 0 !important;
+    box-shadow: 6px 6px 0 0 var(--wp--preset--color--house-you-pink, #A8178C) !important;
+}
+
+/* Hairline dividers so the links read as distinct rows */
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu li.mega-menu-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu li.mega-menu-item:last-child {
+    border-bottom: 0;
+}
+
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu li.mega-menu-item a.mega-menu-link {
+    background-color: transparent !important;
+    color: var(--wp--preset--color--white, #FFFFFF) !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    padding: 12px 20px !important;
+    text-transform: none !important;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Hover/focus mirrors the site's link interaction: pink bar, white text */
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu li.mega-menu-item a.mega-menu-link:hover,
+#mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu li.mega-menu-item a.mega-menu-link:focus {
+    background-color: var(--wp--preset--color--house-you-pink, #A8178C) !important;
+    color: var(--wp--preset--color--white, #FFFFFF) !important;
+}
+
+/* Mobile: the panel sits inside the full-width dark menu, so drop
+   the offset shadow and inner padding */
+@media (max-width: 768px) {
+    #mega-menu-wrap-max_mega_menu_2 #mega-menu-max_mega_menu_2 > li.mega-menu-flyout ul.mega-sub-menu {
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+}
 
 /* Social Icons in Menu */
 .mega-social-icon,
@@ -1963,6 +2072,22 @@ body #can_embed_form .can_embed_form_inner,
     }
 }
 
+/* When a columned row has fewer cards than its column count, the grid would
+   leave empty tracks on the right (cards stuck left). Centre the group instead,
+   keeping each card the same width as it would be in a full row. */
+@media (min-width: 769px) {
+    .card-grid--columned:has(.card-link:nth-child(1):last-child),
+    .card-grid--columned:has(.card-link:nth-child(2):last-child) {
+        justify-content: center;
+    }
+    .card-grid--columned:has(.card-link:nth-child(1):last-child) {
+        grid-template-columns: minmax(0, calc((100% - (var(--card-grid-columns, 3) - 1) * 25px) / var(--card-grid-columns, 3)));
+    }
+    .card-grid--columned:has(.card-link:nth-child(2):last-child) {
+        grid-template-columns: repeat(2, minmax(0, calc((100% - (var(--card-grid-columns, 3) - 1) * 25px) / var(--card-grid-columns, 3))));
+    }
+}
+
 .card-link {
     text-decoration: none;
     display: block;
@@ -2113,6 +2238,33 @@ body #can_embed_form .can_embed_form_inner,
     .card-link:focus-visible .card {
         transform: none;
     }
+}
+
+/* === Card ink is immune to the band colour ===
+   The is-style-*-section rules force every heading/paragraph/link inside the
+   band to one colour. Cards always sit on a white background, so they must
+   keep their own ink regardless of the band they're dropped into (e.g. the
+   pink Events row). These selectors are .section + .card + .element = 3 classes,
+   which outranks the section rules' 2-class + element selectors. */
+.is-style-light-section .card .card-title,
+.is-style-dark-section .card .card-title,
+.is-style-pink-section .card .card-title {
+    color: var(--wp--preset--color--ash-grey, #141414) !important;
+}
+.is-style-light-section .card .card-excerpt,
+.is-style-dark-section .card .card-excerpt,
+.is-style-pink-section .card .card-excerpt {
+    color: #3a3a3a !important;
+}
+.is-style-light-section .card .card-subline,
+.is-style-dark-section .card .card-subline,
+.is-style-pink-section .card .card-subline {
+    color: #5b5b5b !important;
+}
+.is-style-light-section .card .card-eyebrow,
+.is-style-dark-section .card .card-eyebrow,
+.is-style-pink-section .card .card-eyebrow {
+    color: var(--wp--preset--color--house-you-pink, #A8178C) !important;
 }
 
 /* =========================================================================
@@ -2620,9 +2772,81 @@ body.home #can_embed_form .button {
    homepage they sit inside full-width is-style-* bands, so constrain the
    shortcode-rendered children to the content width like the other sections.
    ========================================================================= */
+.card-row-heading {
+    text-align: center;
+}
+
 .card-row-more {
     margin-top: 28px;
     text-align: center;
+}
+
+/* "See more" is a secondary, navigate-to-archive action — quieter than the
+   pink CONTINUE primary, but still unmistakably shadow-box. White fill + ash
+   border + a hard pink offset shadow (a mini-card), which reads on BOTH the
+   white Campaigns band and the dark Media band (pink contrasts both). */
+.card-row-more a,
+.card-row-more .wp-block-button__link {
+    display: inline-block;
+    padding: 0.7em 2em;
+    background-color: #fff !important;
+    color: var(--wp--preset--color--ash-grey, #141414) !important;
+    border: 3px solid var(--wp--preset--color--ash-grey, #141414) !important;
+    border-radius: 0 !important;
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    font-family: var(--wp--preset--font-family--lexend) !important;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1.1;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card-row-more a:hover,
+.card-row-more a:focus-visible,
+.card-row-more .wp-block-button__link:hover,
+.card-row-more .wp-block-button__link:focus-visible {
+    transform: translate(3px, 3px);
+    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    opacity: 1;
+}
+
+/* The dark/pink band rules above force every <a> to white, which would be
+   invisible on the white button. Re-assert ash text on the button itself
+   (higher specificity than .wp-block-group.is-style-*-section a). */
+.wp-block-group.is-style-dark-section .card-row-more a,
+.wp-block-group.is-style-dark-section .card-row-more .wp-block-button__link,
+.wp-block-group.is-style-pink-section .card-row-more a,
+.wp-block-group.is-style-pink-section .card-row-more .wp-block-button__link {
+    color: var(--wp--preset--color--ash-grey, #141414) !important;
+}
+
+/* On the pink band the pink offset shadow would vanish — swap to ash so the
+   shadow-box still reads (mirrors the hero's pink-on-pink → ash rule). */
+.is-style-pink-section .card-row-more a,
+.is-style-pink-section .card-row-more .wp-block-button__link {
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey, #141414);
+}
+.is-style-pink-section .card-row-more a:hover,
+.is-style-pink-section .card-row-more a:focus-visible,
+.is-style-pink-section .card-row-more .wp-block-button__link:hover,
+.is-style-pink-section .card-row-more .wp-block-button__link:focus-visible {
+    box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey, #141414);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-row-more a,
+    .card-row-more .wp-block-button__link {
+        transition: none;
+    }
+    .card-row-more a:hover,
+    .card-row-more a:focus-visible,
+    .card-row-more .wp-block-button__link:hover,
+    .card-row-more .wp-block-button__link:focus-visible {
+        transform: none;
+    }
 }
 
 .full-width-homepage .card-grid,
