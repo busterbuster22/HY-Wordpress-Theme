@@ -1,144 +1,167 @@
-# House You — Site Map
+# House You — Site Map, Gap Analysis & Alignment Plan
 
-How the site is structured **as it currently functions on staging** (June 2026), plus what's
-still missing against the May 2026 content brief. Companion to [refactor.md](refactor.md) and
-[style-guide.md](style-guide.md).
+Snapshot of staging (June 2026) vs. the May 2026 content brief, plus a plan to bring pages
+into line with [style-guide.md](style-guide.md). Companion to [refactor.md](refactor.md).
 
-Legend: ✅ live · 🟡 live but empty / needs content · ❌ missing · 🗑 draft (archived) · 🔮 future
-
----
-
-## 1. Site map (current)
-
-**Header nav** (Max Mega Menu — the `new-header` menu):
-
-```
-1  EVENTS            (2846)   ← conditional: only appears when an active event exists
-2  CAMPAIGNS         (2983)
-3  ARTICLES          (3563)
-4  ABOUT             (custom #, dropdown)
-   ├─ OUR STORY      (274)
-   ├─ CONTACT        (237)
-   └─ IN THE MEDIA   (3564)
-5  FB                (external)
-6  INSTA             (external)
-```
-
-### Page tree
-
-```
-Homepage (2019, /)                              ← DB-built landing page
-│
-├─ EVENTS (2846, /events)                       ← [events_listing] → cards, template "an-events"
-│  └─ TEST EVENT — Card Preview (3560)           🗑 delete; it's the only "active" event,
-│                                                   so deleting it hides the EVENTS nav item
-│
-├─ CAMPAIGNS (2983, /campaigns)                 ← [content_cards tax="campaign"] · 5 cards
-│  ├─ The Housing Crisis Is Killing People (3489)   action ✅
-│  ├─ Mullumbimby Hospital Site (3449)              action ✅  (page-nested under Media, shown here via campaign tag)
-│  ├─ Shift the Conversation (2654)                 action ✅
-│  ├─ Scrap the Tax Breaks (2300)                   action ✅
-│  └─ Defend and Extend Public Housing (182)        action ✅  (now on the action template)
-│
-├─ ARTICLES (3563, /articles)                   ← [content_cards parent="current"]  🟡 no child pages yet
-│
-├─ ABOUT (274, /about-us)
-│  ├─ Our Story            ← the About page itself
-│  ├─ Contact (237)
-│  └─ IN THE MEDIA (3564, /in-the-media)         ← [content_cards parent="current"]  🟡 no press items yet
-│
-├─ Privacy Policy (1434)   ·  Terms of Use (1439)   (URL-nested under Homepage)
-│
-└─ Not in nav (legacy / standalone):
-   ├─ Media (3505, /media)                       🟡 orphaned old page → see Projects below
-   │  ├─ Disaster Preparedness (3508)             project
-   │  ├─ Workshop: Preparedness for you (3128)    project
-   │  └─ Mullumbimby Hospital Site (3449)         project (also a campaign)
-   ├─ Housing Village (229)                       ⚠ nested under Campaigns but NOT campaign-tagged → doesn't list
-   ├─ Conversation Training: House Hoarding 101 (3081)   was an event; standalone, not in nav
-   └─ Conversations Training Feedback + Action (3289)    survey; standalone
-```
-
-**Archive 🗑 (draft):** Joint Statement Budget 2026 ×2 (3398, 3477); past events — Preparedness
-Workshops Mullum/Lismore/Tweed (3159, 3132, 3115), Conversation Trainings (3061, 3059, 3046),
-SOLD! Screening (2868), Mullumbimby Forum (2851), Grinch convo training (2479).
-
-### How the card lists work
-All grids run through the one `[content_cards]` engine in `functions.php`:
-- **Campaigns** = `tax="campaign"` (anything tagged with the `campaigns` term, regardless of page parent).
-- **Events** = `[events_listing]` → `template="an-events"` (pages on the `an-events` template).
-- **Articles / In the Media** = `parent="current"` (child pages of that page).
-
-So to add a campaign you tag it; to add an article you make it a child of Articles; to add a
-press item you make it a child of In the Media.
+Legend: ✅ done · 🟡 partial / needs work · ❌ missing · 🗑 archived (draft)
 
 ---
 
-## 2. Future: Projects page under About Us  🔮
-
-We want a **Projects** page sitting under **About Us** (alongside Our Story, Contact, In the
-Media) to house the on-the-ground project pages that currently hang off the orphaned **Media**
-page (3505):
-
-- Disaster Preparedness (3508)
-- Workshop: Preparedness for you (3128)
-- Mullumbimby Hospital Site (3449) — note this is *also* a campaign, so decide whether it lives
-  as a Project, a Campaign, or is cross-listed.
-
-Plan when we build it: create a `Projects` page (child cards via `[content_cards parent="current"]`,
-same as Articles/Media), re-parent the project pages onto it, add it to the ABOUT dropdown, then
-retire the old Media (3505) page.
-
----
-
-## 3. Gap analysis — brief content not yet implemented
-
-What the May 2026 brief specified, vs. what's live.
+## 1. Site map
 
 ### Homepage blocks
-| Block | Homepage teaser | Long / linked page |
+| Block | Short (homepage) | Long / linked page |
 |---|---|---|
-| 1 Hero / Sign-up | 🟡 hero exists (verify copy + two-step volunteer form) | n/a |
-| 2 No Homes No Future | 🟡 verify on homepage | ❌ long page missing → Articles |
-| 3 What's Driving the Crisis (5 graphics) | 🟡 card row exists, wrong set | see campaigns |
-| 4 Housing First: The Solution | 🟡 verify on homepage | ❌ long page missing → Articles |
-| 5 Our Story | ✅ About exists | ❌ Team page + bios missing |
-| 6 Acknowledgement (footer) | 🟡 ack exists, long | ❌ shorter version not done |
+| 1 Hero / Sign-up | 🟡 hero exists (verify copy + AN volunteer-form-22 two-step) | n/a |
+| 2 No Homes No Future | 🟡 verify on homepage | ❌ `/no-homes-no-future` long page **missing** |
+| 3 What's Driving the Crisis (5 graphics) | 🟡 card row exists but **wrong set** (see below) | see petitions |
+| 4 Housing First: The Solution | 🟡 verify on homepage | ❌ `/housing-first` long page **missing** |
+| 5 Our Story | 🟡 About exists | ❌ `/team` page **missing** |
+| 6 Acknowledgement (footer) | 🟡 footer ack exists | ❌ "shorter" version not done |
+| — extra brief sections | ❌ "How we Get Everybody a House", "How we End House Hoarding", social-media feed | all missing |
 
-### Whole sections still missing
-| Brief item | Status |
-|---|---|
-| Articles content (No Homes, Housing First, Team, bios) | 🟡 section live, no pages yet |
-| In the Media content (press / media releases) | 🟡 section live, no items yet |
-| Team page + bios (Chels, Emily, Jacob) | ❌ |
-| Partners page (Housing Justice National Alliance + logos) | ❌ |
-| Take Action location pages (Wagga, Northern Rivers, National) | ❌ (3489 covers one) |
-| Projects page under About | 🔮 planned (§2) |
-| Donate in nav | ❌ (need URL) |
-| SEO (titles/meta; doesn't rank for "housing campaign") | ❌ |
+**Header nav (`max_mega_menu_2`):**
+`EVENTS · CAMPAIGNS · ARTICLES · ABOUT` (dropdown: Our Story, Contact, In the Media) `· FB · INSTA`
 
-### Done ✅
-Lexend + Poppins fonts · brand pink darkened (#A8178C) · readability measure · unified
-shadow-box card system + `[content_cards]` engine · Campaigns page + `campaign` taxonomy + nav ·
-all 5 campaign pages on the `action` template · conditional Events nav · Articles + In the Media
-sections created · archived stale pages/events · style guide.
+```
+Homepage (2019, /)
+│
+├─ EVENTS (2846)                              ← [events_listing]
+│  ├─ Disaster Preparedness (3508)            ⚠ filed under Media, reassign to Events
+│  ├─ Workshop: Preparedness (3128)           ⚠ filed under Media, reassign to Events
+│  └─ TEST EVENT — Card Preview (3560)        🗑 delete
+│
+├─ CAMPAIGNS (2983, /campaigns)               ← [content_cards tax="campaign"]
+│  ├─ Scrap the Tax Breaks (2300)             action
+│  ├─ Defend & Extend Public Housing (182)    ⚠ default template → move to action
+│  ├─ Shift the Conversation (2654)           action
+│  └─ Mullumbimby Hospital Site (3449)        action
+│
+├─ ARTICLES                                    🟡 page exists in nav, no content yet
+│
+├─ ABOUT (274, /about-us)
+│  ├─ Our Story                               ← the About page itself
+│  ├─ Contact (237)
+│  └─ In the Media (3505, /media)             ← [content_cards parent="current"]  🟡 empty page ready for press coverage
+│
+├─ Privacy Policy (1434)
+├─ Terms of Use (1439)
+│
+└─ Standalone / in-progress:
+   ├─ The Housing Crisis Is Killing People (3489, action)
+   ├─ Housing Village (229)                   ⚠ mis-filed under Campaigns
+   ├─ Conversation Training: House Hoarding 101 (3081)
+   └─ Conversations Training Feedback (3289, survey)
+```
+
+**Archive (draft) 🗑:** Joint Statement Budget 2026 ×2 (3398, 3477); 9 past events
+(workshops, conversation trainings, SOLD screening, Mullum forum, Grinch).
+
+### Known structural problems
+- **In the Media page (3505) is empty** — its children (Disaster Preparedness, Workshop,
+  Mullumbimby) belong under Events and Campaigns respectively. Reassign them, then the page
+  is ready to receive actual press coverage.
+- **`Defend & Extend Public Housing` (182)** is on the `default` template, not `action`
+  (no petition form layout) — brief flags it as "need to recreate."
+- **Deep parent nesting** (About/Contact/Privacy under Homepage; Village under Campaigns)
+  creates messy URLs.
+- **Test event (3560)** still live.
 
 ---
 
-## 4. Remaining work (unblocked vs. blocked)
+## 3. Gap analysis — brief content NOT yet implemented
 
-**Unblocked**
+What the brief specified, mapped to what exists.
+
+### Homepage blocks
+| Block | Short (homepage) | Long / linked page |
+|---|---|---|
+| 1 Hero / Sign-up | 🟡 hero exists (verify copy + AN volunteer-form-22 two-step) | n/a |
+| 2 No Homes No Future | 🟡 verify on homepage | ❌ `/no-homes-no-future` long page **missing** |
+| 3 What's Driving the Crisis (5 graphics) | 🟡 card row exists but **wrong set** (see below) | see petitions |
+| 4 Housing First: The Solution | 🟡 verify on homepage | ❌ `/housing-first` long page **missing** |
+| 5 Our Story | 🟡 About exists | ❌ `/team` page **missing** |
+| 6 Acknowledgement (footer) | 🟡 footer ack exists | ❌ "shorter" version not done |
+| — extra brief sections | ❌ "How we Get Everybody a House", "How we End House Hoarding", social-media feed | all missing |
+
+### Campaigns in progress
+| Campaign | Page | Status |
+|---|---|---|
+| Property Investors / End Tax Handouts | tax-breaks (2300) | ✅ exists |
+| Defend & Extend Public Housing | defend-public-housing (182) | 🟡 exists, needs `action` template |
+
+→ 1 campaign to rebuild on the `action` template, plus copy review. (Remaining 3 brief
+petitions deferred — not finished.)
+
+### Whole pages / sections missing
+| Brief item | Status |
+|---|---|
+| Partners page (Housing Justice National Alliance + logos) | ❌ missing |
+| Take Action: Wagga, Northern Rivers, National (Green Bans) | ❌ missing (3489 = Wagga letter exists) |
+| In the Media (press coverage / media releases) | ❌ missing (current Media page misused) |
+| Articles section (long-form: No Homes, Housing First, Team, bios) | ❌ missing |
+| Team page + bios (Chels, Emily, Jacob) | ❌ missing (bios in brief) |
+| Featured Contributors/Experts (Darran SCU, Tahlia) | ❌ missing |
+| Donate in nav | ❌ missing (need URL) |
+| SEO (titles/meta; "doesn't rank for housing campaign") | ❌ not started |
+
+### Done since the brief ✅
+Lexend + Poppins fonts · brand pink darkened · readability measure · unified shadow-box
+card system · `[content_cards]` engine · Campaigns page + taxonomy + nav item · conditional
+Events nav · archived stale pages/dead nav link · Media page rendering fixed · style guide.
+
+---
+
+## 4. Style-guide audit (existing pages)
+
+Theme-level tokens (fonts, colour, buttons, cards, forms) are already aligned, so every page
+inherits the system. Remaining gaps are **page-/template-level**:
+
+| Area | Finding | Action |
+|---|---|---|
+| Homepage (2019) | Long single scroll on a DB template; not decomposed; not using shadow-box section rhythm | Decompose into teasers + Read-more + campaign card row (§5 plan) |
+| Header / Footer | Functional but plain; don't yet use the shadow-box/Lexend identity; footer ack is long | Restyle to style guide; shorten ack |
+| Campaign/action pages | Body copy varies; cards lack featured images; 182 on wrong template | Add images + curated excerpts (excerpts ✅); move 182 to `action` |
+| Section colour use | Inconsistent use of `is-style-dark/light/pink-section` bands | Apply alternating bands per style guide |
+| Long-form pages | Don't exist yet (No Homes/Housing First/Team) — build them on the prose measure | Create with brief copy |
+| Imagery | Few featured images; no shadow-box on inline images | Add images; apply shadow-box treatment |
+| Misc | Emoji/grey boxes removed from cards ✅; check none remain in page content | Spot-fix any in page bodies |
+
+No off-brand fonts/colours found at the theme level (global tokens enforce them). The risk
+is in **page content blocks** authored before the system existed — those need a visual pass
+in the Site Editor.
+
+---
+
+## 5. Alignment plan (phased)
+
+Ordered by value and by what's unblocked. Many items need inputs (flagged).
+
+**Phase A — Structure & cleanup (mostly unblocked, low risk)**
 1. Delete test event 3560.
-2. Fill **Articles** with long-form pages (No Homes No Future, Housing First) as child pages.
-3. Build the **Projects** page under About (§2) and re-parent the Media children.
+2. Move 182 (Defend & Extend) to the `action` template; fix deep parent nesting where it
+   harms URLs.
+3. Create the **Articles** section (long-form: No Homes No Future, Housing First, Team,
+   bios). Build on prose measure per style guide.
+4. Repurpose **Media → In the Media** for press only; move mis-filed children out; place
+   In the Media under About in the nav.
 
-**Blocked on inputs**
-- **Jacob:** approve copy; Jacob's bio; Donate URL.
+**Phase B — Fill content gaps (needs brief copy = Jacob sign-off)**
+5. Create long-form pages: `/no-homes-no-future`, `/housing-first`, `/team` (copy in brief).
+6. Create **Partners** + **Take Action** location pages. *(Needs logos, organiser details.)*
+
+**Phase C — Homepage decomposition** (needs B's pages to link to)
+8. Trim homepage to teasers + Read-more; insert campaign card row; shorten footer ack.
+
+**Phase D — Design polish**
+9. Header/footer restyle to the style guide; alternating section bands; add featured images
+   (needs image assets); shadow-box on key images.
+
+**Phase E — Decisions / external**
+10. Add Donate URL to nav; SEO pass.
+
+### Blocked on inputs
+- **Jacob:** approve copy ("need to chat with Jacob"); Jacob's bio; Donate URL.
 - **Assets:** featured images; Partner logos; team photos.
-- **Decisions:** In-the-Media layout; Mullum as Project vs Campaign; Featured Experts.
-- **Action Network:** any new petition URLs.
-
-**Later**
-- Homepage decomposition into teasers + campaign card row; shorten footer ack.
-- Header/footer restyle to the style guide; alternating section bands.
-- SEO pass.
+- **Action Network:** live action URL for rebuilt Defend campaign.
+- **Decisions:** In-the-Media layout; confirm Featured Experts.
