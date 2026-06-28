@@ -63,98 +63,30 @@ Or if email should go after FB/INSTA, adjust as preferred.
 
 **What:** Add a new block/section on the homepage displaying the latest Instagram posts.
 
-### Approach options
+### Implementation
 
-Three ways to do this, ordered by recommendation:
+Uses **Smash Balloon Instagram Feed** (free plugin v6.11.3).
 
-#### Option A — Elfsight widget (recommended for speed)
+**Connected account:** `house_you__` (ID: 17841462139073968), stored in `wp_sbi_sources` table.
 
-1. Create an Elfsight Instagram Feed widget at `https://apps.elfsight.com`.
-2. Configure: connect IG account, set layout to grid, max 3–6 posts, remove heavy branding.
-3. Elfsight provides an embed code (script tag or iframe).
-4. Paste it into a new `wp-block-group` section on the homepage, positioned between the Campaigns row and the In The Media row.
+**Feed:** Created programmatically (ID: 1) in `wp_sbi_feeds` table because the Lite version has no feed creation UI. The default `[instagram-feed]` shortcode auto-resolves to feed ID 1.
 
-**Pros:** 5-minute setup, no code, Elfsight handles caching/auth/refresh.  
-**Cons:** Adds a third-party script load; the free tier may show branding.
+**Shortcode in use:** `[instagram-feed]` (via a `wp:shortcode` block inside a dark-section group block).
 
-#### Option B — Custom PHP shortcode + Instagram Basic Display API
+### Smash Balloon Lite quirk
 
-Register a new shortcode `[instagram_feed]` in `functions.php` that:
-1. Uses the Instagram Basic Display API (long-lived access token stored as a WP option).
-2. Fetches the user's recent media (up to 6 posts).
-3. Outputs a card grid reusing the existing `.card-grid` / `.card` CSS classes (matches the campaigns and events row style).
-4. Caches the response in a transient (e.g. 6 hours) to avoid hitting API rate limits.
-
-Implementation sketch:
-```php
-function houseyou_instagram_feed_shortcode() {
-    $cached = get_transient( 'houseyou_instagram_feed' );
-    if ( $cached ) return $cached;
-
-    $token = get_option( 'houseyou_instagram_token' );
-    if ( ! $token ) return '<p>Instagram not connected.</p>';
-
-    $url = add_query_arg( array(
-        'fields'       => 'media_url,permalink,caption,media_type',
-        'access_token' => $token,
-        'limit'        => 6,
-    ), 'https://graph.instagram.com/me/media' );
-
-    $response = wp_remote_get( $url );
-    if ( is_wp_error( $response ) ) return '';
-
-    $body   = json_decode( wp_remote_retrieve_body( $response ) );
-    $data   = $body->data ?? array();
-
-    ob_start();
-    ?>
-    <div class="card-grid">
-        <?php foreach ( $data as $post ) : ?>
-            <a href="<?php echo esc_url( $post->permalink ); ?>" class="card-link" target="_blank" rel="noopener">
-                <div class="card">
-                    <?php if ( $post->media_type === 'VIDEO' ) : ?>
-                        <div class="card-image">
-                            <img src="<?php echo esc_url( $post->media_url ); ?>" alt="" loading="lazy">
-                            <span class="card-play-icon">▶</span>
-                        </div>
-                    <?php else : ?>
-                        <div class="card-image">
-                            <img src="<?php echo esc_url( $post->media_url ); ?>" alt="" loading="lazy">
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </a>
-        <?php endforeach; ?>
-    </div>
-    <?php
-    $html = ob_get_clean();
-    set_transient( 'houseyou_instagram_feed', $html, 6 * HOUR_IN_SECONDS );
-    return $html;
-}
-add_shortcode( 'instagram_feed', 'houseyou_instagram_feed_shortcode' );
-```
-
-Then add a settings page (like the existing Action Network and Substack settings pages) for the Instagram access token.
-
-**Pros:** No third-party widgets, reuses existing card design, fully controllable.  
-**Cons:** Instagram Basic Display API setup (Meta app, token exchange); longer dev time.
-
-#### Option C — Substack articles as a stand-in
-
-If the Substack already publishes IG-embedded posts, use `[substack_articles tax="instagram" ...]` or tag-based filtering. Quick but doesn't show actual IG content.
-
-### Recommendation
-
-Start with **Option A (Elfsight)** for speed. If it works visually and the branding is acceptable, move on. If Elfsight is too slow or branded, swap to **Option B** later (it's a self-contained PHP change and the homepage section stays the same).
+The free version stores connected accounts in the `wp_sbi_sources` custom table (not `wp_options`). Feeds must exist in the `wp_sbi_feeds` table, but the Lite version's settings page has no "Add New Feed" button — the Feeds tab only exposes caching, GDPR, and CSS/JS settings. Feeds can be created programmatically via `SBI_Db::feeds_insert()` or a raw `INSERT` into `wp_sbi_feeds` with a JSON `settings` column.
 
 ### Placement
 
-Insert the new section between the Campaigns row and the In The Media row on the homepage. Use the existing `is-style-dark-section` or `is-style-light-section` block style for visual consistency:
+Inserted between the Campaigns row and the Articles/Events rows on the homepage. Uses `is-style-dark-section` for visual consistency:
 
 ```
 Hero →
 Campaigns →
 [Instagram row — NEW] →
+Articles (hidden if empty) →
+Events →
 In The Media →
 Our Story →
 Footer
@@ -170,13 +102,14 @@ Footer
 | `sass/theme.scss` | Add `.social-icon a[href*="/contact"]` background-image rule |
 | `assets/theme.css` | **Rebuild** — compiled from SCSS |
 | WP Admin — Max Mega Menu | Move CONTACT out of dropdown, add CSS class, set label to empty |
-| `home.html` or WP Admin — homepage | Add Instagram row block (content change, not template file) |
+| WP Admin — homepage (ID 2019) | Add Instagram row `wp:group` block with `[instagram-feed]` shortcode |
+| `wp_sbi_feeds` table | Feed ID 1 created programmatically (Lite has no UI for this) |
 
 ### Files left alone
 
 | File | Why |
 |---|---|
-| `functions.php` | No new shortcode needed unless Option B chosen |
+| `functions.php` | No changes needed (Smash Balloon plugin handles all PHP) |
 | `theme.json` | No new design tokens |
 | `block-template-parts/footer.html` | Unchanged |
 | `block-template-parts/header.html` | Unchanged (menu is managed by Max Mega Menu plugin, not the template) |
@@ -191,6 +124,8 @@ Footer
 - [ ] Email icon links to `/contact/`
 - [ ] OUR WORK dropdown no longer contains "CONTACT"
 - [ ] Desktop and mobile nav both correct
-- [ ] Instagram row renders on homepage
-- [ ] Instagram images load, are responsive, look intentional
+- [x] Instagram row renders on homepage
+- [x] Instagram images load, are responsive, look intentional
 - [ ] No broken styles on any page
+- [ ] Check if feed layout matches site design (padding, column count, header style)
+- [ ] Articles section hidden (hide_if_empty=true) — confirm expected

@@ -2930,4 +2930,43 @@ body.home #can_embed_form .button {
   display: none !important;
 }
 
+/* =========================================================================
+   INSTAGRAM FEED — Card treatment on light-section
+   The Smash Balloon feed renders as a CSS grid of .sbi_item tiles. We
+   override the default padding + overflow to turn each tile into a
+   shadow-box card that matches the site's card language.
+   ========================================================================= */
+.instagram-row #sb_instagram #sbi_images {
+  padding: 0;
+  gap: 16px;
+}
+
+.instagram-row #sb_instagram #sbi_images .sbi_item {
+  padding: 0 !important;
+  overflow: visible;
+  border: 3px solid var(--wp--preset--color--ash-grey, #141414);
+  box-shadow: 7px 7px 0 0 #000000;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.instagram-row #sb_instagram #sbi_images .sbi_item:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 0 #000000;
+}
+
+.instagram-row .sbi_photo_wrap {
+  overflow: hidden;
+  display: block;
+  background-color: #efefef;
+}
+
+.instagram-row .sbi_photo {
+  display: block !important;
+}
+
+.instagram-row .sbi_photo img {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
 /*# sourceMappingURL=theme.css.map */
