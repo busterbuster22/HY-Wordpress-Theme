@@ -172,6 +172,10 @@ One engine renders all card grids: `[content_cards]` (taxonomy / `parent` / `tem
 modes; `[events_listing]` delegates to it). The whole card is the link — **no separate
 "Read more" button.** Build new card-like listings on `.card`, never a new card style.
 
+Additional parameters: `term` for slug filtering, `fallback` to backfill untagged posts
+when a term filter doesn't fill the full limit. Articles via `[substack_articles]`
+support `featured_urls` for pinned Substack posts.
+
 ### Forms / inputs
 Already shadow-box: 3px border, square corners, offset shadow, transparent fill, Lexend
 uppercase labels (`theme.json` → `settings.custom.form`). Keep new inputs in this style.

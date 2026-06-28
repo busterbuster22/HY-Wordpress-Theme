@@ -402,6 +402,29 @@ The letter campaign embed is placed directly in the hero section of the homepage
 
 > **Note:** The homepage has JavaScript that customises the letter form's labels and adds a custom thank-you message. If you change the campaign, contact the developer to update the JavaScript if the form fields are different.
 
+### Controlling which campaigns appear on the homepage
+
+The campaigns row uses the `[content_cards]` shortcode. To control which 3 campaigns appear:
+
+1. When editing a campaign page, look for the **Campaigns** taxonomy panel in the right sidebar
+2. Create a term called **`homepage`** if it doesn't already exist
+3. Tag the pages you want featured on the homepage with the `homepage` term
+4. The homepage shortcode is set to: `[content_cards tax="campaign" term="homepage" limit="3" fallback="true"]`
+5. If fewer than 3 campaigns are tagged, the remaining slots automatically fill with the latest untagged campaigns
+
+### Controlling which articles appear on the homepage
+
+Articles are imported from the Substack RSS feed using `[substack_articles]`. To pin specific articles at the front of the row:
+
+1. Find the Substack article URLs you want to feature
+2. Edit the homepage in the Site Editor, find the Substack shortcode block
+3. Add the `featured_urls` parameter with comma-separated URLs:
+   ```
+   [substack_articles limit="3" featured_urls="https://houseyou.substack.com/p/post-one, https://houseyou.substack.com/p/post-two"]
+   ```
+4. Pinned articles appear first; remaining slots fill from the RSS feed
+5. Duplicates between pinned and feed articles are automatically removed
+
 ---
 
 ## 14. Images and media

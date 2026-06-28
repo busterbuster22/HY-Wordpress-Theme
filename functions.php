@@ -704,6 +704,7 @@ function houseyou_content_cards_shortcode( $atts ) {
 		'more_text'     => '',
 		'more_url'      => '',
 		'hide_if_empty' => 'false',
+		'fallback'      => 'false',
 	), $atts, 'content_cards' );
 
 	$event_meta   = filter_var( $atts['event_meta'], FILTER_VALIDATE_BOOLEAN );
@@ -711,6 +712,7 @@ function houseyou_content_cards_shortcode( $atts ) {
 	$show_excerpt = filter_var( $atts['show_excerpt'], FILTER_VALIDATE_BOOLEAN );
 	$show_image   = filter_var( $atts['show_image'], FILTER_VALIDATE_BOOLEAN );
 	$auto_excerpt = filter_var( $atts['auto_excerpt'], FILTER_VALIDATE_BOOLEAN );
+	$fallback     = filter_var( $atts['fallback'], FILTER_VALIDATE_BOOLEAN );
 	$words        = absint( $atts['excerpt_words'] );
 
 	$query_args = array(
@@ -777,6 +779,39 @@ function houseyou_content_cards_shortcode( $atts ) {
 	}
 
 	$cards = new WP_Query( $query_args );
+
+	if ( $fallback && '' !== $atts['term'] && '' !== $atts['tax'] && intval( $atts['limit'] ) > 0 ) {
+		$fallback_limit = intval( $atts['limit'] );
+		$found_count    = $cards->found_posts;
+		if ( $found_count < $fallback_limit ) {
+			$found_ids  = wp_list_pluck( $cards->posts, 'ID' );
+			$needed     = $fallback_limit - $found_count;
+			$fb_args    = array(
+				'post_type'           => $query_args['post_type'],
+				'posts_per_page'      => $needed,
+				'post_status'         => 'publish',
+				'ignore_sticky_posts' => true,
+				'post__not_in'        => $found_ids,
+				'orderby'             => $atts['orderby'],
+				'order'               => $atts['order'],
+			);
+			if ( isset( $query_args['post_parent'] ) ) {
+				$fb_args['post_parent'] = $query_args['post_parent'];
+			}
+			if ( isset( $query_args['meta_query'] ) ) {
+				$fb_args['meta_query'] = $query_args['meta_query'];
+			}
+			$fb_args['tax_query'] = array( array(
+				'taxonomy' => $atts['tax'],
+				'operator' => 'EXISTS',
+			) );
+			$fb_query = new WP_Query( $fb_args );
+			if ( $fb_query->have_posts() ) {
+				$cards->posts       = array_merge( $cards->posts, $fb_query->posts );
+				$cards->post_count  = count( $cards->posts );
+			}
+		}
+	}
 
 	// Grid wrapper classes / inline custom properties.
 	$styles     = array();
@@ -881,12 +916,54 @@ function houseyou_substack_shortcode( $atts ) {
 		'more_text'     => '',
 		'more_url'      => '',
 		'hide_if_empty' => 'false',
+		'featured_urls' => '',
 	), $atts, 'substack_articles' );
 
-	$articles = houseyou_substack_fetch_articles(
-		intval( $atts['limit'] ),
-		intval( $atts['excerpt_words'] )
-	);
+	$limit         = intval( $atts['limit'] );
+	$excerpt_words = intval( $atts['excerpt_words'] );
+	$featured_urls = array_filter( array_map( 'trim', explode( ',', $atts['featured_urls'] ) ) );
+	$featured      = array();
+
+	if ( ! empty( $featured_urls ) ) {
+		foreach ( $featured_urls as $url ) {
+			$meta = houseyou_substack_fetch_article_meta( $url, $excerpt_words );
+			if ( ! empty( $meta['title'] ) ) {
+				$featured[ esc_url_raw( $url ) ] = $meta;
+			}
+		}
+	}
+
+	$fetch_limit = $limit;
+	if ( ! empty( $featured ) ) {
+		$fetch_limit = max( $limit, 20 );
+	}
+
+	$articles = houseyou_substack_fetch_articles( $fetch_limit, $excerpt_words );
+
+	if ( ! empty( $featured ) ) {
+		$feed_filtered = array();
+		foreach ( $articles as $article ) {
+			if ( ! isset( $featured[ $article['url'] ] ) ) {
+				$feed_filtered[] = $article;
+			}
+		}
+		$articles = $feed_filtered;
+	}
+
+	$final = array();
+	foreach ( $featured as $url => $fa ) {
+		if ( count( $final ) >= $limit ) {
+			break;
+		}
+		$final[] = $fa;
+	}
+	foreach ( $articles as $article ) {
+		if ( count( $final ) >= $limit ) {
+			break;
+		}
+		$final[] = $article;
+	}
+	$articles = $final;
 
 	if ( empty( $articles ) ) {
 		if ( filter_var( $atts['hide_if_empty'], FILTER_VALIDATE_BOOLEAN ) ) {

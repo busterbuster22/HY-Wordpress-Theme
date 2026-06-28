@@ -69,6 +69,7 @@ house-you/
 │   └── single.html
 ├── inc/
 │   ├── action-network-api.php  ← Action Network API client
+│   ├── substack-api.php        ← Substack RSS feed + OG metadata fetcher
 │   └── headstart/
 │       └── en.json
 ├── languages/
@@ -219,6 +220,85 @@ All functions use the `houseyou_` prefix.
 | `houseyou_events_listing_shortcode()` | shortcode | `[events_listing]` - displays grid of upcoming events |
 
 **API Functions:** See `inc/action-network-api.php` for API client functions (`houseyou_an_get_event()`, `houseyou_an_parse_event_id()`, `houseyou_an_sync_event()`, etc.)
+
+### Content Cards Shortcode
+
+**Location:** `functions.php` → `houseyou_content_cards_shortcode()` (line ~683)
+
+**Usage:** `[content_cards]` — the single card-grid engine for campaigns, events, media pages, and child pages.
+
+**Parameters:**
+
+| Parameter | Default | Description |
+|---|---|---|
+| `tax` | `''` | Taxonomy slug (e.g. `campaign`) |
+| `term` | `''` | Term slug(s) to filter by, comma-separated (e.g. `homepage`) |
+| `parent` | `''` | Page slug/ID — show children of this page. `current` = current page |
+| `template` | `''` | Filter by page template filename (e.g. `an-events`) |
+| `post_type` | `page` | Post type(s), comma-separated |
+| `limit` | `-1` | Max posts to show |
+| `orderby` | `menu_order title` | Order by field(s) |
+| `order` | `ASC` | Sort order |
+| `event_meta` | `false` | Show event date/time/location from post meta |
+| `upcoming` | `false` | Only show events with `_event_date` >= today |
+| `columns` | `''` | Number of grid columns (`1`–`4`) |
+| `width` | `''` | CSS max-width override |
+| `button_text` | `''` | Button label (optional call-to-action) |
+| `excerpt_words` | `24` | Words in auto-generated excerpt |
+| `show_excerpt` | `true` | Show excerpt |
+| `show_image` | `true` | Show featured image |
+| `auto_excerpt` | `true` | Auto-generate excerpt from content |
+| `empty_text` | `Nothing here yet.` | Message when no posts found |
+| `heading` | `''` | Section heading (h2 above grid) |
+| `more_text` | `''` | "View all" link text |
+| `more_url` | `''` | "View all" link URL |
+| `hide_if_empty` | `false` | Hide entire row if no posts |
+| `fallback` | `false` | When `term` is set, backfill remaining slots with untagged posts |
+
+**Examples:**
+
+```
+[content_cards tax="campaign" term="homepage" limit="3" fallback="true"]
+[content_cards tax="campaign" limit="-1" heading="All Campaigns"]
+[content_cards parent="current" heading="In this section"]
+[events_listing]
+```
+
+### Substack Articles Shortcode
+
+**Location:** `functions.php` → `houseyou_substack_shortcode()` (line ~907)
+
+**Usage:** `[substack_articles]` — displays a card grid of articles from the configured Substack RSS feed.
+
+**Parameters:**
+
+| Parameter | Default | Description |
+|---|---|---|
+| `limit` | `12` | Max articles to show |
+| `columns` | `''` | Number of grid columns |
+| `width` | `''` | CSS max-width override |
+| `button_text` | `''` | Button label |
+| `excerpt_words` | `24` | Words in excerpt |
+| `empty_text` | `No articles yet.` | Message when no articles |
+| `heading` | `''` | Section heading (h2 above grid) |
+| `more_text` | `''` | "View all" link text |
+| `more_url` | `''` | "View all" link URL |
+| `hide_if_empty` | `false` | Hide entire row if no articles |
+| `featured_urls` | `''` | Comma-separated Substack article URLs to pin at the front |
+
+**`featured_urls` behaviour:**
+- Each URL is fetched to extract Open Graph metadata (title, image, description)
+- OG metadata is cached for 24 hours via transients
+- Pinned articles appear first, then remaining slots fill from the RSS feed
+- Duplicates between pinned and feed articles are automatically removed
+- If a pinned URL is unreachable, it's silently skipped
+
+**API Functions:** See `inc/substack-api.php` for feed client + OG metadata fetcher (`houseyou_substack_fetch_articles()`, `houseyou_substack_fetch_article_meta()`).
+
+**Example:**
+```
+[substack_articles limit="3" featured_urls="https://houseyou.substack.com/p/key-post" heading="Latest Articles" more_text="View all" more_url="/articles"]
+```
 
 ---
 

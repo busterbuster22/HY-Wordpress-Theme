@@ -671,19 +671,69 @@ footer.site-footer-container > .wp-block-group {
     .hero-desktop-only { display: none !important; }
 }
 
-/* IN THE MEDIA — give the press clippings the shadow-box offset (pink reads on
-   the dark band), square, with the same press-in hover the cards use. */
-.media-row .wp-block-image img {
+/* IN THE MEDIA — press clippings get the shadow-box offset + press-in hover,
+   square. The shadow colour tracks the band background, same rule as the cards:
+   black on white (default), pink on black, black on pink.
+   Targets Image blocks, Media & Text, Cover, and Gallery images.
+   Two tiers: .media-row explicit class for fine-grained control, plus
+   bare is-style-* fallback so images in dark/pink sections always get a
+   shadow even if the .media-row class wasn't added. */
+.media-row .wp-block-image img,
+.media-row .wp-block-media-text__media img,
+.media-row .wp-block-cover img,
+.media-row .wp-block-gallery img {
     display: block;
     border-radius: 0;
-    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    box-shadow: 7px 7px 0 0 #000000;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.is-style-dark-section .media-row .wp-block-image img,
+.is-style-dark-section .media-row .wp-block-media-text__media img,
+.is-style-dark-section .media-row .wp-block-cover img,
+.is-style-dark-section .media-row .wp-block-gallery img,
+.is-style-dark-section .wp-block-image img,
+.is-style-dark-section .wp-block-media-text__media img,
+.is-style-dark-section .wp-block-cover img,
+.is-style-dark-section .wp-block-gallery img {
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+.is-style-pink-section .media-row .wp-block-image img,
+.is-style-pink-section .media-row .wp-block-media-text__media img,
+.is-style-pink-section .media-row .wp-block-cover img,
+.is-style-pink-section .media-row .wp-block-gallery img,
+.is-style-pink-section .wp-block-image img,
+.is-style-pink-section .wp-block-media-text__media img,
+.is-style-pink-section .wp-block-cover img,
+.is-style-pink-section .wp-block-gallery img {
+    box-shadow: 7px 7px 0 0 #000000;
 }
 
 .media-row .wp-block-image a:hover img,
-.media-row .wp-block-image a:focus-visible img {
+.media-row .wp-block-image a:focus-visible img,
+.media-row .wp-block-media-text__media a:hover img,
+.media-row .wp-block-media-text__media a:focus-visible img {
     transform: translate(3px, 3px);
+    box-shadow: 4px 4px 0 0 #000000;
+}
+.is-style-dark-section .media-row .wp-block-image a:hover img,
+.is-style-dark-section .media-row .wp-block-image a:focus-visible img,
+.is-style-dark-section .media-row .wp-block-media-text__media a:hover img,
+.is-style-dark-section .media-row .wp-block-media-text__media a:focus-visible img,
+.is-style-dark-section .wp-block-image a:hover img,
+.is-style-dark-section .wp-block-image a:focus-visible img,
+.is-style-dark-section .wp-block-media-text__media a:hover img,
+.is-style-dark-section .wp-block-media-text__media a:focus-visible img {
     box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+.is-style-pink-section .media-row .wp-block-image a:hover img,
+.is-style-pink-section .media-row .wp-block-image a:focus-visible img,
+.is-style-pink-section .media-row .wp-block-media-text__media a:hover img,
+.is-style-pink-section .media-row .wp-block-media-text__media a:focus-visible img,
+.is-style-pink-section .wp-block-image a:hover img,
+.is-style-pink-section .wp-block-image a:focus-visible img,
+.is-style-pink-section .wp-block-media-text__media a:hover img,
+.is-style-pink-section .wp-block-media-text__media a:focus-visible img {
+    box-shadow: 4px 4px 0 0 #000000;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -884,6 +934,11 @@ li.mega-social-icon a {
 /* Instagram icon */
 .social-icon a[href*="instagram.com"] {
     background-image: url('../assets/svg/instagram.svg') !important;
+}
+
+/* Email icon */
+.social-icon a[href*="/contact"] {
+    background-image: url('../assets/svg/email.svg') !important;
 }
 
 /* Text shadow for social media icons for readability */
@@ -2111,7 +2166,7 @@ body #can_embed_form .can_embed_form_inner,
     height: 100%;
     background-color: #fff;
     border: 3px solid var(--wp--preset--color--ash-grey, #141414);
-    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    box-shadow: 7px 7px 0 0 #000000;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 
     /* Inner padding for everything except the full-bleed image */
@@ -2133,7 +2188,7 @@ body #can_embed_form .can_embed_form_inner,
 .card-link:hover .card,
 .card-link:focus-visible .card {
     transform: translate(3px, 3px);
-    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+    box-shadow: 4px 4px 0 0 #000000;
 }
 
 .card-link:focus-visible {
@@ -2265,6 +2320,37 @@ body #can_embed_form .can_embed_form_inner,
 .is-style-dark-section .card .card-eyebrow,
 .is-style-pink-section .card .card-eyebrow {
     color: var(--wp--preset--color--house-you-pink, #A8178C) !important;
+}
+
+/* === Shadow colour tracks the band background ===
+   The shadow-box offset must contrast the background it falls on:
+     • white (light) band        → pink shadow   (the default)
+     • black (dark) + pink bands  → white shadow
+   Only the COLOUR changes per band; geometry is untouched (7px resting /
+   4px press-in hover). The band class raises specificity above the base rule,
+   so no !important is needed. The same mapping is applied below to the IN THE
+   MEDIA clipping images and the See-more buttons. */
+.is-style-light-section .card {
+    box-shadow: 7px 7px 0 0 #000000;
+}
+.is-style-dark-section .card {
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+.is-style-pink-section .card {
+    box-shadow: 7px 7px 0 0 #000000;
+}
+
+.is-style-light-section .card-link:hover .card,
+.is-style-light-section .card-link:focus-visible .card {
+    box-shadow: 4px 4px 0 0 #000000;
+}
+.is-style-dark-section .card-link:hover .card,
+.is-style-dark-section .card-link:focus-visible .card {
+    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
+.is-style-pink-section .card-link:hover .card,
+.is-style-pink-section .card-link:focus-visible .card {
+    box-shadow: 4px 4px 0 0 #000000;
 }
 
 /* =========================================================================
@@ -2776,6 +2862,23 @@ body.home #can_embed_form .button {
     text-align: center;
 }
 
+
+
+/* Dedicated listing PAGES (Campaigns / In the Media / Articles) render their
+   title as a standalone <h1 class="wp-block-heading"> sitting directly above
+   the bare .card-grid — the shortcode is called without heading=, so no
+   .card-row-heading is emitted (functions.php houseyou_card_row_wrap). Centre
+   any heading immediately followed by a card grid; this is tight enough that
+   unrelated page H1s (About, Contact) stay left-aligned. .card-grid-empty
+   covers a listing page with no items yet. The Events page title already
+   carries has-text-align-center. */
+.wp-block-heading:has(+ .card-grid),
+.wp-block-heading:has(+ .card-grid-empty) {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .card-row-more {
     margin-top: 28px;
     text-align: center;
@@ -2793,8 +2896,7 @@ body.home #can_embed_form .button {
     color: var(--wp--preset--color--ash-grey, #141414) !important;
     border: 3px solid var(--wp--preset--color--ash-grey, #141414) !important;
     border-radius: 0 !important;
-    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
-    font-family: var(--wp--preset--font-family--lexend) !important;
+    box-shadow: 7px 7px 0 0 #000000;
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -2809,8 +2911,7 @@ body.home #can_embed_form .button {
 .card-row-more .wp-block-button__link:hover,
 .card-row-more .wp-block-button__link:focus-visible {
     transform: translate(3px, 3px);
-    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
-    opacity: 1;
+    box-shadow: 4px 4px 0 0 #000000;
 }
 
 /* The dark/pink band rules above force every <a> to white, which would be
@@ -2823,17 +2924,27 @@ body.home #can_embed_form .button {
     color: var(--wp--preset--color--ash-grey, #141414) !important;
 }
 
-/* On the pink band the pink offset shadow would vanish — swap to ash so the
-   shadow-box still reads (mirrors the hero's pink-on-pink → ash rule). */
+/* On black/pink bands the shadow colour follows the heading colour:
+   pink shadow reads against both dark and pink backgrounds. */
+.is-style-dark-section .card-row-more a,
+.is-style-dark-section .card-row-more .wp-block-button__link {
+    box-shadow: 7px 7px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
+}
 .is-style-pink-section .card-row-more a,
 .is-style-pink-section .card-row-more .wp-block-button__link {
-    box-shadow: 7px 7px 0 0 var(--wp--preset--color--ash-grey, #141414);
+    box-shadow: 7px 7px 0 0 #000000;
+}
+.is-style-dark-section .card-row-more a:hover,
+.is-style-dark-section .card-row-more a:focus-visible,
+.is-style-dark-section .card-row-more .wp-block-button__link:hover,
+.is-style-dark-section .card-row-more .wp-block-button__link:focus-visible {
+    box-shadow: 4px 4px 0 0 var(--wp--preset--color--house-you-pink, #A8178C);
 }
 .is-style-pink-section .card-row-more a:hover,
 .is-style-pink-section .card-row-more a:focus-visible,
 .is-style-pink-section .card-row-more .wp-block-button__link:hover,
 .is-style-pink-section .card-row-more .wp-block-button__link:focus-visible {
-    box-shadow: 4px 4px 0 0 var(--wp--preset--color--ash-grey, #141414);
+    box-shadow: 4px 4px 0 0 #000000;
 }
 
 @media (prefers-reduced-motion: reduce) {

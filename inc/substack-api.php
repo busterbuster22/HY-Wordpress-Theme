@@ -153,3 +153,78 @@ function houseyou_substack_fetch_articles( $limit = 12, $excerpt_words = 24 ) {
 
 	return array_slice( $articles, 0, $limit );
 }
+
+/**
+ * Fetch Open Graph metadata from a URL.
+ *
+ * Lightweight page fetch to extract og:title, og:image, og:description.
+ * Cached for 24 hours via WordPress transients.
+ *
+ * @param string $url
+ * @param int    $excerpt_words
+ * @return array Article data matching the standard article array shape,
+ *               or empty array on failure.
+ */
+function houseyou_substack_fetch_article_meta( $url, $excerpt_words = 24 ) {
+	$cache_key = 'houseyou_ogmeta_' . md5( $url );
+	$cached    = get_transient( $cache_key );
+
+	if ( false !== $cached ) {
+		return $cached;
+	}
+
+	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		$empty = array();
+		set_transient( $cache_key, $empty, HOUR_IN_SECONDS );
+		return $empty;
+	}
+
+	$html = wp_remote_retrieve_body( $response );
+	if ( empty( $html ) ) {
+		$empty = array();
+		set_transient( $cache_key, $empty, HOUR_IN_SECONDS );
+		return $empty;
+	}
+
+	$og_title       = '';
+	$og_image       = '';
+	$og_description = '';
+
+	if ( preg_match( '/<meta\s[^>]*property=["\']og:title["\'][^>]*content=["\']([^"\']+)["\']/i', $html, $m ) ||
+	     preg_match( '/<meta\s[^>]*content=["\']([^"\']+)["\'][^>]*property=["\']og:title["\']/i', $html, $m ) ) {
+		$og_title = html_entity_decode( $m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	}
+
+	if ( preg_match( '/<meta\s[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']+)["\']/i', $html, $m ) ||
+	     preg_match( '/<meta\s[^>]*content=["\']([^"\']+)["\'][^>]*property=["\']og:image["\']/i', $html, $m ) ) {
+		$og_image = $m[1];
+	}
+
+	if ( preg_match( '/<meta\s[^>]*property=["\']og:description["\'][^>]*content=["\']([^"\']+)["\']/i', $html, $m ) ||
+	     preg_match( '/<meta\s[^>]*content=["\']([^"\']+)["\'][^>]*property=["\']og:description["\']/i', $html, $m ) ) {
+		$og_description = html_entity_decode( $m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	}
+
+	// Fallback: <title> tag
+	if ( empty( $og_title ) && preg_match( '/<title>([^<]+)<\/title>/i', $html, $m ) ) {
+		$og_title = html_entity_decode( trim( $m[1] ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	}
+
+	$article = array(
+		'title'       => $og_title,
+		'url'         => esc_url_raw( $url ),
+		'date'        => '',
+		'timestamp'   => 0,
+		'excerpt'     => $og_description ? wp_trim_words( wp_strip_all_tags( $og_description ), $excerpt_words, '…' ) : '',
+		'author'      => '',
+		'image'       => $og_image,
+		'publication' => '',
+		'featured'    => true,
+	);
+
+	set_transient( $cache_key, $article, DAY_IN_SECONDS );
+
+	return $article;
+}
